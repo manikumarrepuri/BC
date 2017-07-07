@@ -1,0 +1,55 @@
+<aside class="add-tag-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Home tab content -->
+    <div class="tab-pane active">
+      <section class="content-header">
+        <h1>
+          Add New Tag
+          <i class="pull-right close fa fa-times-circle-o" ng-click="addTagCtrl.toggleTag()"></i>
+        </h1>
+      </section>
+
+      <!-- /Main content is here -->
+      <div>
+        <div class="box-primary">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="status update-success hide progress-bar-success"><span>Successfully added the tag {{addTagCtrl.addTagForm.name}}.</span></div>
+            <div class="status update-failed hide progress-bar-danger"><span>Failed to add the tag: {{addTagCtrl.errorMessage}}.</span></div>
+            <div class="callout callout-danger" ng-show="addTagForm.$submitted && addTagForm.$invalid">
+              <div ng-show="addTagForm.name.$invalid">Please provide a tagname.</div>
+              <div ng-show="addTagForm.color.$invalid">Please provide a valid color.</div>
+            </div>
+
+            <form name="addTagForm" ng-submit="addTagCtrl.addTag(addTagForm)">
+              <div class="form-group" ng-class="{'has-error':addTagForm.$dirty && addTagForm.type.$invalid}">
+                <label class="control-label" for="tagtype">Type: </label>
+                <input name="type" ng-model="addTagCtrl.addTagForm.type" placeholder="Tag type" autofocus required>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addTagForm.$dirty && addTagForm.value.$invalid}">
+                <label class="control-label" for="tagname">Value: </label>
+                <input name="value" ng-model="addTagCtrl.addTagForm.value" placeholder="Tag name" autofocus required>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addTagForm.$dirty && addTagForm.description.$invalid}">
+                <label class="control-label" for="description">Description: </label>
+                <textarea name="description" ng-model="addTagCtrl.addTagForm.description" required placeholder="description">
+                </textarea>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Tag</button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+      </div>
+      <!-- /Main content ends here -->
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

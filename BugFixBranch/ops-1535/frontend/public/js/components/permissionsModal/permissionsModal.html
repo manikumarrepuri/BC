@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h3 class="modal-title">Edit Role Permissions ({{role}})</h3>
+</div>
+<form id="editPermissionsForm" name="editPermissionsForm" ng-submit="editPermissions(editPermissionsForm)">
+  <div class="modal-body">
+    <div class="status update-success hide progress-bar-success"><span>Successfully updated the {{role}} role.</span></div>
+    <div class="status update-failed hide progress-bar-danger"><span>Failed to update the {{role}} role.</span></div>
+    <div class="form-group" ng-class="{'has-error':editPermissions.$dirty &&editPermissions.roles.$invalid}">
+      <table class="table table-fixed table-striped table-bordered table-hover table-permissions">
+        <thead>
+          <tr>
+            <th class='hover col-xs-6'>Resource</th>
+            <th class='hover col-xs-6'>Permissions</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="resource in resources track by resource.id">
+              <td class="col-xs-6">{{resource.id}}</td>
+              <td class="col-xs-6">
+                <span ng-repeat="action in resource.actions">
+                  <input type="checkbox" name="{{resource.id}}-{{action}}"  ng-model="editPermissionsForm[resource.id][action]"> {{action | capitalize}}
+                </span>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

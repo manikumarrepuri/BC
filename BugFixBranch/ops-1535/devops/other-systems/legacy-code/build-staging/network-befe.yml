@@ -1,0 +1,14 @@
+---
+- name: configure network
+  hosts: 10.197.55.113
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.57.13
+    - network_hostname: staging-befe-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0

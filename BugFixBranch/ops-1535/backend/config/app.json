@@ -1,0 +1,54 @@
+{
+  "certificate_paths": {
+    "ca" : "/opt/itheon/itheonChain.crt",
+    "cert" : "/opt/itheon/itheon.crt",
+    "key" : "/opt/itheon/itheon.key"
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "mongo": {
+    "db": "mongodb://localhost:27017/testdb"
+  },
+  "amqp": {
+    "connectionString": "amqp://guest:guest@localhost:32771"
+  },
+  "redis": 
+    {
+      "host": "localhost",
+      "port": 32774,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+  "server" : {
+    "protocol": "http",
+    "ssl": false,
+    "port": 9443
+  }
+}

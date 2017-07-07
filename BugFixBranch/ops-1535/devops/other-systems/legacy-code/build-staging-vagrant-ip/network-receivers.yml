@@ -1,0 +1,42 @@
+---
+- name: configure network
+  hosts: 10.197.55.104
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.4
+    - network_hostname: staging-receiver1-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.105
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.5
+    - network_hostname: staging-receiver2-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.106
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.6
+    - network_hostname: staging-receiver3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0

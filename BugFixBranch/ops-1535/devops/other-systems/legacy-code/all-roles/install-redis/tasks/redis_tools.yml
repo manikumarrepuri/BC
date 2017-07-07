@@ -1,0 +1,4 @@
+---
+- name: Install Redis CLI tools
+  apt: name=redis-tools
+       state=present

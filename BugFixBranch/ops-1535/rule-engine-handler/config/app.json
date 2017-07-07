@@ -1,0 +1,65 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : true,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "rethinkdb": {
+    "servers": [
+      {
+        "host" :  "10.187.76.123",
+        "port" : 28015
+      },
+     {
+        "host" :  "10.187.76.124",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.125",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.126",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.127",
+        "port" : 28015
+      }
+    ],
+    "db" : "itheon",
+    "replicas": 5
+  },
+  "amqp": {
+    "connectionString": "amqp://test:test@10.187.75.228"
+  },
+  "frontendApi": {
+    "host": "www.itheon.com",
+    "protocol": "https://",
+    "port": "443",
+    "ssl": true
+  }
+}

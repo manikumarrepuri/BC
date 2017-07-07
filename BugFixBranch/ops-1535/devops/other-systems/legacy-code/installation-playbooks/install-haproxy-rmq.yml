@@ -1,0 +1,33 @@
+---
+- name: See group
+  hosts: rabbitmq
+  tasks: [ ]
+
+- name: Install HAProxy
+  hosts: haproxy-rmq
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-heartbeat
+    - install-haproxy-rmq
+
+- name: Configure Active
+  hosts: haproxy-rmq-active
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-haproxy-rmq-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-rmq-passive'][0]].ansible_default_ipv4.address }}"
+    - haproxy_group: haproxy-rmq
+
+- name: Configure Passive
+  hosts: haproxy-rmq-passive
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-haproxy-rmq-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-rmq-active'][0]].ansible_default_ipv4.address }}"
+    - haproxy_group: haproxy-rmq

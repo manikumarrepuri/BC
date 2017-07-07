@@ -1,0 +1,35 @@
+view-rule .module-sidebar textarea.smart-area {
+  width: 100% !important;
+  max-height: 700px;
+}
+
+view-rule .module-sidebar .sa-fakeArea {
+  width: 100% !important;
+}
+
+view-rule .tab-pane {
+  margin-right: 10px;
+}
+
+/*Syntax Highlighting rules for JSON */
+view-rule .highlight.jsonObjArr {
+  color: #4399ce;
+}
+view-rule .highlight.jsonProperty {
+  color: #DA2E7C;
+}
+view-rule .highlight.hbValue {
+  color: #337ab7;
+}
+view-rule .highlight.jsonValue {
+  color: #00a65a;
+}
+view-rule .highlight.jsonBool {
+  color: #22C3DC;
+}
+view-rule .highlight.jsonNumber {
+  color: #DA872E;
+}
+view-rule .highlight.jsonComments {
+  color: #A0A0A0;
+}

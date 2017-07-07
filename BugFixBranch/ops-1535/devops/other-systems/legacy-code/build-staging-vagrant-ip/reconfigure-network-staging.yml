@@ -1,0 +1,155 @@
+---
+- name: RabbitMQ
+  become: yes
+  hosts: rabbitmq
+  remote_user: ansible
+  roles:
+    - reconfigure-rabbitmq
+
+- name: Set up Redis Master node
+  hosts: redis-master
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-redis
+
+- name: configure redis sentinel nodes
+  hosts: redis-sentinel
+  become: yes
+  remote_user: ansible
+  vars:
+    - redis_sentinel: true
+    - redis_sentinel_monitors:
+      - name: master01
+        host: "{{ hostvars[groups['redis-master'][0]].ansible_default_ipv4.address }}"
+        port: "{{ itheonx_redis_port }}"
+  roles:
+    - reconfigure-redis
+
+- name: Set up Redis Slaves
+  hosts: redis-slaves
+  become: yes
+  remote_user: ansible
+  vars:
+    - redis_slaveof: "{{ hostvars[groups['redis-master'][0]].ansible_default_ipv4.address }} {{ itheonx_redis_port }}"
+  roles:
+    - reconfigure-redis
+
+- name: Reconfigure rethinkdb
+  hosts: rethinkdb
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-rethinkdb
+
+- name: See Sentinel group
+  hosts: redis-sentinel
+  become: yes
+  tasks: [ ]
+
+- name: See RethinkDB group
+  hosts: rethinkdb
+  become: yes
+  tasks: [ ]
+
+- name: Reconfigure OpServe Backend/Frontend
+  hosts: be-fe
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-be-fe
+
+- name: reconfigure receivers
+  hosts: receivers
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-receivers
+
+- name: See group
+  hosts: receivers
+  tasks: [ ]
+
+- name: See group
+  hosts: handlers
+  tasks: [ ]
+
+- name: Reconfigure haproxy
+  hosts: haproxy
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-heartbeat
+    - reconfigure-haproxy
+
+- name: Configure Active
+  hosts: haproxy-active
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-haproxy-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-passive'][0]].ansible_default_ipv4.address }}"
+
+- name: Configure Passive
+  hosts: haproxy-passive
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-haproxy-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-active'][0]].ansible_default_ipv4.address }}"
+
+- name: See group
+  hosts: rabbitmq
+  tasks: [ ]
+
+- name: Install HAProxy
+  hosts: haproxy-rmq
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-heartbeat
+    - reconfigure-haproxy-rmq
+
+- name: Configure Active
+  hosts: haproxy-rmq-active
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-haproxy-rmq-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-rmq-passive'][0]].ansible_default_ipv4.address }}"
+    - haproxy_group: haproxy-rmq
+
+- name: Configure Passive
+  hosts: haproxy-rmq-passive
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-haproxy-rmq-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-rmq-active'][0]].ansible_default_ipv4.address }}"
+    - haproxy_group: haproxy-rmq
+
+- name: See RethinkDB group
+  hosts: rethinkdb
+  tasks: [ ]
+
+- name: Reconfigure handlers nodes and dependencies
+  hosts: handlers
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-handlers
+
+- name: See redis-sentinel group
+  hosts: redis-sentinel
+  tasks: [ ]
+
+- name: Configure worker nodes and dependencies
+  hosts: workers
+  become: yes
+  remote_user: ansible
+  roles:
+    - reconfigure-workers

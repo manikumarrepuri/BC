@@ -1,0 +1,53 @@
+---
+- name: Add redis ppa
+  apt_repository:
+    repo: "{{item}}"
+  with_items:
+    - ppa:chris-lea/redis-server 
+  register: aptrepo
+  when: ansible_distribution == "Ubuntu"
+
+- name: Add redis debian gpg key
+  apt_key:
+    url: "https://www.dotdeb.org/dotdeb.gpg"
+    state: present
+  register: aptrepo
+  when: ansible_distribution == "Debian"
+
+- name: Add redis debian repo
+  apt_repository:
+    repo: "{{item}}"
+    state: present
+  register: aptrepo
+  with_items:
+    - deb http://mirror.stshosting.co.uk/dotdeb/ stable all
+    - deb-src http://mirror.stshosting.co.uk/dotdeb/ stable all
+  when: ansible_distribution == "Debian"
+
+- name: update package cache
+  apt:
+    update_cache: yes
+  when: aptrepo.changed
+
+- name: install redis
+  apt:
+    name: redis-server
+    state: latest
+
+- name: deploy config
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    mode: 0640
+  register: config
+
+- name: restart redis server
+  service: 
+    name: redis-server
+    state: restarted
+  when: config.changed
+
+- name: ensure that redis server is running
+  service:
+    name: redis-server
+    state: started

@@ -1,0 +1,79 @@
+---
+- name: Deploy backend app.env.json template
+  template:
+    src: backend_app.json.j2
+    dest: "/opt/itheon/itheon-10-backend/config/app.env.json"
+
+- name: Deploy frontend app.env.json template
+  template:
+    src: frontend_app.json.j2
+    dest: "/opt/itheon/itheon-10-frontend/config/app.env.json"
+
+- name: Remove file /itheon-10-frontend/public/js/services/socket.io.js
+  file: path=/opt/itheon/itheon-10-frontend/public/js/services/socket.io.js
+        state=absent
+
+- name: Create file /itheon-10-frontend/public/js/services/socket.io.js from template
+  template:
+    src: socket.io.js.j2
+    dest: "/opt/itheon/itheon-10-frontend/public/js/services/socket.io.js"
+
+- name: Remove Nginx file /etc/nginx/sites-enabled/default
+  file: path=/etc/nginx/sites-enabled/default
+        state=absent
+
+- name: Remove Nginx file /etc/nginx/sites-available/default
+  file: path=/etc/nginx/sites-available/default
+        state=absent
+
+- name: Deploy Nginx conf template
+  template:
+    src: config.j2
+    dest: "/etc/nginx/sites-available/itheon.conf"
+
+- name: Create Nginx conf symlink in /etc/nginx/sites-enabled
+  file: src=/etc/nginx/sites-available/itheon.conf
+        dest=/etc/nginx/sites-enabled/itheon.conf
+        state=link
+
+- name: Restart Nginx
+  service: name=nginx
+           state=restarted
+
+- name: npm install frontend
+  command: npm install
+  args:
+    chdir: /opt/itheon/itheon-10-frontend
+
+- name: bower install
+  become: no
+  command: bower install
+  args:
+    chdir: /opt/itheon/itheon-10-frontend
+
+- name: npm install backend
+  command: npm install
+  args:
+    chdir: /opt/itheon/itheon-10-backend
+
+- name: stop pm2
+  command: pm2 stop all
+
+- name: delete all pm2 jobs
+  command: pm2 delete all
+
+- name: Run pm2 command to start frontend
+  command: pm2 start /opt/itheon/itheon-10-frontend/app.js --name "Frontend"
+
+- name: Run pm2 command to start backend
+  command: pm2 start /opt/itheon/itheon-10-backend/app.js --name "BackEnd"
+
+- name: Run pm2 save
+  command: pm2 save
+  args:
+    chdir: ~/
+
+- name: Set pm2 startup
+  command: pm2 startup ubuntu
+  args:
+    chdir: ~/

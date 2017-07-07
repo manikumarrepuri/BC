@@ -1,0 +1,24 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-befe-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 4092
+    - vagrant_project: /etc/vagrant/staging-befe-ub-16-04
+    - network_address_1: 10.197.55.113
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.113
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - network_hostname: staging-befe-ub-16-04

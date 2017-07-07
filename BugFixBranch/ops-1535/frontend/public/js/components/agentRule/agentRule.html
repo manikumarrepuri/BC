@@ -1,0 +1,64 @@
+<aside resize scrolly class="agentRule-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content" *ng-if="selected">
+    <!-- Home tab content -->
+    <div class="tab-pane active" ng-if="agentRuleCtrl.rule">
+      <h2>
+        <span class="light"><strong>Rule Name:</strong></span>
+        <span class="padding-right-20">{{agentRuleCtrl.rule.name}}</span><br />
+        <span class="light"><strong>File Name:</strong></span>
+        <span class="padding-right-20">{{agentRuleCtrl.rule.fileName}}.rul</span><br />
+        <span class="light"><strong>Latest Version:</strong></span>
+        <span class="padding-right-20">{{agentRuleCtrl.rule.versionDisplay | amCalendar:null:agentRuleCtrl.calendarFormat }}</span>
+        <i class="pull-right close fa fa-times-circle-o" ng-click="agentRuleCtrl.toggleAgentRule()"></i>
+      </h2>
+
+      <h4><p>{{agentRuleCtrl.rule.description}}</p></h4>
+
+      <h3 class="module-sidebar-heading">Rule Tags</h3>
+      <div class="tag-group clearfix">
+        <div class="tag label bg-gray" ng-repeat="(key, tag) in agentRuleCtrl.rule.tags">
+          #{{tag}}
+        </div>
+      </div>
+
+      <h3 class="module-sidebar-heading">Rule Versions</h3>
+      <form name="newAgentRuleForm">
+        <div class="status update-success hide progress-bar-success"><span>Successfully saved Agent Rule.</span></div>
+        <div class="status update-failed hide progress-bar-danger"><span>Failed to save Agent Rule.</span></div>
+        <uib-accordion close-others="true">
+          <uib-accordion-group ng-repeat="version in agentRuleCtrl.versions" is-open="agentRuleCtrl.rule.versions[version].open">
+            <uib-accordion-heading>
+              {{agentRuleCtrl.rule.versions[version].versionDisplay | amCalendar:null:agentRuleCtrl.calendarFormat }} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': agentRuleCtrl.rule.versions[version].open, 'glyphicon-chevron-right': !agentRuleCtrl.rule.versions[version].open}"></i>
+
+              <div class="label bg-yellow" ng-if="agentRuleCtrl.rule.versions[version].started.count > 0" title="In progress" uib-popover-html="agentRuleCtrl.rule.versions[version].started.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{agentRuleCtrl.rule.versions[version].started.count}}
+              </div>
+              <div class="label bg-green" ng-if="agentRuleCtrl.rule.versions[version].success.count > 0" title="Successfully installed"  uib-popover-html="agentRuleCtrl.rule.versions[version].success.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{agentRuleCtrl.rule.versions[version].success.count}}
+              </div>
+              <div class="label bg-red" ng-if="agentRuleCtrl.rule.versions[version].failed.count > 0" title="Failed to install"  uib-popover-html="agentRuleCtrl.rule.versions[version].failed.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{agentRuleCtrl.rule.versions[version].failed.count}}
+              </div>
+
+            </uib-accordion-heading>
+              <textarea id="version{{version}}" ng-readonly="!agentRuleCtrl.rule.versions[version].editable" spellcheck="false" class="form-control smart-area code" ng-model="agentRuleCtrl.newAgentRuleForm['version' + version]" rows="5" smart-area="agentRuleCtrl.config">
+              </textarea>
+              <div class="pull-right" style="margin-top: 10px;">
+                <button ng-hide="agentRuleCtrl.rule.versions[version].editable" class="btn btn-success" ng-click="agentRuleCtrl.addComment(version)"><i class="fa fa-pencil"></i> Edit</button>
+                <button ng-click="agentRuleCtrl.saveNewVersion(agentRuleCtrl.newAgentRuleForm['version' + version], version)" class="btn btn-danger"><i class="fa fa-floppy"></i> Save (New)</button>
+              </div>
+          </uib-accordion-group>
+        </uib-accordion>
+      </form>
+      <!-- /.control-sidebar-menu -->
+
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

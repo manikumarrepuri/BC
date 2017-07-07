@@ -1,0 +1,12 @@
+agent-rule .module-sidebar textarea.smart-area {
+  width: 100% !important;
+  height: 200px;
+}
+
+agent-rule .module-sidebar .sa-fakeArea {
+  width: 100% !important;
+}
+
+agent-rule .module-sidebar textarea.smart-area.form-control[readonly] {
+  opacity: 0.2;
+}

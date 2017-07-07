@@ -1,0 +1,54 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python
+    - curl
+    - apt-transport-https
+    - ca-certificates
+    - apparmor
+
+- name: add docker repository for Debian
+  apt_repository:
+    repo: deb https://apt.dockerproject.org/repo/ debian-{{ansible_lsb.codename}} main
+    state: present
+  register: aptrepo
+  when: ansible_distribution == "Debian"
+
+- name: add docker repository for Ubuntu
+  apt_repository:
+    repo: deb https://apt.dockerproject.org/repo/ ubuntu-{{ansible_lsb.codename}} main
+    state: present
+  register: aptrepo
+  when: ansible_distribution == "Ubuntu"
+
+- name: add key id
+  apt_key:
+    url: "https://yum.dockerproject.org/gpg"
+    state: present
+  register: aptrepo
+
+- name: update package cache
+  apt:
+    update_cache: yes
+  when: aptrepo.changed
+
+- name: install docker
+  apt:
+    name: "{{item}}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - docker-engine
+  register: dockerupdate
+
+- name: install docker-compose
+  pip:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - docker-compose
+  register: dockerupdate

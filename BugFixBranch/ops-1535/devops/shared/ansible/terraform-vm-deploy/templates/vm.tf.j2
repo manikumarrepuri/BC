@@ -1,0 +1,53 @@
+resource "vsphere_virtual_machine" "{{item.category}}" {
+  count      = "{{item.count | default(1)}}"
+  name       = "{{item.name_prefix | default([environment_identifier, '-', item.category] | join)}}-${count.index + 1}"
+  vcpu       = "{{item.cpu | default(2)}}"
+  memory     = "{{item.memory | default(4096)}}"
+  datacenter = "AR Itheon Development"
+  folder     = "${vsphere_folder.opserve.path}"
+
+{% if item.ip_addresses is defined %}
+  variable "ip_addresses" {
+  type = "map"
+
+  default = {
+    {% for ip_address in item.ip_addresses %}
+      {{loop.index0}} = "{{ip_address}}"
+    {% endfor %}
+  }
+}
+{% endif %}
+
+  network_interface {
+    {#
+      network_label can be one of the following:
+      .57 network (no internet or DHCP) AR_Itheon_DMZ_179 
+      .56 network (DHCP and internet) AR_Itheon_PreProd_178
+      .55 network (DHCP and internet) AR_Itheon_Dev_177
+
+      ip_address must be provided if using static IPs.
+    #}
+    label = "{{item.network_label}}"
+    {% if item.ip_addresses is defined %}
+    ipv4_address       = "${var.ip_addresses["${count.index}"]}"
+    ipv4_prefix_length = "24"
+    ipv4_gateway       = "{{item.ipv4_gateway}}"
+    {% endif %}
+  }
+
+  disk {
+    template  = "opserve/template-lvm-ub-16-04"
+    datastore = "${var.datastore}"
+    type      = "thin"
+    bootable  = "true"
+  }
+
+  disk {
+    type            = "thin"
+    size            = {{item.disk_size | default(10)}}  # GB
+    name            = "{{item.name_prefix | default(item.category)}}-${count.index + 1}-data"
+    controller_type = "scsi"
+    datastore       = "${var.datastore}"
+    bootable        = "false"
+  }
+}

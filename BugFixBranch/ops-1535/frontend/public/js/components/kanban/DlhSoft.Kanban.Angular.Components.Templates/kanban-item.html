@@ -1,0 +1,51 @@
+<div ng-mouseenter="isHovered = true" ng-mouseleave="isHovered = false" class="dskb-item-container">
+    <div class="dskb-item" ds:kanban-draggable-item drag-type="dskb.itemType" drag-index="dskb.items.indexOf(item)" is-dragging-parent="true" ng-style="{ backgroundColor: item.backgroundColor ? item.backgroundColor : (item.itemType && item.itemType.backgroundColor ? item.itemType.backgroundColor : dskb.defaultItemType.backgroundColor), height: (dskb.itemHeight) + 'px' }">
+        <table style="height: 100%;">
+            <tr>
+                <td class="dskb-gripper" ng-style="{ backgroundColor: item.color ? item.color : (item.itemType ? item.itemType.color : dskb.defaultItemType.color) }">&nbsp;</td>
+                <td class="dskb-item-content">
+                    <div compile-data template="{{item[dskb.itemNameField]}}" controller="reminderCtrl" ng-click="dskb.onItemSelected({item: item})" class="dskb-property dskb-property-editor" ng-style="{ height: (dskb.itemHeight-60) + 'px' }"></div>
+                    <div class="dskb-property-date clearfix">
+                      {{item.createdAt | date : 'h:mm:ss a'}}
+                    </div>
+                    <table class="dskb-property dskb-property-editor dskb-property-table">
+                        <tr>
+                            <td>
+                                <img ng-if="dskb.assignableResources && item.assignedResource.imageUrl" ng-src="{{ item.assignedResource.imageUrl }}" class="dskb-property-image"/>
+                            </td>
+                            <td class="dskb-property-table">
+                                <input ng-model="dskb.assignableResources ? item.assignedResource[dskb.userNameField] : null" ng-model-options="{ getterSetter: true }" readonly="readonly" class="dskb-property-secondary dskb-select-replacement"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div ng-hide="dskb.isReadOnly || item.isReadOnly || item.group.isReadOnly || item.state.isReadOnly" class="dskb-editors-area" ng-style="{ backgroundColor: item.backgroundColor ? item.backgroundColor : (item.itemType && item.itemType.backgroundColor ? item.itemType.backgroundColor : dskb.defaultItemType.backgroundColor), top: -(dskb.itemHeight-10) + 'px', height: (dskb.itemHeight) + 'px' }">
+        <div class="dskb-item-commands-container" ng-show="dskb.onEditingItem && isHovered">
+            <a ng-hide="dskb.areEditItemButtonsHidden || item.isEditItemButtonHidden || item.state.areEditItemButtonsHidden || item.group.areEditItemButtonsHidden" href="javascript://" ng-click="dskb.onEditingItem({item: item})" class="dskb-button dskb-edit-button" title="{{ dskb.editItemButtonToolTip }}">
+              {{ dskb.editItemButtonText }}
+            </a>
+        </div>
+        <div ng-hide="dskb.areItemReadOnly || item.isItemReadOnly || item.group.areItemsReadOnly || item.state.areItemsReadOnly" class="dskb-properties-container">
+            <div compile-data template="{{item[dskb.itemNameField]}}" controller="dskb.controller" ng-click="dskb.onItemSelected({item: item})" class="dskb-property dskb-property-editor" ng-style="{ height: (dskb.itemHeight-60) + 'px' }">
+                <!-- <textarea ng-model="item[dskb.itemNameField]" ng-style="{ height: (dskb.itemHeight-40) + 'px' }">
+                </textarea> -->
+            </div>
+            <div class="dskb-property-date pull-right">
+              {{item.createdAt | date : 'h:mm:ss a'}}
+            </div>
+            <table ng-if="dskb.assignableResources" class="dskb-property dskb-property-editor dskb-property-table">
+                <tr>
+                    <td>
+                        <img ng-if="item.assignedResource.imageUrl" ng-src="{{ item.assignedResource.imageUrl }}" class="dskb-property-image"/>
+                    </td>
+                    <td class="dskb-property-table">
+                        <select ng-change="dskb.onItemAssignmentChanged({item: item})" ng-model="item.assignedResource[dskb.userNameField]" ng-options="r[dskb.userNameField] as r[dskb.userNameField] for r in dskb.assignableResources" class="dskb-property-secondary"></select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

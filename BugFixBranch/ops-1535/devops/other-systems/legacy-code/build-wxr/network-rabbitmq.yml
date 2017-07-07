@@ -1,0 +1,68 @@
+- name: configure network
+  hosts: 10.197.55.114
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.14
+    - network_hostname: staging-rabbitmq-master-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.115
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.15
+    - network_hostname: staging-rabbitmq-slave1-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.116
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.16
+    - network_hostname: staging-rabbitmq-slave2-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.117
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.17
+    - network_hostname: staging-rabbitmq-slave3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+
+- name: configure network
+  hosts: 10.197.55.118
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.18
+    - network_hostname: staging-rabbitmq-slave4-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0

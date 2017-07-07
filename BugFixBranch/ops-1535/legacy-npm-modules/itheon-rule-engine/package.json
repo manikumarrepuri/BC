@@ -1,0 +1,31 @@
+{
+  "name": "itheon-rule-engine",
+  "version": "2.0.3",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases"
+  },
+  "dependencies": {
+    "itheon-entity": "^1.1.1",
+    "itheon-error": "^1.0.0",
+    "itheon-logger": "^1.0.0",
+    "itheon-module-metric-entity": "^1.0.0",
+    "itheon-module-rule-entity": "^1.0.0",
+    "itheon-utility": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-config": "^2.0.1",
+    "itheon-test": "^2.1.1",
+    "mocha": "^2.4.5",
+    "nodeunit": "^0.9.1",
+    "proxyquire": "^1.7.4"
+  }
+}

@@ -1,0 +1,304 @@
+<style>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+  .st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid lightgrey;
+}
+
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+thead, tfoot {
+    flex-shrink: 0;
+}
+
+th, tbody td {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+tfoot {
+    display: inline-block;
+}
+
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+
+body, html {
+  height: 100%;
+}
+.form-control{
+  height: 36px;
+}
+.alignFlat {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+</style>
+<script>
+  function getVisible() {
+      var $el = $('#tableWrapper');
+      if($el.length){
+        var scrollTop = $(this).scrollTop(),
+            scrollBot = scrollTop + $(this).height(),
+            elTop = $el.offset().top,
+            elBottom = elTop + $el.outerHeight(),
+            visibleTop = elTop < scrollTop ? scrollTop : elTop,
+            visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+        $('#myTable').css('height', ($(window).height() - 140));
+      }
+  }
+  $(window).on('scroll resize', getVisible);
+  getVisible();
+</script>
+
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button ng-click="alertsCtrl.addAlert()" class="add btn btn-bar bg-teal btn-flat">
+      <i class="fa fa-plus"></i> <strong>Alert</strong>
+    </button>
+  </div>
+  <div class="input-group box-title" ng-if="alertsCtrl.totals.total != 0">
+    <span class="alignFlat" style="padding-top: 0px">
+      <div class="input-group">
+        <span class="input-group-addon bg-gray" style="text-align:center;padding: 2px 4px 2px 4px;border: white 0px;border-radius: 3px;font-weight:bold">
+          {{alertsCtrl.totals.total}}
+        </span><span style="padding-left: 5px">Alert(s)</span>
+      </div>
+    </span>
+    <span class="alignFlat" style="padding-top: 0px">
+      <div class="input-group">
+        <span class="input-group-addon bg-white" style="text-align:center;padding: 0px 0px 0px 0px;border: white 0px">
+          <a class="btn btn-small" href ng-click="alertsCtrl.filterVisibility()">
+          <i class="fa fa-filter" aria-hidden="true"></i> {{alertsCtrl.filterStatus}}</a>
+        </span>
+        <span class="input-group-addon bg-white" style="text-align:center;padding: 0px 0px 0px 0px;border: white 0px">
+          <strong>Rows/Page : </strong>
+        </span>
+        <input id="noOfRows" type="number" step="1" ng-model="alertsCtrl.numberOfPages" class="form-control" style="width: 50px;">
+      </div>
+    </span>
+    <span class="alignFlat" style="padding-top: 0px">
+      <div class="input-group">
+        <span class="input-group-addon bg-white" style="text-align:center;padding: 0px 0px 0px 0px;border-right: white 0px"><strong>Shared? :</strong></span>
+        <span class="input-group-addon bg-white" style="padding: 1.5% 3px 0px 3px;border-left: white 0px">
+          <input type="checkbox" ng-blur="alertsCtrl.filterAttribueChanged()" ng-change="alertsCtrl.filterAttribueChanged()" ng-keyup="alertsCtrl.filterAttribueChanged()" aria-label="Checkbox for following text input" ng-model="alertsCtrl.filterAttributes.isShared">
+        </span>
+        <input ng-required="true" type="text" ng-blur="alertsCtrl.filterAttribueChanged()" ng-change="alertsCtrl.filterAttribueChanged()" ng-keyup="alertsCtrl.filterAttribueChanged()" class="form-control" placeholder="Filter Name" class="form-control" ng-model="alertsCtrl.filterAttributes.filterName">
+        <span class="input-group-btn">
+          <button ng-click="alertsCtrl.saveFilter(alertsCtrl)" class="form-control bg-green">
+            <i class="fa fa-filter"></i> <strong>Save</strong>
+          </button>
+        </span>
+        <!--<span class="input-group-btn">
+          <button ng-click="alertsCtrl.clearFilter()" class="form-control bg-red">
+            <i class="fa fa-filter"></i> <strong>Clear</strong>
+          </button>
+        </span>-->
+      </div>
+    </span>
+      
+  </div>
+</div>
+<div class="box-header">
+</div>
+<div style="overflow: auto;" id="tableWrapper" ng-if="alertsCtrl.totals.total != 0">
+  <table ng-if="alertsCtrl.display=='table'" id="myTable" st-set-filter="customFilter" st-persist="myTable" st-table="alertsCtrl.alerts" class="table table-list-page table-bordered table-hover table-devices" style="margin-bottom: 0px;padding-bottom: 0px;">
+        <thead style="overflow-y: scroll; border-bottom: 1px solid #111;">
+           <tr ng-show="alertsCtrl.isFilterVisible">
+            <th st-ratio="7">
+              <input id="severityFilterId" class="form-control" step="0.01" placeholder="Severity" st-search="severity" type="number" ng-model="alertsCtrl.query.severityFilter"/>
+            </th>
+            <th st-ratio="43">
+              <input id="briefFilterId" class="form-control" placeholder="Brief" st-search="brief" type="search" ng-model="alertsCtrl.query.briefFilter" />
+              <div class="input-group">
+                <span class="input-group-addon">
+                <label>Acknowledged:</label><st-acknowledge id="acknowledgeFilterId" predicate="acknowledged" selectedOption="alertsCtrl.query.selectedOption"></st-acknowledge>  
+                </span>
+                <input id="assigneeFilterId" class="form-control" style="width: 50%" placeholder="Assigned to" st-search="assignee" type="search" ng-model="alertsCtrl.query.assigneeFilter" />
+                <input id="ruleNameFilterId" class="form-control" style="width: 50%" placeholder="RuleName" st-search="ruleName" type="search" ng-model="alertsCtrl.query.ruleNameFilter" />
+                <button ng-show="false" name="clearFiltersButton" id="clearFiltersButton" type="button" st-reset-search></button>
+                <button ng-show="false" name="applyFiltersButton" id="applyFiltersButton" type="button" st-apply-filter></button>
+              </div>
+            </th>
+            <th st-ratio="10">
+              <st-date-range id="dateFilterId" predicate="createdAt" before="alertsCtrl.query.before" after="alertsCtrl.query.after"></st-date-range>
+            </th>
+            <th st-ratio="15">
+              <input id="tagsFilterId" class="form-control" placeholder="Tags" st-search="tags" type="search" ng-model="alertsCtrl.query.tagsFilter"/>
+            </th>
+            <th st-ratio="10">
+              <input id="groupFilterId" class="form-control" placeholder="Group" st-search="group" type="search" ng-model="alertsCtrl.query.groupFilter" />
+            </th>
+            <th st-ratio="10">
+              <input id="nameFilterId" class="form-control" placeholder="Host" st-search="name" type="search" ng-model="alertsCtrl.query.nameFilter" />
+            </th>
+            <th st-ratio="5">
+              <input id="stateFilterId" class="form-control" placeholder="State" st-search="state" type="search" ng-model="alertsCtrl.query.stateFilter" />
+            </th>
+          </tr>
+          <tr style="cursor: pointer;">
+            <th st-ratio="7" st-sort="severity">Severity</th>
+            <th st-ratio="43" st-sort="brief">Details</th>
+            <th st-ratio="10" st-sort-default="reverse" st-sort="createdAt">Occurred</th>
+            <th st-ratio="15" st-sort="tags">Tags</th>
+            <th st-ratio="10" st-sort="group">Group</th>
+            <th st-ratio="10" st-sort="name">Host</th>
+            <th st-ratio="5" st-sort="state">State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr bindonce
+              context-menu="alertsCtrl.menuOptions"
+              ng-repeat="alert in alertsCtrl.alerts"
+              selection-model
+              selection-model-selected-items="alertsCtrl.selected"
+              selection-model-selected-class="'row-selected'"
+              ng-class="{'acknowledged-row': alert.acknowledged}"
+              ng-click="alertsCtrl.requestAlert($event, alert._id)"
+              ng-if="!(alert.acknowledged && alert.state == 'C')">
+            <td st-ratio="7">
+              <span class="fa-stack fa-1x severity-icon" ng-class="{'text-green': alert.severity >= 7 || alert.severity == 5,
+                'text-orange': alert.severity >= 3 && alert.severity  <= 6 && alert.severity != 5,
+                'text-red': alert.severity <= 2}">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa-stack fa-stack-1x severity-text ng-binding">{{alert.severity}}</i>
+                </span>
+                <a title="Collapse" href="#" ng-if="alert.expanded" ng-click="alert.expanded = false; $event.stopPropagation(); $event.preventDefault();"><span class="fa fa-chevron-up fa-1x" aria-hidden="true"></span></a>
+                <a title="Expand" href="#" ng-if="!alert.expanded" ng-click="alert.expanded = true; $event.stopPropagation(); $event.preventDefault();"><span class="fa fa-chevron-down fa-1x" aria-hidden="true"></span></a>
+            </td>
+            <td st-ratio="43">
+                <div class="alert-details">
+                  <div class="alert-header clearfix">
+                    <ng-letter-avatar ng-if="alert.assignee" class="pull-left" data="{{alert.assignee}}" charcount="2" dynamic="true" width="20" height="20" fontsize="10" avatarcustomborder="border:2px solid #cccccc;" shape="round"></ng-letter-avatar>
+                    <i data-ng-if="alert.acknowledged" class="fa fa-check-circle-o acknowledged-icon pull-left"></i>
+                    <h5 title="{{alert.brief}}" class="pull-left alert-title truncate" ng-bind-html="alert.brief | limitTo:100"></h5>
+                    
+                    <span class="alert-tag label label-primary pull-right" title="{{alert.ruleName}}">
+                        {{alert.ruleName}}
+                      </span>
+                  </div>
+                  <p ng-if="alert.expanded" ng-bind-html="alert.fullText"></p>
+                  <div ng-if="alert.expanded" class="alert-footer clearfix">
+                    <div class="alert-actions">
+                      <a ng-if="alert.occurrences > 0" href="#" title="View History" ng-click="alertsCtrl.requestHistory($event, alert._id); $event.stopPropagation(); $event.preventDefault();">{{alert.occurrences}} Alert(s) | </a>
+                      <a href="#" ng-if="!alert.acknowledged" ng-click="alertsCtrl.acknowledge($event, alert._id); $event.stopPropagation(); $event.preventDefault();">Acknowledge | </a>
+                      <a href="#" ng-click="alertsCtrl.assignToMe($event, alert._id); $event.stopPropagation(); $event.preventDefault();">Assign to me</a>
+                    </div>
+                  </div>
+                </div>
+                <alert-history alert-history-active="alert"></alert-history>
+            </td>
+            <td st-ratio="10">
+              <time ng-if="alert.expanded" title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ alert.createdAt | amCalendar:null:alertsCtrl.calendarFormatWithTime }}</time>
+              <time ng-if="!alert.expanded" title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ alert.createdAt | amCalendar:null:alertsCtrl.calendarFormat }}</time>
+            </td>
+            <td st-ratio="15">
+                <div ng-if="alert.expanded" class="bg-gray" ng-repeat="(key, tag) in alert.tags" title="{{tag}}">
+                      #{{tag}}
+                </div>
+                <div ng-if="!alert.expanded" class="bg-gray" ng-repeat="(key, tag) in alert.tags |limitTo:1" title="{{tag}}">
+                      #{{tag}}
+                </div>
+            </td>
+            <td st-ratio="10" title="{{alert.group}}" >{{alert.group}}</td>
+            <td st-ratio="10" title="{{alert.name}}" >{{alert.name}}</td>
+            <td st-ratio="5" title="{{ alert.state == 'C' ? 'Closed' : alert.state == 'N' ? 'New' : 'Update'}}" >{{alert.state}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8" class="text-center">
+              <div st-pagination="" st-items-by-page="alertsCtrl.numberOfPages" st-template="../static/js/components/stCustomPagination/stCustomPagination.html"></div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <!--<div ng-show='alertsCtrl.busy'>
+        <i class="fa fa-spinner"></i>Loading data...
+      </div>-->
+</div>    
+
+<div ng-show="alertsCtrl.busy != true && alertsCtrl.totals.total == 0" class="no-items">
+  <h3>No Alerts</h3>
+  <p>
+    You don't currently have any alerts this either mean's you aren't monitoring anything or that your systems are all 100% healthy!
+  </p>
+</div>
+
+<view-alert></view-alert>
+<add-alert></add-alert>
+<!-- Modal -->
+<button ng-show="false" id="modalButton" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #3c8dbc">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">{{ alertsCtrl.modal.title }}</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ alertsCtrl.modal.message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

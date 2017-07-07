@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h3 class="modal-title">Edit tags</h3>
+</div>
+<form name="editTagsForm" ng-submit="editTags(editTagsForm)">
+  <div class="modal-body">
+    <div class="form-group" ng-class="{'has-error':editTagsForm.$dirty && editTagsForm.tags.$invalid}">
+      <label class="control-label" for="tags">Tags: </label>
+      <ui-select multiple ng-model="editTagsForm.tags" theme="bootstrap" reset-search-input="true" close-on-select="true">
+        <ui-select-match allow-clear="true" ui-lock-choice="isSystem($item)" placeholder="Select Tags...">
+          {{$item.value}}
+           <a class="btn btn-xs btn-link pull-right" ng-click="clear($event, $select)"></a>
+        </ui-select-match>
+        <ui-select-choices repeat="tag in tags | propsFilter: {fields: [{ name: 'value', value: $select.search}]}">
+          <div ng-bind-html="tag.value | highlight: $select.search"></div>
+          <small>
+            Tag: {{tag.value}}
+            </small>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

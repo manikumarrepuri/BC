@@ -1,0 +1,41 @@
+global
+        log 127.0.0.1   local1
+        maxconn 4096
+        #chroot {{ haproxy_chroot }}
+        user {{ haproxy_user }}
+        group {{ haproxy_group }}
+        daemon
+        debug
+        #quiet
+
+defaults
+        log     global
+        mode    tcp
+        option  tcplog
+        retries 3
+        option redispatch
+        maxconn 2000
+        timeout connect 5000
+        timeout client 50000
+        timeout server 50000
+
+listen  stats
+        bind {{ haproxy_rmq_virtual_ip }}:{{ haproxy_stats_port }}
+        mode http
+        stats enable
+        stats hide-version
+        stats realm Haproxy\ Statistics
+        stats uri /
+
+listen aqmp_front
+        bind {{ haproxy_rmq_virtual_ip }}:{{ haproxy_rmq_node_port }}
+        mode            tcp
+        balance         roundrobin
+        timeout client  3h
+        timeout server  3h
+        option          clitcpka
+{% for host in groups[haproxy_rabbitmq_group] %}
+{% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+        server          rabbitmq{{ loop.index }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_rmq_node_port }}  check inter 5s rise 2 fall 3
+{% endif %}
+{% endfor %}

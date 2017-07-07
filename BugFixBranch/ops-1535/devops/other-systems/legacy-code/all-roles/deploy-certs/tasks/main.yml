@@ -1,0 +1,14 @@
+---
+- name: Configure dest
+  become: yes
+  file: path=/opt/itheon/
+        state=directory
+        mode=0777
+
+- name: Git clone cert repo
+  become: no
+  git: repo={{ itheonx_cert_repo }}
+       dest=/opt/itheon
+       version=develop
+       clone=yes
+       accept_hostkey=yes

@@ -1,0 +1,78 @@
+---
+# This first var is required for Ansible to run on Ubuntu 16.04
+# as it ships with Python 3 which is incompatible with Ansible.
+ansible_python_interpreter: /usr/bin/python2.7
+#
+#
+handler_git_repo: git@10.197.55.248:itheonx/rule-engine-handler.git
+handler_frontend_port: 80
+
+worker_git_repo: git@10.197.55.248:itheonx/rule-engine-worker.git
+
+receiver_git_repo: git@10.197.55.248:itheonx/rule-engine-receiver.git
+
+itheonx_rethinkdb_group: rethinkdb
+itheonx_rethinkdb_port: 28015
+itheonx_rethinkdb_master: "{{ hostvars[groups['rethinkdb'][0]].ansible_default_ipv4.address }}"
+itheonx_frontend_ip: 10.197.56.13
+itheonx_sinopia_server: http://10.197.55.249
+itheonx_redis_port: 6379
+itheonx_rethinkdb_master: 10.197.56.26
+itheonx_frontend_git_repo: "git@10.197.55.248:itheonx/itheon-10-frontend.git"
+itheonx_backend_git_repo: "git@10.197.55.248:itheonx/itheon-10-backend.git"
+itheonx_frontend_port: 3002
+itheonx_socket_port: 5000
+itheonx_backend_ip: 10.197.56.13
+itheonx_backend_port: 9443
+itheonx_sentinel_group: "redis-sentinel"
+itheonx_sentinel_port: 26379
+itheonx_receivers_group: receivers
+itheonx_dns: 10.187.9.1 10.187.9.2
+itheonx_haproxy_group: haproxy
+itheonx_haproxy_rmq_group: haproxy-rmq
+itheonx_redis_group: redis
+itheonx_handler_group: handlers
+itheonx_pubsub_git_repo: "git@10.197.55.248:itheonx/pub-sub-server.git"
+itheonx_website_address: trn-opserve.bluechip.co.uk
+itheonx_cert_repo: "git@10.197.55.248:itheonx/opserve-cert.git"
+
+pubsub_democracy_port: 12345
+pubsub_stats_port: 4000
+
+
+haproxy_receivers_port: 2919
+haproxy_stats_port: 8080
+haproxy_virtual_ip: 10.197.56.1
+
+haproxy_rabbitmq_group: rabbitmq
+haproxy_rmq_virtual_ip: 10.197.56.34
+haproxy_rmq_node_port: 5672
+
+haproxy_mcast: 225.0.0.1
+haproxy_ucast: # Passive address if active, Active address if passive
+haproxy_udp_port: 694
+
+vsphere_data_store_name: 'BCA_V7000_SAN_ITHEONDEV_01'
+vsphere_dest_directory: /opserve/terry
+vsphere_memory: 2048
+vsphere_cpu: 4
+vsphere_custom_spec: opserve-networking
+
+vsphere_template_small: /opserve/template-small-ub-16-04
+vsphere_template_full: /opserve/template-ub-16-04
+
+ssl: 443
+
+# available adapters as follows:
+#   - ens160 - .55 network
+#   - ens192 - .56 network
+#   - ens224 - .57 network
+
+network_interface: ens192
+network_address: "{{ inventory_hostname }}"
+network_netmask: "{{ ansible_default_ipv4.netmask }}"
+network_network: "{{ ansible_default_ipv4.network }}"
+network_broadcast: "{{ ansible_default_ipv4.broadcast }}"
+network_gateway: "{{ ansible_default_ipv4.gateway }}"
+network_hostname: "{{ ansible_nodename }}"
+network_dns_nameservers: 10.187.9.1 10.187.9.2

@@ -1,0 +1,18 @@
+---
+# To generate password hashes use the following command:
+#
+# $ python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('thisisthepassword')"
+#
+# To remove a user, set the state to absent.
+
+machine_users:
+  - {name: "willr", groups: "developers", state: "present", password: "$6$rounds=656000$92VYCNXSkBtUO1zc$MagdJHsPAxdNXkbY3k3CzNYyJnBAbQj/2MsA9SCY9MfwtHtpHcV.Mja9uY/xjqqRE5Y5N2kW3R4wHNUzV20R0/"}
+  - {name: "simond", groups: "developers", state: "present", password: "$6$rounds=656000$NXpMeDe92DPHTaAK$TUWksYXWjTUELvhlVy0JRXwwn.v6Tm4LIBRUadHkVV1j9rvtP2iRMVw4wWpl0iTrXcT39UNw9gBuTR.XBS6Ax."}
+  - {name: "peterg", groups: "developers", state: "absent"}
+  - {name: "terryn", groups: "developers", state: "absent"}
+  - {name: "tannyb", groups: "developers", state: "present", password: "$6$rounds=656000$EBCc66wLGg7gcL82$8mXzxnAXkvawso2U26KDczxIEfOXvLnaRD0X..W5XDyU02X5k/5jawq7AYDqCYzcNYjkB7PZq8x/GND/AX7TL."}
+  - {name: "marcelloc", groups: "developers", state: "present"}
+  - {name: "ansible", groups: "developers", state: "present"}
+  - {name: "sebastianb", groups: "developers", state: "present"}
+  - {name: "chrisg", groups: "developers", state: "present", password: "$6$rounds=656000$SxjRpM5acjNkMgZo$Ybyqj3aWia.dmeKcRN7V9Xr3CiJYtVBky4Dgqn4JMFEbzwHJKD0jZ72NlyZiow4g.yxlOW9cR7xRUG4Kk65YD0"}
+  - {name: "manik", groups: "developers", state: "present", password: "$6$rounds=656000$3nI1T2/UIu72BKL9$RubivjEclEIzpoczo1rKpmsC26IXr/Az.DU0ft0ujAKcLOiGZf1q/Rr/KSgmJdWA.GyL22kKY0Z3PeayD3Ynf."}

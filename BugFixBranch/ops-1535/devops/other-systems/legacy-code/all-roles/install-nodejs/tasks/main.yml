@@ -1,0 +1,34 @@
+---
+- name: Tweak dpkg
+  shell: yes | dpkg --configure -a
+  ignore_errors: true
+
+- name: Upgrade packages
+  apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Upgrade packages
+  shell: yes | apt-get -f install
+  ignore_errors: true
+
+- name: Install all npm dependencies
+  apt: name={{ item }}
+       state=latest
+       update_cache=yes
+       cache_valid_time=3600
+  with_items:
+    - build-essential
+    - openssl
+    - libssl-dev
+    - pkg-config
+
+- name: Add nodesource repository
+  shell: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+
+- name: Install all nodejs dependencies
+  apt: name=nodejs
+       state=latest
+       update_cache=yes
+       cache_valid_time=3600

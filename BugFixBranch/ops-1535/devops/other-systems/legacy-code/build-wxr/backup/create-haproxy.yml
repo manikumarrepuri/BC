@@ -1,0 +1,44 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: wxr-haproxy-active-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address_2: 10.197.56.102
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: wxr-haproxy-passive-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address_2: 10.197.56.103
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: wxr-haproxy-rmq-active-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address_2: 10.197.56.132
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: wxr-haproxy-rmq-passive-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address_2: 10.197.56.133

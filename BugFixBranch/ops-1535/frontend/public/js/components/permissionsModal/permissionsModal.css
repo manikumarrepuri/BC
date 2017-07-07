@@ -1,0 +1,7 @@
+.table-permissions tr span {
+  padding-right: 10px;
+}
+
+.table-permissions tr input {
+  margin: 0;
+}

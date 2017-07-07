@@ -1,0 +1,51 @@
+#################################################
+# Dependencies
+# ============
+#- name: Reconfigure VirtualBox
+#  command: dpkg-reconfigure virtualbox-dkms
+
+#- name: Install vSphere open vm tools
+#  apt: name=open-vm-tools
+#       update_cache=yes
+
+#- name: Install vSphere Vagrant plugin
+#  command: vagrant plugin install vagrant-vsphere
+#################################################
+
+- name: Create new Vagrant project directory
+  file: path={{ vagrant_project }}
+        state=directory
+        mode=0755
+
+- name: Check for Vagrantfile - delete if present
+  file: path={{ vagrant_project }}/Vagrantfile
+        state=absent
+
+# - name: Create vSphere dummy box
+#   command: vagrant box add {{ vagrant_box_name }} {{ vagrant_box_url }} --force
+#   args:
+#     chdir: "{{ vagrant_project }}"
+
+- name: Download vSphere dummy box configuration
+  command: vagrant init {{ config_vm_box }}
+  args:
+    chdir: "{{ vagrant_project }}"
+
+- name: remove default Vagrantfile
+  file: path={{ vagrant_project }}/Vagrantfile
+        state=absent
+
+- name: Deploy Vagrantfile
+  template: src=Vagrantfile.j2
+            dest={{ vagrant_project }}/Vagrantfile
+
+- name: Deploy VM
+  shell: vagrant up --provider=vsphere
+  ignore_errors: yes
+  args:
+    executable: /bin/bash
+    chdir: "{{ vagrant_project }}"
+
+# - name: Clearing {{ vagrant_project }}
+#   file: path={{ vagrant_project }}
+#         state=absent

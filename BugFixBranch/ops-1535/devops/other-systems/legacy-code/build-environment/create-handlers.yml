@@ -1,0 +1,60 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-handler1-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.10
+    - network_hostname: mxc-handler1-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-handler2-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.11
+    - network_hostname: mxc-handler2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-handler3-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.12
+    - network_hostname: mxc-handler3-ub-16-04

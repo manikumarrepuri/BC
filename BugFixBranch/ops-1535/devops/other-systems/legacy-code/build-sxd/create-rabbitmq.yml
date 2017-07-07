@@ -1,0 +1,60 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rabbitmq-master-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.158
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rabbitmq-slave1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.159
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rabbitmq-slave2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.160
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rabbitmq-slave3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.161
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rabbitmq-slave4-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.162

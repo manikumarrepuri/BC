@@ -1,0 +1,7 @@
+{
+  "frontendAPI": {
+    "host": "10.187.76.231",
+    "protocol": "http://",
+    "port": 3002
+  }
+}

@@ -1,0 +1,60 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-master-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - network_address: 10.197.55.126
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - network_address: 10.197.55.127
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - network_address: 10.197.55.128
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - network_address: 10.197.55.129
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave4-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - network_address: 10.197.55.130

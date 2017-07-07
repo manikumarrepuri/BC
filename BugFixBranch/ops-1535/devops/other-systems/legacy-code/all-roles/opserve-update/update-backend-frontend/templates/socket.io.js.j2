@@ -1,0 +1,7 @@
+app.factory('socket', function () {
+
+  "use strict";
+
+  console.log('Connecting to: https://{{ itheonx_website_address }}:{{ itheonx_socket_port }}');
+  return io.connect('https://{{ itheonx_website_address }}:{{ itheonx_socket_port }}');
+});

@@ -1,0 +1,35 @@
+---
+- name: Install OpServe
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: Run builder
+    shell: parallel.sh
+    args:
+      chdir: ../build-staging-vagrant-ip/
+
+# network
+  - include: ../installation-playbooks/network-group.yml
+
+# installing
+  - name: Rabbitmq, Redis, Rethinkdb
+    shell: parallel-install-1.sh
+    args:
+      chdir: ../build-staging-vagrant-ip/
+
+  - name: Befe, Receivers, HAProxy, Handlers, Workers
+    shell: parallel-install-2.sh
+    args:
+      chdir: ../build-staging-vagrant-ip/
+
+# change ip addresses
+  - name: Reconfigure network
+    shell: parallel-network.sh
+    args:
+      chdir: ../build-staging-vagrant-ip/
+
+# end screens
+  - name: End screens
+    shell: end-screens.sh
+    args:
+      chdir: ../build-staging-vagrant-ip/

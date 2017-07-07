@@ -1,0 +1,79 @@
+---
+- name: create nomad group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{nomad_user}}"
+- name: Check docker exists
+  stat:
+    path: "/etc/init.d/docker"
+  register: status_docker
+  changed_when: no
+- name: create nomad user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    groups: "{{item}},docker"
+  with_items:
+    - "{{nomad_user}}" 
+  register: restartnomad
+  when: status_docker.stat.exists
+- name: create nomad user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    groups: "{{item}}"
+  with_items:
+    - "{{nomad_user}}" 
+  register: restartnomad
+  when: not status_docker.stat.exists
+- name: Create nomad directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{nomad_user}}"
+    group: "{{nomad_user}}"
+  with_items:
+    - "/var/nomad/"
+    - "/etc/nomad.d/"
+    - "/run/nomad/"
+- name: Deploy server config file
+  template:
+    src: server.hcl.j2
+    dest: /etc/nomad.d/nomad.hcl
+    owner: "{{nomad_user}}"
+    group: "{{nomad_user}}"
+  when: nomad_deployment == "server"
+  register: restartnomad
+- name: Deploy client config file
+  template:
+    src: client.hcl.j2
+    dest: /etc/nomad.d/nomad.hcl
+    owner: "{{nomad_user}}"
+    group: "{{nomad_user}}"
+  when: nomad_deployment == "client"
+  register: restartnomad
+- name: Deploy nomad service file
+  template: 
+    src: nomad.service.j2
+    dest: "/etc/systemd/system/nomad.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: nomad
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable nomad.service"
+  when: nomad.changed
+- name: retstart nomad
+  service:
+    name: nomad
+    state: restarted
+  when: restartnomad.changed
+- name: Ensure nomad service is started.
+  service:
+    name: nomad
+    state: started

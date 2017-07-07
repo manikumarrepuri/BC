@@ -1,0 +1,42 @@
+{
+  "name": "itheon-subscriber",
+  "version": "1.6.2",
+  "publishConfig": {
+    "registry": "https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+  },
+  "files": [
+    "Readme.md",
+    "history.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --recursive tests/cases/",
+    "test-debug": "mocha --recursive tests/cases/ --debug-brk"
+  },
+  "dependencies": {
+    "amqplib": "^0.3.2",
+    "app-root-path": "^1.0.0",
+    "handlebars": "^4.0.5",
+    "itheon-config": "^2.0.1",
+    "itheon-entity": "^1.0.9",
+    "itheon-logger": "^1.0.0",
+    "itheon-module-alert-entity": "^1.0.3",
+    "itheon-service": "^3.0.3",
+    "itheon-utility": "^1.0.0",
+    "moment": "^2.12.0",
+    "nodemailer": "^2.3.0",
+    "request": "^2.69.0",
+    "require-all": "^2.0.0",
+    "simple-ssh": "^0.8.9",
+    "soap-as-promised": "^1.6.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-test": "^2.2.1",
+    "mocha": "^3.1.2",
+    "proxyquire": "^1.7.4",
+    "sinon": "^1.17.6",
+    "underscore": "^1.8.3"
+  }
+}

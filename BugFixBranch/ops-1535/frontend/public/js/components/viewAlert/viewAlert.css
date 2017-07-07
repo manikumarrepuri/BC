@@ -1,0 +1,17 @@
+.alert-sidebar dl {
+  margin-bottom: 0;
+}
+
+.alert-sidebar dl dd {
+  padding-bottom: 10px;
+}
+
+.severity-icon i.severity-text {
+  color: #fff !important;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.box {
+  width: 98%;
+}

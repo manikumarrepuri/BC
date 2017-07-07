@@ -1,0 +1,70 @@
+{
+  "certificate_paths": {
+    "ca" : "/opt/itheon/itheonChain.crt",
+    "cert" : "/opt/itheon/itheon.crt",
+    "key" : "/opt/itheon/itheon.key"
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : true,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "amqp": {
+    "connectionString": "amqp://guest:guest@localhost:32771"
+  },
+  "receiver" : {
+    "listenport": 2919
+  },
+  "redis": 
+    {
+      "host": "localhost",
+      "port": 32774,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+  "frontendApi": {
+    "host": "localhost:3002",
+    "protocol": "http://",
+    "port": "3002",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "ssl": false
+  },
+  "backend-api": {
+    "host": "localhost:9443",
+    "protocol": "http://",
+    "port": "9443",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "ssl": false
+  },
+  "mongo": {
+    "db": "mongodb://localhost:27017/testdb"
+  }
+}

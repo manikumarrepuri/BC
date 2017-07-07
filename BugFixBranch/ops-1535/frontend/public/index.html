@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>OpServe | Dashboard</title>
+  <base href="/">
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.5 -->
+  <link rel="stylesheet" href="/static/AdminLTE/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Fontello Custom Font -->
+  <link href="/static/css/fontello.css" rel="stylesheet" type="text/css" />
+
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="/static/css/font-awesome-badge.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/static/AdminLTE/dist/css/AdminLTE.min.css" type="text/css" />
+  <link rel="stylesheet" href="/static/AdminLTE/dist/css/skins/skin-blue.min.css" type="text/css" />
+
+  <!-- Stylesheets //-->
+  <link rel="stylesheet" type="text/css" href="/static/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/alerts/alerts.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/addAlert/addAlert.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/alertHistory/alertHistory.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/alertList/alertList.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/alertTable/alertTable.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/conditionBuilder/conditionBuilder.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/viewAlert/viewAlert.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/viewReminder/viewReminder.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/viewRule/viewRule.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/viewTag/viewTag.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/device/device.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/devices/devices.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/rules/rules.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/header/header.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/addUser/addUser.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/addReminder/addReminder.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/addTag/addTag.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/kanban/DlhSoft.Kanban.Angular.Components.css" />
+  <link rel="stylesheet" type="text/css" href="/static/js/components/deviceWizard/deviceWizard.css" />
+  <link rel="stylesheet" type="text/css" href="/static/js/components/permissionsModal/permissionsModal.css" />
+  <link rel="stylesheet" type="text/css" href="/static/js/components/agentRule/agentRule.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/addAgentRule/addAgentRule.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/tags/tags.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/tagModal/tagModal.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/multiSelectModal/multiSelectModal.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/tagGrid/tagGrid.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/tagTable/tagTable.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/users/users.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/reminders/reminders.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/scheduledReminders/scheduledReminders.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/search/search.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/ruleUpdater/ruleUpdater.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/ruleEditor/ruleEditor.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/components/progressBar/progressBar.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/directives/scrolly.css">
+  <link rel="stylesheet" type="text/css" href="/static/js/vendor/ui-select/dist/select.min.css">
+  <!--<link rel="stylesheet" type="text/css" href="/static/js/vendor/query-builder/css/query-builder.default.min.css">-->
+  <link rel="stylesheet" type="text/css" href="/static/js/vendor/smart-area/dist/smart-area.min.css">
+
+  <!-- iCheck -->
+  <link rel="stylesheet" type="text/css" href="/static/AdminLTE/plugins/iCheck/square/blue.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script type="text/javascript" src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" href="/static/css/fontello-ie7.css"><![endif]-->
+
+    <style>
+
+      body .atlwdg-trigger {
+        z-index: 10000;
+        position: fixed;
+        background: #367FA9;
+        padding: 5px;
+        border: 0px solid #367FA9;
+        border-top: none;
+        font-weight: inherit;
+        color: white !important;
+        display: block;
+        white-space: nowrap;
+        text-decoration: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        border-radius: 0 0 5px 5px;
+        transition: background .25s ease-in-out;
+      }
+
+      /* new section here */
+      body a#atlwdg-trigger:nth-of-type(3n) {
+        margin-left: 85px;
+      }
+
+      body a#atlwdg-trigger:hover {
+        background: orange;
+      }
+    </style>
+
+  <link rel="shortcut icon" type="image/png" href="/static/favicon.png"/>
+</head>
+<body class="skin-blue sidebar-mini" data-ng-app="itheonApp">
+    <div class="wrapper">
+    <app-header></app-header>
+    <app-menu style="min-height: 100%"></app-menu>
+
+    <div class="content-wrapper">
+      <!-- Main content -->
+      <section class="content">
+        <loading></loading>
+        <div ng-view class="main-page"></div>
+        <!-- Angular 2 <router-outlet></router-outlet> //-->
+      </section>
+      <!-- /.content -->
+    </div>
+
+    <app-footer></app-footer>
+  </div>
+
+  <a href="http://goo.gl/forms/DqgDQnhi5eaHeVBj2" id="atlwdg-trigger" class="atlwdg-trigger atlwdg-TOP" style="margin-left: -108px;" target="_blank">Feature Testing</a>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js" integrity="sha256-fiM0lX3OYzf0FfLBeLqFuCokh+rf1VhI/eanPbzldUM=" crossorigin="anonymous"></script>
+
+  <!-- jQuery 2.1.4 -->
+  <script type="text/javascript" src="/static/AdminLTE/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+  <!-- Bootstrap 3.3.5 -->
+  <script type="text/javascript" src="/static/AdminLTE/bootstrap/js/bootstrap.min.js"></script>
+  <!-- iCheck -->
+  <script type="text/javascript" src="/static/AdminLTE/plugins/iCheck/icheck.min.js"></script>
+
+  <!-- Vendors //-->
+  <script type="text/javascript" src="/static/js/vendor/underscore/underscore-min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular/angular.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-sanitize/angular-sanitize.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-route/angular-route.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/ng-letter-avatar/dist/ngletteravatar.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/moment/moment.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-moment/angular-moment.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/ui-select/dist/select.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/ngSticky/dist/sticky.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-bootstrap/ui-bootstrap.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-bootstrap-contextmenu/contextMenu.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-file-upload/dist/angular-file-upload.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-bindonce/bindonce.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/smart-area/dist/smart-area.min.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angularjs-camelCase-human/camelcase-browser.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/later/later.js"></script>
+  <!--<script type="text/javascript" src="/static/js/vendor/HTML5-Desktop-Notifications2/desktop-notify.js"></script>-->
+  <script type="text/javascript" src="/static/js/vendor/angular-web-notification/angular-web-notification.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/angular-smart-table/dist/smart-table.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/d3/d3.js"></script>
+
+  <!-- error stacktracing -->
+  <script type="text/javascript" src="/static/js/vendor/stackframe/stackframe.js"></script>
+  <script type="text/javascript" src="/static/js/vendor/error-stack-parser/error-stack-parser.js"></script>
+
+  <!-- jQuery Query Builder 2.3.2 -->
+  <script type="text/javascript" src="/static/js/vendor/jquery-extendext/jQuery.extendext.min.js"></script>
+  <!--<script type="text/javascript" src="/static/js/vendor/doT/doT.min.js"></script>-->
+  <!--<script type="text/javascript" src="/static/js/vendor/query-builder/js/query-builder.min.js"></script>-->
+  <!--<script type="text/javascript" src="/static/js/query-builder-itheonsearch.js"></script>-->
+
+  <!-- App //-->
+  <script type="text/javascript" src="/static/js/appRoutes.js"></script>
+  <script type="text/javascript" src="/static/js/app.js"></script>
+
+  <!-- Socket.io //-->
+  <script type="text/javascript" src="/static/js/services/socket.io.js"></script>
+
+  <!-- Controllers //-->
+  <script type="text/javascript" src="/static/js/controllers/modalController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/mainController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/alertsController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/devicesController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/remindersController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/rulesController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/ruleEditorsController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/ruleUpdatersController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/usersController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/userRolesController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/userRulesController.js"></script>
+  <script type="text/javascript" src="/static/js/controllers/tagsController.js"></script>
+
+  <!-- Models //-->
+  <script type="text/javascript" src="/static/js/models/selectionModel.js"></script>
+
+  <!-- Directives //-->
+  <script type="text/javascript" src="/static/js/directives/scrollyDirective.js"></script>
+  <script type="text/javascript" src="/static/js/directives/compileData.js"></script>
+  <script type="text/javascript" src="/static/js/directives/formSubmitter.js"></script>
+  <script type="text/javascript" src="/static/js/directives/selectOnClick.js"></script>
+  <script type="text/javascript" src="/static/js/directives/resize.js"></script>
+  <script type="text/javascript" src="/static/js/directives/stRatio.js"></script>
+  <script type="text/javascript" src="/static/js/directives/stPersist.js"></script>
+  <script type="text/javascript" src="/static/js/directives/stApplyFilter.js"></script>
+  <script type="text/javascript" src="/static/js/directives/stGetFilteredCollection.js"></script>
+  <script type="text/javascript" src="/static/js/directives/stResetSearch.js"></script>
+  
+  <!-- Services //-->
+  <script type="text/javascript" src="/static/js/services/agentRuleService.js"></script>
+  <script type="text/javascript" src="/static/js/services/laterService.js"></script>
+  <script type="text/javascript" src="/static/js/services/sharedService.js"></script>
+  <script type="text/javascript" src="/static/js/services/searchService.js"></script>
+  <script type="text/javascript" src="/static/js/services/sortService.js"></script>
+  <script type="text/javascript" src="/static/js/services/alertService.js"></script>
+  <script type="text/javascript" src="/static/js/services/filterService.js"></script>
+  <script type="text/javascript" src="/static/js/services/deviceService.js"></script>
+  <script type="text/javascript" src="/static/js/services/reminderService.js"></script>
+  <script type="text/javascript" src="/static/js/services/scheduledReminderService.js"></script>
+  <script type="text/javascript" src="/static/js/services/ruleService.js"></script>
+  <script type="text/javascript" src="/static/js/services/loginService.js"></script>
+  <script type="text/javascript" src="/static/js/services/sessionService.js"></script>
+  <script type="text/javascript" src="/static/js/services/tagService.js"></script>
+  <script type="text/javascript" src="/static/js/services/userService.js"></script>
+  <script type="text/javascript" src="/static/js/services/aclRoleService.js"></script>
+  <script type="text/javascript" src="/static/js/services/aclRuleService.js"></script>
+  <script type="text/javascript" src="/static/js/services/aclResourceService.js"></script>
+  <script type="text/javascript" src="/static/js/services/underscoreService.js"></script>
+  <!-- Filters //-->
+  <script type="text/javascript" src="/static/js/filters/commonFilters.js"></script>
+
+  <!-- Validators //-->
+  <script type="text/javascript" src="/static/js/validators/commonValidators.js"></script>
+
+  <!-- Components //-->
+  <script type="text/javascript" src="/static/js/components/overview/overviewDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/stAcknowledge/stAcknowledgeDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/stNumberRange/stNumberRangeDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/stCustomPagination/pageSelectDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/stDateRange/stDateRangeDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/kanban/DlhSoft.Kanban.Angular.Components.js"></script>
+  <script type="text/javascript" src="/static/js/components/loading/loadingDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/alerts/alertsDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addAlert/addAlertDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addRole/addRoleDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/alertList/alertListDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/alertTable/alertTableDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/alertHistory/alertHistoryDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addAgentRule/addAgentRuleDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/viewAlert/viewAlertDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/viewReminder/viewReminderDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/viewRule/viewRuleDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/viewTag/viewTagDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/conditionBuilder/conditionBuilderDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/device/deviceDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/devices/devicesDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addUser/addUserDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addReminder/addReminderDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/editReminder/editReminderDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/rules/rulesDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/users/usersDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/userRoles/userRolesDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/confirmModal/confirmModalDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/tags/tagsDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/tagGrid/tagGridDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/tagTable/tagTableDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/addTag/addTagDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/permissionsModal/permissionsModalDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/multiSelectBox/multiSelectBoxDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/multiSelectModal/multiSelectModalDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/selectBox/selectBoxDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/search/searchDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/header/headerDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/menu/menuDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/reminders/remindersDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/scheduledReminders/scheduledRemindersDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/progressBar/progressBarDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/footer/footerDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/ruleEditor/ruleEditorDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/ruleUpdater/ruleUpdaterDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/agentRule/agentRuleDirective.js"></script>
+  <script type="text/javascript" src="/static/js/components/deviceWizard/deviceWizardDirective.js"></script>
+
+
+  <!-- AdminLTE -->
+  <script type="text/javascript" src="/static/js/adminLTEapp.js"></script>
+
+  <script type="text/javascript">
+    jQuery.ajax({
+       url: "https://bluechip.atlassian.net/s/c5bc59cf9a95cded50af9db69ac623ee-T/-srycvj/72002/b6b48b2829824b869586ac216d119363/2.0.14/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-UK&collectorId=c6006fe6",
+       type: "get",
+       cache: true,
+       dataType: "script"
+    }).done(function() {
+      jQuery.ajax({
+         url: "https://bluechip.atlassian.net/s/c5bc59cf9a95cded50af9db69ac623ee-T/-srycvj/72002/b6b48b2829824b869586ac216d119363/2.0.14/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?locale=en-UK&collectorId=5c4cc1f9",
+         type: "get",
+         cache: true,
+         dataType: "script"
+      });
+    })
+
+  </script>
+</body>
+</html>

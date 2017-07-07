@@ -1,0 +1,22 @@
+{
+  "name": "itheon-config",
+  "version": "2.0.1",
+  "publishConfig": {
+    "registry": "http://10.187.76.250:80"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "nconf": "^0.8.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
+}

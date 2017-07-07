@@ -1,0 +1,7 @@
+/*
+ * Component: Control sidebar. By default, this is the right sidebar.
+ */
+
+ .add-agent-rule-sidebar .box-body {
+  min-height: 400px
+ }

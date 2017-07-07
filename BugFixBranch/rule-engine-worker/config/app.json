@@ -1,0 +1,60 @@
+{
+  "certificate_paths": {
+    "ca" : "/opt/itheon/cert/itheonChain.crt",
+    "cert" : "/opt/itheon/cert/itheon.crt",
+    "key" : "/opt/itheon/cert/itheon.key"
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "rethinkdb": {
+    "servers": [
+      {
+        "host": "192.168.99.100",
+        "port": 32797
+      }
+    ],
+    "db" : "itheon",
+    "replicas": 1
+  },
+  "redis": 
+    {
+      "host": "192.168.99.100",
+      "port": 32811,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+  "amqp": {
+    "connectionString": "amqp://guest:guest@192.168.99.100:32815",
+    "prefetch": 50
+  },
+  "mongo": {
+    "db": "mongodb://localhost:27017/Test"
+  }
+}

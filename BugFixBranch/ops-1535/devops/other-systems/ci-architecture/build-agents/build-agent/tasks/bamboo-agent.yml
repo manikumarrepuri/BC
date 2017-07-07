@@ -1,0 +1,104 @@
+---
+- name: Check if agent exists
+  stat:
+    path: "{{install_path}}/{{bamboo_version}}/bin/bamboo-agent.sh"
+  register: agent_exists
+
+- name: create application group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{bamboo_user}}"
+
+- name: create application user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    groups: "{{item}},docker,developers"
+  with_items:
+    - "{{bamboo_user}}"
+
+- name: create .ssh directory
+  file:
+    path: "/home/{{bamboo_user}}/.ssh/"
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+    mode: 0600
+    state: directory
+
+- name: deploy ssh key
+  template:
+    src: "{{item}}.j2"
+    dest: "/home/{{bamboo_user}}/.ssh/{{item}}"
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+    mode: 0600
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+
+- name: stop agent service
+  service:
+    name: bamboo-agent
+    state: stopped
+  when: agent_exists.stat.exists
+
+- name: Remove old agent directory
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "{{install_path}}"
+  when: (not agent_exists.stat.exists)
+
+- name: Create bamboo directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+  with_items:
+    - "{{install_path}}/{{bamboo_version}}"
+    - "/home/{{bamboo_user}}/.docker/"
+
+- name: Download agent jar.
+  get_url: 
+    url: "https://{{bamboo_fqdn}}/agentServer/agentInstaller/atlassian-bamboo-agent-installer-{{bamboo_version}}.jar"
+    dest: "/tmp/atlassian-bamboo-agent-installer.jar"
+    mode: 0777
+  when: (not agent_exists.stat.exists)
+
+- name: Installing Agent
+  shell: "java -Dbamboo.home={{install_path}}/{{bamboo_version}} -jar /tmp/atlassian-bamboo-agent-installer.jar https://{{bamboo_fqdn}}/agentServer/ install"
+  become: yes
+  become_user: "{{bamboo_user}}"
+  when: (not agent_exists.stat.exists)
+
+- name: Deploy agent service
+  template: 
+    src: bamboo-agent.service.j2
+    dest: "/etc/systemd/system/bamboo-agent.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: bamboo_agent_service
+
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable bamboo-agent.service"
+  when: bamboo_agent_service.changed
+
+- name: deploy docker auth config
+  template:
+    src: docker-config.json.j2
+    dest: "/home/{{bamboo_user}}/.docker/config.json"
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+
+- name: start agent service
+  service:
+    name: bamboo-agent
+    state: started

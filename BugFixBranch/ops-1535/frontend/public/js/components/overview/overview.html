@@ -1,0 +1,71 @@
+<style>
+  .links path {
+    fill: none;
+    stroke: #ccc;
+  }
+
+  svg {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 10px;
+  }
+</style>
+<script>
+  function getVisible() {
+    var $el = $('#overviewWrapper');
+    if ($el.length) {
+      $('#overviewWrapper').css('height', ($(window).height() - 150));
+      // $('#mySVG').css('margin-left', (-250));
+    }
+  }
+  $(window).on('scroll resize', getVisible);
+  getVisible();
+
+</script>
+<style>
+  .node circle {
+    fill: steelblue;
+    stroke-width: 1.5px;
+    stroke: #fff;
+  }
+
+  .node {
+    font: 12px sans-serif;
+  }
+
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-opacity: 0.6;
+    stroke-width: 1.5px;
+  }
+</style>
+<table ng-if="overviewCtrl.display=='table'" ng-show="false" id="filterTable" st-set-filter="customFilter" st-table="overviewCtrl.alerts">
+  <thead>
+    <tr>
+      <th>
+        <button ng-show="false" name="applyFiltersButton" id="applyFiltersButton" type="button" st-get-filtered-collection></button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="alert in overviewCtrl.alerts">
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<div class="box-header">
+</div>
+<div ng-show="overviewCtrl.allFilters.length > 0" style="overflow: auto;position: relative" id="overviewWrapper">
+  <svg id="mySVG" ng-attr-height="{{overviewCtrl.svgHeight}}" ng-attr-width="{{overviewCtrl.svgWidth + 40}}" style="padding-left:20px;">
+    <g class="wrapper">
+      <g class="links"></g>
+      <g class="nodes"></g>
+    </g>
+  </svg>
+</div>
+<div ng-if="overviewCtrl.busy == false && overviewCtrl.allFilters.length == 0" class="no-items" style="height:100%;width:100%;">
+  <h3>No persistent filter(s). </h3>
+  <p>
+    You don't currently have any filter(s) saved and there are no shared filter(s).
+  </p>
+</div>

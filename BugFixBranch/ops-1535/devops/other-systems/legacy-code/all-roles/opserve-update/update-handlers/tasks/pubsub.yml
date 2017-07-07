@@ -1,0 +1,20 @@
+---
+- name: Git clone OpServe pub/sub repo
+  become: no
+  git: repo={{ itheonx_pubsub_git_repo }}
+       dest=/opt/itheon/pub-sub-server
+       clone=yes
+       accept_hostkey=yes
+
+- name: Deploy pub/sub app.env.json template
+  template:
+    src: pubsub.app.env.json.j2
+    dest: "/opt/itheon/pub-sub-server/config/app.env.json"
+
+- name: npm install
+  command: npm install
+  args:
+    chdir: /opt/itheon/pub-sub-server
+
+- name: Run pm2 command to start pub-sub app.js
+  command: pm2 start /opt/itheon/pub-sub-server/app.js --name "pub-sub"

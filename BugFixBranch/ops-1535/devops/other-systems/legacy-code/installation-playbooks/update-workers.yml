@@ -1,0 +1,16 @@
+---
+- name: See RethinkDB group
+  hosts: rethinkdb
+  tasks: [ ]
+
+- name: See redis-sentinel group
+  hosts: redis-sentinel
+  tasks: [ ]
+
+- name: Configure worker nodes and dependencies
+  hosts: workers
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - update-worker

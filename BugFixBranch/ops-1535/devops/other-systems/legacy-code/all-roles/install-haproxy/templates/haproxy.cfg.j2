@@ -1,0 +1,76 @@
+global
+  stats socket /var/haproxy level admin
+  daemon
+
+defaults
+  log     global
+  mode    http
+  option  dontlognull
+  option  redispatch
+  option  tcp-smart-accept
+  option  tcp-smart-connect
+  retries 3
+  maxconn 2000000
+  timeout connect 5s
+  timeout queue 5s
+  timeout client 30s
+  timeout server 30s
+  timeout tunnel 1h
+  timeout http-request 5s
+  timeout http-keep-alive 15s
+
+frontend http-in
+  bind *:{{ itheonx_socket_port }}
+  mode tcp
+  default_backend websockets
+
+backend websockets
+  mode tcp
+  balance source
+  option ssl-hello-chk
+{% for host in groups[itheonx_handler_group] %}
+{% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+  server PubSub{{ loop.index }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ itheonx_socket_port }} check
+{% endif %}
+{% endfor %}
+
+listen frontend
+ bind {{ haproxy_virtual_ip }}:{{ ssl }}
+ mode tcp
+ balance roundrobin
+ option ssl-hello-chk
+ server server1 {{ itheonx_frontend_ip }}:{{ ssl }}
+
+listen frontendAPI
+  bind {{ haproxy_virtual_ip }}:{{ itheonx_frontend_port }}
+  mode tcp
+  balance roundrobin
+  option ssl-hello-chk
+  server server1 {{ itheonx_frontend_ip }}:{{ itheonx_frontend_port }}
+
+listen backendAPI
+  bind {{ haproxy_virtual_ip }}:{{ itheonx_backend_port }}
+  mode tcp
+  balance roundrobin
+  option ssl-hello-chk
+  server server1 {{ itheonx_backend_ip }}:{{ itheonx_backend_port }}
+
+listen Receivers
+  bind {{ haproxy_virtual_ip }}:{{ haproxy_receivers_port }}
+  mode tcp
+  balance roundrobin
+  maxconn 2000000
+{% for host in groups[itheonx_receivers_group] %}
+{% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+  server Receiver{{ loop.index }} {{ hostvars[host].ansible_default_ipv4.address }}:{{ haproxy_receivers_port }} check
+{% endif %}
+{% endfor %}
+
+listen stats
+  bind {{ haproxy_virtual_ip }}:{{ haproxy_stats_port }}
+  mode http
+  stats enable
+  stats hide-version
+  stats realm Haproxy\ Statistics
+  stats uri /
+  stats auth test:test

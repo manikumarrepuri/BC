@@ -1,0 +1,9 @@
+---
+vsphere_name: # Define name of VM in playbook
+vsphere_data_store_name: 'BCA_V7000_SAN_ITHEONDEV_01'
+vsphere_dest_directory: # define in /group_vars/all.yml
+vsphere_memory: 2048
+vsphere_template_name: #defined higher up
+network_address: # define
+vsphere_custom_spec:  # opserve-networking
+vsphere_adapter_number: # 2=55 3=56 4=57

@@ -1,0 +1,32 @@
+---
+- name: Set up Redis Master node
+  hosts: redis-master
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-redis
+
+- name: configure redis sentinel nodes
+  hosts: redis-sentinel
+  become: yes
+  remote_user: ansible
+  vars:
+    - redis_sentinel: true
+    - redis_sentinel_monitors:
+      - name: master01
+        host: "{{ hostvars[groups['redis-master'][0]].ansible_default_ipv4.address }}"
+        port: "{{ itheonx_redis_port }}"
+  roles:
+    - network-tuning
+    - install-redis
+
+- name: Set up Redis Slaves
+  hosts: redis-slaves
+  become: yes
+  remote_user: ansible
+  vars:
+    - redis_slaveof: "{{ hostvars[groups['redis-master'][0]].ansible_default_ipv4.address }} {{ itheonx_redis_port }}"
+  roles:
+    - network-tuning
+    - install-redis

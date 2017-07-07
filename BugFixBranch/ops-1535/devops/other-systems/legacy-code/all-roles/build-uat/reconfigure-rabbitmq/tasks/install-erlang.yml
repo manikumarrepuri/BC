@@ -1,0 +1,14 @@
+---
+- name: Add erlang apt key
+  apt_key: url=http://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+           state=present
+
+- name: Install erlang
+  apt: name=erlang
+       state=present
+       update_cache=yes
+
+- name: Install erlang-nox
+  apt: name=erlang-nox
+       state=present
+       update_cache=yes

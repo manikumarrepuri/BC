@@ -1,0 +1,32 @@
+{
+  "name": "itheon-entity",
+  "version": "1.4.3",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive --reporter spec tests/cases/",
+    "test-debug": "mocha --require tests/bootstrap.js --recursive --reporter spec tests/cases/ --debug-brk"
+  },
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "schema-inspector": "^1.6.4",
+    "itheon-logger": "^1.0.0",
+    "itheon-utility": "^1.0.0",
+    "itheon-error": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-config": "^2.0.0",
+    "itheon-module-device-entity": "^1.1.0",
+    "itheon-module-dummy-entity": "^1.0.3",
+    "itheon-test": "^2.1.1",
+    "mocha": "^2.4.5",
+    "proxyquire": "^1.7.4"
+  }
+}

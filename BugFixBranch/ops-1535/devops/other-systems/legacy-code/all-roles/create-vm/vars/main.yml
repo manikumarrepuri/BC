@@ -1,0 +1,11 @@
+---
+config_vm_box: atlas_shrugged/vsphere_dummy
+vsphere_host: 10.197.55.55
+vsphere_compute_resource_name: 'Itheon Development'
+vsphere_user:  ITHDEV.LOCAL\opserve
+vsphere_password: Op$3rv3!
+vsphere_insecure: true
+vagrant_box_url: https://atlas.hashicorp.com/atlas_shrugged/boxes/vsphere_dummy/versions/1.0.0/providers/vsphere.box
+vagrant_box_name: vsphere_dummy
+vsphere_data_store_name: 'BCA_V7000_SAN_ITHEONDEV_01'
+vagrant_project: /etc/vagrant/{{ vsphere_name }}

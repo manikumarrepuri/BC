@@ -1,0 +1,17 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto {{ network_interface }}
+iface {{ network_interface }} inet static
+        address {{ network_address }}
+        netmask {{ network_netmask }}
+        network {{ network_network }}
+        broadcast {{ network_broadcast }}
+        gateway {{ network_gateway }}
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers {{ network_dns_nameservers }}

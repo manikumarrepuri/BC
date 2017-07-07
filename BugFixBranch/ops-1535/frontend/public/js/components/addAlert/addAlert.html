@@ -1,0 +1,70 @@
+<aside class="add-alert-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Home tab content -->
+    <div class="tab-pane active">
+      <section class="content-header">
+        <h1>
+          Add New Alert
+          <i class="pull-right close fa fa-times-circle-o" ng-click="addAlertCtrl.toggleAlert()"></i>
+        </h1>
+      </section>
+
+      <!-- /Main content is here -->
+      <div>
+        <div class="box-primary">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="status update-success hide progress-bar-success"><span>Successfully added the alert {{addAlertCtrl.addAlertForm.alertname}}.</span></div>
+            <div class="status update-failed hide progress-bar-danger"><span>Failed to add the alert: {{addAlertCtrl.errorMessage}}.</span></div>
+            <div class="callout callout-danger" ng-show="addAlertForm.$submitted && addAlertForm.$invalid">
+              <div ng-show="addAlertForm.group.$invalid">Please provide a valid device group.</div>
+              <div ng-show="addAlertForm.name.$invalid">Please provide a valid host name.</div>
+              <div ng-show="addAlertForm.brief.$invalid">Please provide a brief description.</div>
+              <div ng-show="addAlertForm.full.$invalid">Please provide a full description.</div>
+              <div ng-show="addAlertForm.context.$invalid">Please provide a valid context.</div>
+              <div ng-show="addAlertForm.severity.$invalid">Please provide a severity.</div>
+            </div>
+
+            <form name="addAlertForm" ng-submit="addAlertCtrl.addAlert(addAlertForm)">
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.group.$invalid}">
+                <label class="control-label" for="group">Group: </label>
+                <input name="group" ng-model="addAlertCtrl.addAlertForm.group" placeholder="Device Group" autofocus required>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.name.$invalid}">
+                <label class="control-label" for="name">Name: </label>
+                <input name="name" ng-model="addAlertCtrl.addAlertForm.name" required placeholder="Device Name">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.brief.$invalid}">
+                <label class="control-label" for="brief">Brief: </label>
+                <input name="brief" ng-model="addAlertCtrl.addAlertForm.brief" required placeholder="Brief Description">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.fullText.$invalid}">
+                <label class="control-label" for="fullText">Full: </label>
+                <textarea name="fullText" ng-model="addAlertCtrl.addAlertForm.fullText" required placeholder="Full Description"></textarea>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.ruleName.$invalid}">
+                <label class="control-label" for="ruleName">Context: </label>
+                <input name="ruleName" ng-model="addAlertCtrl.addAlertForm.ruleName" required placeholder="Context ie. cpu_load">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAlertForm.$dirty && addAlertForm.severity.$invalid}">
+                <label class="control-label" for="severity">Severity: </label>
+                <input name="severity" ng-model="addAlertCtrl.addAlertForm.severity" required type="number" min="0" max="10" placeholder="Severity">
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Alert</button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+      </div>
+      <!-- /Main content ends here -->
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

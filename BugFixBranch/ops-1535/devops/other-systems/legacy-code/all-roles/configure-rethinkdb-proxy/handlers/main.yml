@@ -1,0 +1,5 @@
+---
+
+- name: restart rethinkdb-proxy
+  become: yes
+  service: name=rethinkdb-proxy state=restarted

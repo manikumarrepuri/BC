@@ -1,0 +1,27 @@
+---
+- name: Tweak dpkg
+  shell: yes | dpkg --configure -a
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get upgrade
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get -f install
+  ignore_errors: true
+
+- name: Install Git
+  apt: name=git
+       update_cache=yes
+       state=latest
+
+- name: Deploy bash script to enable git cloning
+  template: src=git-config.sh.j2
+            dest=/home/{{ ansible_ssh_user }}/git-config.sh
+            force=yes
+
+- name: Run bash script
+  command: bash git-config.sh
+  args:
+    chdir:/home/{{ ansible_ssh_user }}

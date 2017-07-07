@@ -1,0 +1,27 @@
+#
+keepalive 2
+#
+#       deadtime: seconds-to-declare-host-dead
+#
+deadtime 10
+#
+#       What UDP port to use for udp or ppp-udp communication?
+#
+udpport        {{ haproxy_udp_port }}
+bcast  {{ network_interface }}
+mcast {{ network_interface }} {{ haproxy_mcast }} 694 1 0
+ucast {{ network_interface }} {{ haproxy_ucast }}
+#       What interfaces to heartbeat over?
+udp     {{ network_interface }}
+#
+#       Facility to use for syslog()/logger (alternative to log/debugfile)
+#
+logfacility     local0
+#
+#       Tell what machines are in the cluster
+#       node    nodename ...    -- must match uname -n
+{% for host in groups[itheonx_haproxy_rmq_group] %}
+{% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+node    {{ hostvars[host]['ansible_nodename'] }}
+{% endif %}
+{% endfor %}

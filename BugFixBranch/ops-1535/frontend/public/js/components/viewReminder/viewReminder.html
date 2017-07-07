@@ -1,0 +1,41 @@
+<aside scrolly class="view-reminder-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content" *ng-if="selected">
+    <!-- Home tab content -->
+    <div class="tab-pane active" ng-if="reminderCtrl.reminder">
+      <h2>
+        <span class="light">{{reminderCtrl.reminder.name}}</span>
+        <span class="padding-right-20">{{reminderCtrl.reminder.value}}</span>
+        <i class="pull-right close fa fa-times-circle-o" ng-click="reminderCtrl.toggleReminderDetails()"></i>
+      </h2>
+
+      <h3 class="module-sidebar-heading">Reminder Details</h3>
+
+      <dl>
+        <dt>Date</dt>
+        <dd>{{reminderCtrl.reminder.createdAt | date : 'h:mm:ss a on d MMM y '}}</dd>
+        <dt>State</dt>
+        <dd>{{reminderCtrl.reminder.state.name}}</dd>
+        <dt>Group</dt>
+        <dd>{{reminderCtrl.reminder.group.name}}</dd>
+        <dt>Brief Description</dt>
+        <dd compile-data template="{{reminderCtrl.reminder.briefText}}" controller="reminderCtrl"></dd>
+        <dt>Full Description</dt>
+        <dd compile-data template="{{reminderCtrl.reminder.fullText}}" controller="reminderCtrl"></dd>
+        <dt>Assigned To</dt>
+        <dd>
+          {{reminderCtrl.reminder.assignedResource.username}}
+        </dd>
+      </dl>
+      <!-- /.control-sidebar-menu -->
+    </div>
+    <!-- /.tab-pane -->
+
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>
+<form-submitter></form-submitter>

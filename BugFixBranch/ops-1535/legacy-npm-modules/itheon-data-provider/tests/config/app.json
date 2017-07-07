@@ -1,0 +1,38 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : false,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "http": {
+    "hostname": "10.187.76.204",
+    "host": "10.187.76.204:8080",
+    "port": 8080,
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

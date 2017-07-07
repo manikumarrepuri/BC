@@ -1,0 +1,28 @@
+<style>
+  .select-page {
+  width: 50px;
+  text-align: center;
+}
+.pagination li a input {
+  padding: 0;
+  margin: -5px 0;
+}
+.buttons{
+  background-color: #3c8dbc;
+  color:#fff;
+  cursor: pointer;
+}
+</style>
+<nav ng-if="pages.length >= 1" style="padding-top: 20px;margin: 0px">
+  <ul class="pagination" style="padding: 0px;margin: 0px">
+    <li><a style="background-color: #3c8dbc;color:#fff;">Total :</a></li>
+    <li><a>{{totalItemCount}}</a></li>
+  </ul>
+  <ul class="pagination" style="padding: 0px;margin: 0px">
+    <li><a ng-click="selectPage(1)" style="background-color: #3c8dbc;color:#fff;cursor: pointer;">First</a></li>
+    <li><a ng-click="selectPage(currentPage - 1)" style="cursor: pointer;">&lt;</a></li>
+    <li><a><page-select></page-select> of {{numPages}}</a></li>
+    <li><a ng-click="selectPage(currentPage + 1)"style="cursor: pointer;">&gt;</a></li>
+    <li><a ng-click="selectPage(numPages)"  style="background-color: #3c8dbc;color:#fff;cursor: pointer;">Last</a></li>
+  </ul>
+</nav>

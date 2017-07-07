@@ -1,0 +1,2 @@
+---
+- include: terraform-vm-deploy.yml

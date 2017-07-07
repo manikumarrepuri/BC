@@ -1,0 +1,4 @@
+---
+vagrant_box_url: https://atlas.hashicorp.com/atlas_shrugged/boxes/vsphere_dummy/versions/1.0.0/providers/vsphere.box
+vsphere_dummy_dir: /etc/vagrant/dummy
+vagrant_box_name: vsphere_dummy

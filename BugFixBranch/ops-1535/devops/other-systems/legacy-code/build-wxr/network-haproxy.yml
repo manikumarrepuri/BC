@@ -1,0 +1,56 @@
+---
+- name: configure network
+  hosts: 10.197.55.102
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.2
+    - network_hostname: staging-haproxy-active-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.103
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.3
+    - network_hostname: staging-haproxy-passive-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.132
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.32
+    - network_hostname: staging-haproxy-rmq-active-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.133
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.33
+    - network_hostname: staging-haproxy-rmq-passive-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0

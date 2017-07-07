@@ -1,0 +1,7 @@
+network_address: # define in playbook 10.187.75.82
+network_netmask: 255.255.255.0
+network_network: 10.197.55.0
+network_broadcast: 10.197.55.255
+network_gateway: 10.197.55.254
+network_dns_nameservers: 10.187.9.1 10.187.9.2
+network_hostname: # define in playbook

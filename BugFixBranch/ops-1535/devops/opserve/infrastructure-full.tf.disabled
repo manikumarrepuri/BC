@@ -1,0 +1,272 @@
+variable "environment_identifier" {}
+
+variable "datastore" {
+  default = "BCA_V7000_SAN_ITHEONDEV_02"
+}
+
+variable "host_counts" {
+  type = "map"
+
+  default = {
+    # Supporting Infra
+    rabbitmq        = 1 # large vm, full cluster = 5+
+    rethinkdb       = 1 # large vm, full cluster = 5+
+    redis-master    = 1 # always one
+    redis-slaves    = 1 # full cluster - 3
+    redis-sentinels = 1 # full cluster - 2
+    haproxy         = 1 # usually 2
+
+    # Microservices
+    backend-frontend = 1
+    handlers         = 1
+    workers          = 1
+    receivers        = 1
+  }
+}
+
+variable "network_settings" {
+  type = "map"
+
+  default = {
+    ipv4_prefix_length = "24"
+  }
+}
+
+module "shared-config" {
+  source = "../shared/terraform"
+}
+
+provider "vsphere" {
+  user           = "${module.shared-config.vsphere_user}"
+  password       = "${module.shared-config.vsphere_password}"
+  vsphere_server = "${module.shared-config.vsphere_server}"
+
+  # if you have a self-signed cert
+  allow_unverified_ssl = true
+}
+
+variable "dns_servers" {
+  default = "${module.shared-config.appdev_dns}"
+}
+
+variable "small_storage_template" {
+  default = "opserve/template-small-ub-16-04"
+}
+
+variable "large_storage_template" {
+  default = "opserve/template-ub-16-04"
+}
+
+resource "vsphere_folder" "opserve" {
+  path       = "opserve/${var.environment_identifier}"
+  datacenter = "AR Itheon Development"
+}
+
+resource "vsphere_virtual_machine" "rabbitmq" {
+  count      = "${var.host_counts["rabbitmq"]}"
+  name       = "${var.environment_identifier}-rabbitmq${count.index + 1}"
+  vcpu       = 4
+  memory     = 4096
+  datacenter = "AR Itheon Development"
+  folder     = "${vsphere_folder.opserve.path}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.large_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "rethinkdb" {
+  count       = "${var.host_counts["rethinkdb"]}"
+  name        = "${var.environment_identifier}-rethinkdb${count.index + 1}"
+  vcpu        = 4
+  memory      = 8192
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.large_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "redis-master" {
+  count       = "${var.host_counts["redis-master"]}"
+  name        = "${var.environment_identifier}-redis-master${count.index + 1}"
+  vcpu        = 4
+  memory      = 8192
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "redis-slaves" {
+  count       = "${var.host_counts["redis-slaves"]}"
+  name        = "${var.environment_identifier}-redis-slave${count.index + 1}"
+  vcpu        = 4
+  memory      = 8192
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "redis-sentinels" {
+  count       = "${var.host_counts["redis-sentinels"]}"
+  name        = "${var.environment_identifier}-redis-sentinel${count.index + 1}"
+  vcpu        = 4
+  memory      = 8192
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "haproxy" {
+  count       = "${var.host_counts["haproxy"]}"
+  name        = "${var.environment_identifier}-haproxy${count.index + 1}"
+  vcpu        = 4
+  memory      = 4096
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "backend-frontend" {
+  count       = "${var.host_counts["backend-frontend"]}"
+  name        = "${var.environment_identifier}-befe${count.index + 1}"
+  vcpu        = 4
+  memory      = 4096
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "handlers" {
+  count       = "${var.host_counts["handlers"]}"
+  name        = "${var.environment_identifier}-handler${count.index + 1}"
+  vcpu        = 2
+  memory      = 4096
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "workers" {
+  count       = "${var.host_counts["workers"]}"
+  name        = "${var.environment_identifier}-worker${count.index + 1}"
+  vcpu        = 2
+  memory      = 4096
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}
+
+resource "vsphere_virtual_machine" "receivers" {
+  count       = "${var.host_counts["receivers"]}"
+  name        = "${var.environment_identifier}-receiver${count.index + 1}"
+  vcpu        = 2
+  memory      = 4096
+  datacenter  = "AR Itheon Development"
+  folder      = "${vsphere_folder.opserve.path}"
+  dns_servers = "${var.dns_servers}"
+
+  network_interface {
+    label        = "AR_Itheon_PreProd_178"
+    ipv4_gateway = "10.197.56.254"
+  }
+
+  disk {
+    template  = "${var.small_storage_template}"
+    datastore = "${var.datastore}"
+    type      = "thin"
+  }
+}

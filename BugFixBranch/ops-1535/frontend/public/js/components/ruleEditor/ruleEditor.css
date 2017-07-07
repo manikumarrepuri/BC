@@ -1,0 +1,6 @@
+.btn-bold {
+  height: 20px;
+  min-width: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}

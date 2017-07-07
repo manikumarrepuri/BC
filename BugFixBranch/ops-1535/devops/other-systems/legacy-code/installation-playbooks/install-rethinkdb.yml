@@ -1,0 +1,9 @@
+---
+- name: Install RethinkDB on target machine
+  hosts: rethinkdb
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-rethinkdb
+    - configure-rethinkdb

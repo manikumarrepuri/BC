@@ -1,0 +1,17 @@
+---
+- name: Tweak dpkg
+  shell: yes | dpkg --configure -a
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get upgrade
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get -f install
+  ignore_errors: true
+  
+- name: Install nginx
+  apt: name=nginx
+       state=latest
+       update_cache=yes

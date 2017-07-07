@@ -1,0 +1,35 @@
+---
+- name: See group
+  hosts: receivers
+  tasks: [ ]
+
+- name: See group
+  hosts: handlers
+  tasks: [ ]
+
+- name: Install HAProxy
+  hosts: haproxy
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-heartbeat
+    - install-haproxy
+
+- name: Configure Active
+  hosts: haproxy-active
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-haproxy-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-passive'][0]].ansible_default_ipv4.address }}"
+
+- name: Configure Passive
+  hosts: haproxy-passive
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-haproxy-active-passive
+  vars:
+    - haproxy_ucast: "{{ hostvars[groups['haproxy-active'][0]].ansible_default_ipv4.address }}"

@@ -1,0 +1,103 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "rethinkdb": {
+    "servers": [
+      {
+        "host" :  "10.187.76.223",
+        "port" : 28015
+      },
+     {
+        "host" :  "10.187.76.224",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.225",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.226",
+        "port" : 28015
+      },
+      {
+        "host" :  "10.187.76.227",
+        "port" : 28015
+      }
+    ],
+    "db" : "itheon",
+    "replicas": 5
+  },
+  "redis": [
+    {
+      "host": "10.187.76.217",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+    {
+      "host": "10.187.76.218",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+    {
+      "host": "10.187.76.219",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+    {
+      "host": "10.187.76.220",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+    {
+      "host": "10.187.76.221",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+    {
+      "host": "10.187.76.222",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    }
+  ],
+  "server" : {
+    "port": 8080
+  }
+}

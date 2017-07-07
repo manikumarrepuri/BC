@@ -1,0 +1,51 @@
+
+upstream crowd {
+  server 127.0.0.1:{{http_port}};
+}
+
+server {
+	listen 80;
+	listen [::]:80;
+	server_name {{fqdn}};
+	return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443;
+    
+    ssl on;
+
+    server_name         {{fqdn}};
+    ssl_certificate     /etc/ssl/{{fqdn}}.crt;
+    ssl_certificate_key /etc/ssl/{{fqdn}}.key;
+    ssl_trusted_certificate /etc/ssl/appdev.ca.cer;
+    client_max_body_size 10M;
+
+    rewrite ^/$ /crowd/ redirect;
+
+    location / {
+
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+
+        proxy_pass http://crowd;
+        proxy_redirect http://crowd $scheme://$host;
+        client_max_body_size 10M;
+
+        port_in_redirect off;
+
+        proxy_connect_timeout       30000;
+        proxy_send_timeout          30000;
+        proxy_read_timeout          30000;
+        send_timeout                30000;
+
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+    }
+}

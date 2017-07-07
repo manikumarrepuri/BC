@@ -1,0 +1,65 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rethinkdb-master-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - vsphere_cpu: 8
+    - network_address_1: 10.197.55.170
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rethinkdb-slave1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - vsphere_cpu: 8
+    - network_address_1: 10.197.55.171
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rethinkdb-slave2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - vsphere_cpu: 8
+    - network_address_1: 10.197.55.172
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rethinkdb-slave3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - vsphere_cpu: 8
+    - network_address_1: 10.197.55.173
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-rethinkdb-slave4-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_full }}"
+    - vsphere_memory: 8192
+    - vsphere_cpu: 8
+    - network_address_1: 10.197.55.174

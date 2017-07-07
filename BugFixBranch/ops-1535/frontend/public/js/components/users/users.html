@@ -1,0 +1,83 @@
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button class="add btn btn-bar bg-teal btn-flat" ng-click="usersCtrl.addUser()">
+      <i class="fa fa-plus"></i> <strong>User</strong>
+    </button>
+  </div>
+  <app-search service="usersCtrl.service"></app-search>
+</div>
+
+<div class="box user-box">
+  <div sticky offset="85" class="box-header">
+    <h3 class="box-title">
+      <span class="label label-default">{{usersCtrl.totals.total}}</span> Users
+    </h3>
+  </div>
+  <div class="delete-success hide alert alert-success"><span>Successfully deleted the user.</span></div>
+  <div class="delete-failed hide alert alert-danger"><span>Failed to delete the user: {{userCtrl.errorMessage}}.</span></div>
+  <div class="box-body table-responsive no-padding" infinite-scroll="usersCtrl.loadMore()" infinite-scroll-distance="1">
+    <table class="table table-fixed table-striped table-bordered table-hover table-users">
+      <thead sticky offset="123" >
+        <tr>
+          <th class='hover col-xs-2' data-ng-click="usersCtrl.service.sort('username')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': usersCtrl.options.orderBy == 'username' && !usersCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': usersCtrl.options.orderBy == 'username' && usersCtrl.options.orderASC}">
+            </i>
+            Username
+          </th>
+          <th class='hover col-xs-4' data-ng-click="usersCtrl.service.sort('email')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': usersCtrl.options.orderBy == 'email' && !usersCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': usersCtrl.options.orderBy == 'email' && usersCtrl.options.orderASC}">
+            </i>
+            Email
+          </th>
+          <th class='hover col-xs-2' data-ng-click="usersCtrl.service.sort('title')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': usersCtrl.options.orderBy == 'title' && !usersCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': usersCtrl.options.orderBy == 'title' && usersCtrl.options.orderASC}">
+            </i>
+            Title
+          </th>
+          <th class='hover col-xs-2' data-ng-click="usersCtrl.service.sort('role')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': usersCtrl.options.orderBy == 'role' && !usersCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': usersCtrl.options.orderBy == 'role' && usersCtrl.options.orderASC}">
+            </i>
+            Roles
+          </th>
+          <th class="col-xs-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+            context-menu="usersCtrl.menuOptions"
+            ng-repeat="user in usersCtrl.users track by user.id"
+            selection-model
+            selection-model-mode="'multiple'"
+            selection-model-selected-items="usersCtrl.selected"
+            selection-model-selected-class="'row-selected'">
+          <td class="col-xs-2">{{user.username}}</td>
+          <td class="col-xs-4">{{user.email}}</td>
+          <td class="col-xs-2">{{user.title}}</td>
+          <td class="col-xs-2">{{user.roles}}</td>
+          <td class="btn-group col-xs-2">
+            <a class="btn btn-primary" href="#"><i class="fa fa-cog fa-fw"></i> Actions</a>
+             <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+               <span class="fa fa-caret-down"></span>
+             </a>
+             <ul class="dropdown-menu"  role="menu">
+               <!--  <li><a href="#"><i class="fa fa-pencil fa-fw"></i> Edit</a></li> //-->
+               <li><a ng-click="usersCtrl.confirmDeleteUser(user)"><i class="fa fa-trash-o fa-fw"></i> Delete</a></li>
+               <li><a ng-click="usersCtrl.editRoles(user)"><i class="fa fa-wrench fa-fw"></i> Edit roles</a></li>
+               <!--
+                 <li class="divider"></li>
+                 <li><a href="#"><i class="i"></i> Make admin</a></li>
+               //-->
+             </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<add-user></add-user>
+<confirm-modal></confirm-modal>
+<multi-select-modal></multi-select-modal>

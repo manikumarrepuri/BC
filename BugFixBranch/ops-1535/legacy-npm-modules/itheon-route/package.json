@@ -1,0 +1,24 @@
+{
+  "name": "itheon-route",
+  "version": "3.0.7",
+  "publishConfig": {
+    "registry":"https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "itheon-error": "^1.0.0",
+    "itheon-logger": "^1.0.0",
+    "itheon-utility": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
+}

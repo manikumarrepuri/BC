@@ -1,0 +1,3 @@
+---
+- name: bamboo setup
+  include: bamboo.yml

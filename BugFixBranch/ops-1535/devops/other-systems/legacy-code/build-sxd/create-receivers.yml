@@ -1,0 +1,11 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-receiver1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address_1: 10.197.55.154

@@ -1,0 +1,25 @@
+---
+- name: ensure the ansible launchpad apt repository key is present
+  apt_key:
+    id: "93C4A3FD7BB9C367"
+    keyserver: hkp://keyserver.ubuntu.com:80
+    state: present
+  register: aptrepo
+
+- name: ensure the ansible launchpad apt repository is present
+  apt_repository:
+    repo: 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main'
+    state: present
+  register: aptrepo
+
+- name: update package cache
+  apt:
+    update_cache: yes
+  when: aptrepo.changed
+
+- name: install ansible
+  apt:
+    name: ansible
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600

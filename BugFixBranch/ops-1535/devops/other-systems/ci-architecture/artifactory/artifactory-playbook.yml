@@ -1,0 +1,75 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts : all
+  become: yes
+  vars:
+    nginx_config_items:
+      - {name: "artifactory", src: "nginx-artifactory.j2"}
+    fqdn: artifactory.appdev.bluechipdomain.co.uk
+    docker_fqdn: docker.appdev.bluechipdomain.co.uk
+    certificate_items:
+      - {src: "wildcard.appdev.bundle.crt", dest: "/etc/ssl/{{fqdn}}.crt"}
+      - {src: "wildcard.appdev.key", dest: "/etc/ssl/{{fqdn}}.key"}
+      - {src: "wildcard.appdev.bundle.crt", dest: "/etc/ssl/{{docker_fqdn}}.crt"}
+      - {src: "wildcard.appdev.key", dest: "/etc/ssl/{{docker_fqdn}}.key"}
+  roles:
+   - role: ../../../shared/ansible/common
+   - role: ../../../shared/ansible/ssl-certificates
+   - role: ../../../shared/ansible/nginx
+
+- hosts: artifactory
+  become: yes
+  tasks:
+  - name: Install OpenJDK
+    apt:
+      name: openjdk-8-jre
+      state: present
+      cache_valid_time: 3600
+
+  - name: Add paid Artifactory APT repository.
+    apt_repository:
+      repo: deb https://jfrog.bintray.com/artifactory-pro-debs {{ansible_lsb.codename}} main
+      state: present
+    register: aptrepo
+
+  - name: Remove OSS Artifactory APT repository.
+    apt_repository:
+      repo: deb https://jfrog.bintray.com/artifactory-debs {{ansible_lsb.codename}} main
+      state: absent
+    register: aptrepo
+
+  - name: Add apt public key.
+    apt_key:
+      url: "https://bintray.com/user/downloadSubjectPublicKey?username=jfrog"
+      state: present
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+    when: aptrepo.changed
+
+  - name: Remove artifactory OSS
+    apt:
+      name: jfrog-artifactory-oss
+      state: absent
+
+  - name: Install artifactory pro
+    apt:
+      name: jfrog-artifactory-pro
+      state: present
+
+  - name: Install artifactory license.
+    template:
+      src: artifactory.lic.j2
+      dest: /var/opt/jfrog/artifactory/etc/artifactory.lic
+
+  - name: Ensure artifactory service is running.
+    service:
+      name: artifactory
+      state: started

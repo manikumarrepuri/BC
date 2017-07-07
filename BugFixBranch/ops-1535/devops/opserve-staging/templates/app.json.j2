@@ -1,0 +1,105 @@
+{% set opserve_hostname = hostvars[groups['loadbalancer'][0]]['ansible_hostname'] %}
+{% set opserve_fqdn = [opserve_hostname, appdev_domain_suffix] | join('.') %}
+{% set rabbitmq_address = hostvars[groups['rabbitmq'][0]]['ansible_default_ipv4']['address'] %}
+{% set mongo_address = hostvars[groups['mongodb'][0]]['ansible_default_ipv4']['address'] %}
+{% set redis_address = hostvars[groups['redis'][0]]['ansible_default_ipv4']['address'] %}
+
+{
+  "certificate_paths": {
+    "ca" : "/opt/itheon/certs/appdev.ca.cer",
+    "cert" : "/opt/itheon/certs/wildcard.appdev.crt",
+    "key" : "/opt/itheon/certs/wildcard.appdev.key"
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "log2gelf": {
+        "name": "Graylog",
+        "enabled" : true,
+        "level": "error",
+        "silent": false,
+        "handleExceptions": true,
+        "host": "{{graylog_fqdn}}",
+        "port": 8080,
+        "protocol": "http"
+      }
+    }
+  },
+  "amqp": {
+    "connectionString": "amqp://test:test@{{rabbitmq_address}}?heartbeat=5"
+  },
+  "mongo": {
+    "db": "mongodb://{{mongo_address}}:27017/itheon"
+  },
+  "rethinkdb": {
+    "servers": [
+      {% for host in groups['rethinkdb'] %}
+      {
+        "host" :  "{{hostvars[host]['ansible_default_ipv4']['address']}}",
+        "port" : 28015
+      }
+      {% if not loop.last %}
+      ,
+      {% endif %}
+      {% endfor %}
+    ],
+    "db" : "itheon",
+    "replicas": 1
+  },
+  "redis": {
+      "host": "{{redis_address}}",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+  },
+  "server" : {
+    "protocol": "http",
+    "ssl": false,
+    "port": {{opserve_backend_port}}
+  },
+  "receiver" : {
+    "listenport" : 2919
+   },
+  "backend-api": {
+    "hostname": "{{opserve_fqdn}}",
+    "host": "{{opserve_fqdn}}:{{opserve_backend_port}}",
+    "port": {{opserve_backend_port}},
+    "ssl": true,
+    "strictSSL" : false,
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  "express": {
+    "port" : 3002
+  },
+  "socket.io": {
+    "port": {{opserve_pubsub_port}},
+    "ssl" : false
+  },
+  "session": {
+    "secret": "10f4ca0256bed83fcc7d853c227958944981c13f"
+  },
+  "authentication": {
+    "secret": "1244sdklf^&*$#@hasdjkl35345346533!!$%^&*$#@"
+  },
+  "frontendApi": {
+    "host": "{{opserve_fqdn}}",
+    "protocol": "https://",
+    "strictSSL" : false,
+    "port": 443,
+    "ssl" : true,
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

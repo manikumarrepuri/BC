@@ -1,0 +1,9 @@
+before_script:
+  - node --version
+  - npm --version
+  - npm set registry http://10.187.76.250
+  - npm install
+
+nodeunit:
+  script:
+    - npm test

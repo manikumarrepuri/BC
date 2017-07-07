@@ -1,0 +1,1 @@
+terraform init -get=true -backend-config="username=opserve-devops" -backend-config="password=qt5lZEJDH31TpZHdtLFnaHBVB" -backend-config="url=http://artifactory.appdev.bluechipdomain.co.uk/" -backend-config="repo=terraform-state" -backend-config="subpath=build-agents"

@@ -1,0 +1,65 @@
+---
+- include: user-management.yml
+
+- stat:
+    path: /dev/template-lvm-vg/root
+  register: vgroup
+
+- name: detect new virtual disks
+  command: "echo '- - -' > /sys/class/scsi_host/{{item}}/scan"
+  with_items:
+    - host0
+    - host1
+    - host2
+
+- stat:
+    path: /dev/sdb
+  register: newdisk
+
+- include: lvm-inflate.yml
+  when: vgroup.stat.exists and newdisk.stat.exists
+
+# Network tuning.
+- name: deploy network configs.
+  template:
+    src: "{{item.name}}"
+    dest: "{{item.dir}}{{item.name}}"
+  register: sysctl
+  with_items:
+    - {name: limits.conf, dir: "/etc/security/"}
+    - {name: sysctl.conf, dir: "/etc/security/"}
+    - {name: dhclient.conf, dir: "/etc/dhcp/"}
+    - {name: resolv.conf, dir: "/etc/"}
+    - {name: base, dir: /etc/resolvconf/resolv.conf.d/}
+    - {name: head, dir: /etc/resolvconf/resolv.conf.d/}
+
+- name: ensure old nameservers not in network config
+  lineinfile:
+    name: /etc/network/interfaces
+    state: absent
+    regexp: '.*dns-nameservers.*'
+  register: sysctl
+
+- name: run sysctl -p
+  command: sysctl -p
+  when: sysctl.changed
+
+- name: restart resolvconf service
+  service:
+    name: resolvconf
+    state: restarted
+  when: sysctl.changed
+
+- name: get hostname of machine
+  shell: hostname
+  register: shell_hostname
+
+- set_fact:
+    vm_hostname: "{{shell_hostname.stdout}}"
+
+- name: deploy hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- include: install-additional-software.yml

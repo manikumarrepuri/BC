@@ -1,0 +1,221 @@
+<style>
+  .st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+/* Sortable indicator icon */
+/*th[st-sort]:not(.st-sort-ascent):not(.st-sort-descent):before {
+    font-family: FontAwesome;
+    content: '\f0dc';
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+}*/
+table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid lightgrey;
+}
+
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+thead, tfoot {
+    flex-shrink: 0;
+}
+
+th, tbody td {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+tfoot {
+    display: inline-block;
+}
+
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+
+body, html {
+  height: 100%;
+}
+</style>
+
+<script>
+  function getVisible() {
+      var $el = $('#tableWrapper');
+      if($el.length){
+        var scrollTop = $(this).scrollTop(),
+            scrollBot = scrollTop + $(this).height(),
+            elTop = $el.offset().top,
+            elBottom = elTop + $el.outerHeight(),
+            visibleTop = elTop < scrollTop ? scrollTop : elTop,
+            visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+        $('#myTable').css('height', ($(window).height() - 140));
+      }
+  }
+  $(window).on('scroll resize', getVisible);
+  getVisible();
+</script>
+
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button class="add btn bg-teal btn-bar btn-flat" ng-click="devicesCtrl.newDevice()">
+      <i class="fa fa-plus"></i> <strong>Device</strong>
+    </button>
+  </div>
+  <!--<app-search service="devicesCtrl.service"></app-search>-->
+  <div ng-show="devicesCtrl.needRefresh" class="pull-right box-refresh">
+    <button class="btn btn-sm btn-warning" ng-click="devicesCtrl.loadPage()">
+      <i class="fa fa-refresh" aria-hidden="true"></i> <strong> New devices found </strong>
+    </button>
+  </div>
+  <div class="input-group box-title" ng-if="devicesCtrl.totals.total != 0">
+    <span ng-if="devicesCtrl.totals.totalUp != 0"><span class="label label-success">{{devicesCtrl.totals.totalUp}}</span> Up / </span>
+    <span ng-if="devicesCtrl.totals.totalDown != 0"><span class="label label-danger">{{devicesCtrl.totals.totalDown}}</span> Down / </span>
+    <span class="label label-default">{{devicesCtrl.totals.total}}</span> Devices
+      <a class="btn btn-small" href ng-click="devicesCtrl.filterVisibility()">
+    <i class="fa fa-filter" aria-hidden="true"></i> {{devicesCtrl.filterStatus}}</a>
+    <span>
+      <label for="noOfRows">Rows/Page : </label>
+      <input id="noOfRows" type="number" step="1" ng-model="devicesCtrl.numberOfPages" style="width: 50px; height: 20px; text-align: center;">
+    </span>
+  </div>
+</div>
+
+<div class="box-header">
+</div>
+<div style="overflow: auto;" id="tableWrapper" ng-if="devicesCtrl.totals.total != 0">
+      <table id="myTable" st-set-filter="customFilter" st-table="devicesCtrl.devices" class="table table-list-page table-bordered table-hover table-devices" style="margin-bottom: 0px;padding-bottom: 0px;">
+        <thead style="overflow-y: scroll; border-bottom: 1px solid #111;">
+          <tr ng-show="devicesCtrl.isFilterVisible">
+            <th st-ratio="10">
+              <input class="form-control" placeholder="Alerts" st-search="alertsCount" type="number" ng-model="devicesCtrl.query.alertsFilter"/>
+            </th>
+            <th st-ratio="25">
+              <input class="form-control" placeholder="Group" st-search="group" type="search" ng-model="devicesCtrl.query.groupFIlter" />
+            </th>
+            <th st-ratio="25">
+              <input class="form-control" placeholder="Name" st-search="displayName" type="search" ng-model="devicesCtrl.query.nameFilter" />
+            </th>
+            <th st-ratio="10"></th>
+            <th st-ratio="10">
+              <st-number-range predicate="cpuBusy" equal="devicesCtrl.query.equal1" lower="devicesCtrl.query.lower1" higher="devicesCtrl.query.higher1"></st-number-range>
+            </th>
+            <th st-ratio="10">
+              <st-number-range predicate="physicalMemoryUsed" equal="devicesCtrl.query.equal2" lower="devicesCtrl.query.lower2" higher="devicesCtrl.query.higher2"></st-number-range>
+            </th>
+            <th st-ratio="10">
+              <st-number-range predicate="storage" equal="devicesCtrl.query.equal3" lower="devicesCtrl.query.lower3" higher="devicesCtrl.query.highe3"></st-number-range>
+            </th>
+          </tr>
+          <tr style="cursor: pointer;">
+            <th st-ratio="10" st-sort="alertsCount">State</th>
+            <th st-ratio="25" st-sort="group">Device Group</th>
+            <th st-ratio="25" st-sort-default="true" st-sort="displayName">Device Name</th>
+            <th st-ratio="10" st-sort="status">Info</th>
+            <th st-ratio="10" st-sort="cpuBusy">CPU</th>
+            <th st-ratio="10" st-sort="physicalMemoryUsed">RAM</th>
+            <th st-ratio="10" st-sort="storage">Storage</th>
+          </tr>
+        
+        </thead>
+        <tbody>
+          <!--context-menu="devicesCtrl.menuOptions"-->
+        <tr bindonce
+            ng-repeat="device in devicesCtrl.devices"
+            selection-model
+            selection-model-mode="'multiple'"
+            selection-model-selected-items="devicesCtrl.selected"
+            selection-model-selected-class="'row-selected'"
+            ng-click="devicesCtrl.loadDevice($event, device.id)">
+          <td st-ratio="10" class="state-column">
+              <span class="fa-stack text-orange fa-1x state-icon" ng-if="device.alertsCount > 0">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa-stack fa-stack-1x state-text">{{device.alertsCount}}</i>
+                </span>
+          </td>
+          <td st-ratio="25">
+            {{device.group}}
+            <div class="show-helper pull-right">Show Device</div>
+          </td>
+          <td st-ratio="25">{{device.displayName}}</td>
+          <td st-ratio="10">
+            <i class="fa" ng-class="{'icon-unix': device.platform == 'unix' ,
+                          'icon-windows': device.platform == 'windows',
+                          'icon-os400': device.platform == 'os400',
+                          'icon-question': device.platform == 'question'}">
+              </i>
+            <span class="label" title="{{device.updatedAt | date:'medium'}}" ng-class="{'label-success': device.status == 'UP',
+                          'label-danger': device.status == '???'}">
+                {{device.status}}
+              </span>
+          </td>
+          <td st-ratio="10">
+            <progress-bar value="device.cpuBusy"></progress-bar>
+          </td>
+          <td st-ratio="10" ng-if="device.platform != 'ibm'">
+            <progress-bar value="device.physicalMemoryUsed"></progress-bar>
+          </td>
+          <td st-ratio="10" ng-if="device.platform == 'ibm'">
+            <div class="na">N/A</div>
+          </td>
+          <td st-ratio="10">
+            <progress-bar value="device.storage"></progress-bar>
+          </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="7" class="text-center">
+            <div st-pagination="" st-items-by-page="devicesCtrl.numberOfPages" st-template="../static/js/components/stCustomPagination/stCustomPagination.html"></div>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+      <div ng-show='devicesCtrl.busy'>
+        <i class="fa fa-spinner"></i>Loading data...
+      </div>
+</div>
+<div ng-if="devicesCtrl.busy != true && devicesCtrl.totals.total == 0" class="no-items">
+ <h3>Welcome to OpServe</h3>
+ <p>
+   You currently have no devices reporting metrics. We currently accept metrics from:
+   <li style="list-style-type: circle;">
+    <i class="fa fa-server"></i>
+    <strong> iAM:Servers</strong> agents (Using RoboEDA)
+   </li>
+ </p>
+</div>
+<device></device>
+<device-wizard></device-wizard>
+<tag-modal></tag-modal>
+<confirm-modal></confirm-modal>

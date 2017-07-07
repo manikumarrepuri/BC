@@ -1,0 +1,105 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-master-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.14
+    - network_hostname: mxc-rabbitmq-master-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave1-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.15
+    - network_hostname: mxc-rabbitmq-slave1-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave2-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.16
+    - network_hostname: mxc-rabbitmq-slave2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave3-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.17
+    - network_hostname: mxc-rabbitmq-slave3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave4-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.18
+    - network_hostname: mxc-rabbitmq-slave4-ub-16-04

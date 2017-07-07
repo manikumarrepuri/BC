@@ -1,0 +1,25 @@
+{
+  "name": "itheon-service",
+  "version": "3.0.3",
+  "publishConfig": {
+    "registry": "http://10.187.76.250:80"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+     "test": "mocha --recursive tests/cases/"
+  },
+  "dependencies": {
+    "itheon-error": "^1.0.2",
+    "itheon-gateway": "^2.0.0",
+    "itheon-utility": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-test": "^2.2.1",
+    "proxyquire": "^1.7.4"
+  }
+}

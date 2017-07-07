@@ -1,0 +1,44 @@
+scheduled-reminders #sortable {
+  width: 100%;
+  padding-top: 20px;
+  text-align: left;
+}
+
+scheduled-reminders #sortable li {
+  padding: 4px;
+  background:#fff;
+  cursor: pointer;
+  border:none;
+  border-bottom:1px solid #ddd;
+}
+
+scheduled-reminders #sortable li div {
+  position: relative;
+}
+
+scheduled-reminders #sortable li.ui-state-done {
+  padding:10px 4px;
+  text-decoration:line-through;
+}
+
+scheduled-reminders #sortable input {
+  position: absolute;
+  padding-top:3px;
+  top: 0;
+  left: 30px;
+  color: #1B2432;
+  width: 100%;
+  background: transparent;
+  border: 0px solid transparent;
+}
+
+scheduled-reminders #sortable li.ui-state-default:last-child{
+  border-bottom:none;
+}
+
+scheduled-reminders .next-date {
+  padding-top: 8px;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+}

@@ -1,0 +1,99 @@
+---
+- name: mlock syscall tweak
+  shell: setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
+
+- name: create vault group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{vault_user}}"
+- name: create vault user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    group: "{{item}}"
+  with_items:
+    - "{{vault_user}}" 
+- name: Create vault directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{vault_user}}"
+    group: "{{vault_user}}"
+  with_items:
+    - "/var/vault/"
+    - "/etc/vault.d/"
+    - "/run/vault/"
+- name: Deploy config file
+  template:
+    src: vault.hcl.j2
+    dest: /etc/vault.d/vault.hcl
+    owner: "{{vault_user}}"
+    group: "{{vault_user}}"
+  register: restartvault
+- name: Deploy vault service file
+  template: 
+    src: vault.service.j2
+    dest: "/etc/systemd/system/vault.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: vault
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable vault.service"
+  when: 
+    - vault.changed
+
+- name: Set environment variables
+  lineinfile:
+    dest: "/etc/environment"
+    regexp: '^VAULT_ADDR='
+    line: 'VAULT_ADDR=http://127.0.0.1:8200'
+
+- name: restart vault
+  service:
+    name: vault
+    state: restarted
+  when: 
+    - restartvault.changed
+- name: Ensure vault service is started.
+  service:
+    name: vault
+    state: started
+
+- name: vault init check
+  shell: vault init -check
+  changed_when: no
+  register: vault_init_check
+  failed_when: vault_init_check.rc == 1
+
+- name: initialize vault
+  changed_when: no
+  shell: 'vault init -address=http://127.0.0.1:8200 -key-shares=4 -key-threshold=2 -pgp-keys="keybase:willrogers,keybase:astutecat,keybase:gilbertcj,keybase:rammsj"'
+  register: vault_init_output
+  when: vault_init_check.rc == 2
+
+- name: extract keys
+  changed_when: no
+  when: "'Vault is already initialized' not in vault_init_output.stdout"
+  set_fact:
+    vault_keys: "{{ (vault_init_output.stdout|from_json)['keys'] }}"
+  when: vault_init_check.rc == 2
+
+- debug: msg="{{ vault_init_output.stdout }}"
+  when: vault_init_check.rc == 2
+
+- debug: msg="VAULT KEYS\n {{ vault_keys }}"
+  when: vault_init_check.rc == 2
+
+- name: unseal vault
+  changed_when: no
+  shell: "vault unseal {{item}}"
+  with_items:
+    - "{{unseal_key_one}}"
+    - "fd3ee5c874ef311927513fc6984b7f33168b74ab88c19bbed080065d0bf25bc002"
+  ignore_errors: yes

@@ -1,0 +1,45 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts: all
+  become: yes
+  vars:
+    oracle_java_set_as_default: yes
+  roles:
+    - role: ../../../shared/ansible/common
+    - role: ../../../shared/ansible/launchpad-ppa-webupd8
+    - role: ../../../shared/ansible/oracle-java
+    - role: ../../../shared/ansible/install-docker
+
+- hosts: bamboo-agents
+  become: yes
+  serial:
+    - 1
+    - "50%"
+    - "100%"
+  vars:
+    bamboo_version: "5.15.0.1"
+    bamboo_user: bamboo
+    bamboo_fqdn: bamboo.appdev.bluechipdomain.co.uk
+    node_count: "{{ groups['bamboo-agents'] | length }}"
+    server_node_ips: "{{ groups['bamboo-agents'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(' ') }}"
+    wan_server_node_ips: "10.197.55.242 10.197.55.243 10.197.55.244 10.197.55.245"
+    wan_join: yes
+    advertise_addr: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+    consul_user: "consul"
+    consul_deployment: "server"
+    install_path: /opt/atlassian/bamboo-agent
+    datacenter: "ar-buildagents"
+  roles:
+    - role: ../../../shared/ansible/ssl-certificates
+    - role: ../../../shared/ansible/install-nodejs
+    - role: ../../../shared/ansible/install-consul
+    - role: ../../../shared/ansible/install-terraform
+    - role: ../../../shared/ansible/install-ansible
+    - role: ../../../shared/ansible/install-nomad
+    - role: ./build-agent

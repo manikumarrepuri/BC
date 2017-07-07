@@ -1,0 +1,15 @@
+{
+  "name": "itheon-module-metric-entity",
+  "version": "1.0.2",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "itheon-entity": "^1.0.0"
+  }
+}

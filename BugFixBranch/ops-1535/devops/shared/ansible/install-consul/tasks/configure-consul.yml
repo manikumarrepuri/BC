@@ -1,0 +1,122 @@
+---
+- name: create consul group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{consul_user}}"
+- name: create consul user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    group: "{{item}}"
+  with_items:
+    - "{{consul_user}}" 
+- name: Create consul directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  with_items:
+    - "/var/consul/"
+    - "/etc/consul.d/"
+    - "/run/consul/"
+- name: Deploy server config file
+  template:
+    src: server.json.j2
+    dest: /etc/consul.d/consul.json
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  register: restartconsul
+  when: consul_deployment == "server"
+- name: Deploy client config file
+  template:
+    src: client.json.j2
+    dest: /etc/consul.d/consul.json
+    owner: "{{consul_user}}"
+    group: "{{consul_user}}"
+  register: restartconsul
+  when: consul_deployment == "client"
+- name: Deploy consul service file
+  template: 
+    src: consul.service.j2
+    dest: "/etc/systemd/system/consul.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: consul
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable consul.service"
+  when: consul.changed
+- name: restart consul
+  service:
+    name: consul
+    state: restarted
+  when: restartconsul.changed
+- name: Ensure consul service is started.
+  service:
+    name: consul
+    state: started
+- name: Join cluster
+  shell: "consul join {{server_node_ips}}"
+- name: Join cluster
+  shell: "consul join -wan {{wan_server_node_ips}}"
+  when: wan_join and (consul_deployment == "server")
+- name: Install dnsmasq
+  apt:
+    name: dnsmasq
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+- name: Deploy dnsmasq configs
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: "10-consul.j2", dest: /etc/dnsmasq.d/10-consul }
+    - { src: "dnsmasq.conf.j2", dest: /etc/dnsmasq.conf }
+  register: dnsmasqrestart
+- name: Ensure dnsmasq is running
+  service:
+    name: dnsmasq
+    state: started
+- name: restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+  when: dnsmasqrestart.changed
+- name: Prepend dns server with localhost to use dnsmasq
+  lineinfile:
+    dest: "/etc/dhcp/dhclient.conf"
+    regexp: '^prepend domain-name-servers'
+    line: 'prepend domain-name-servers 127.0.0.1, 10.197.55.240;'
+  register: resolvconf
+- name: Update dhcp settings
+  shell: resolvconf -u
+  when: resolvconf.changed
+
+- name: Check for docker config
+  changed_when: no
+  stat:
+    path: "/etc/docker/daemon.json"
+  register: dockerconfig
+
+- name: Deploy docker daemon json
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  register: dockerupdate
+  when: dockerconfig.stat.exists
+
+- name: Restart docker service
+  service:
+    name: docker
+    state: restarted
+  when: dockerupdate.changed

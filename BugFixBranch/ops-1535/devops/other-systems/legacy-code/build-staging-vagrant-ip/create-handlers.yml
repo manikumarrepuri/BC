@@ -1,0 +1,33 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-handler1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address: 10.197.55.110
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-handler2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address: 10.197.55.111
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-handler3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - network_address: 10.197.55.112

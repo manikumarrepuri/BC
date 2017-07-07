@@ -1,0 +1,14 @@
+[Unit]
+Description=Atlassian Bamboo Build Agent
+After=network.target auditd.service
+ConditionPathExists={{install_path}}/{{bamboo_version}}/bin/bamboo-agent.sh
+
+[Service]
+ExecStart=/bin/bash {{install_path}}/{{bamboo_version}}/bin/bamboo-agent.sh console
+KillMode=process
+Restart=always
+Type=simple
+User={{bamboo_user}}
+Group={{bamboo_user}}
+[Install]
+Alias=bamboo-agent

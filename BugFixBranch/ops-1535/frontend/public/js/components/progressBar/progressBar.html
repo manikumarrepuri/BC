@@ -1,0 +1,8 @@
+<div class="progress">
+  <div class="progress-bar" role="progressbar" ng-class="{'progress-bar-success': progressBarCtrl.value < 25 ,
+                                      'progress-bar-warning': progressBarCtrl.value >= 25 && progressBarCtrl.value < 75,
+                                      'progress-bar-danger': progressBarCtrl.value >= 75 } " ng-style="{ 'width': progressBarCtrl.valuePercent + '%' }"></div>
+  <div class="progress-value" ng-class="{'progress-success': progressBarCtrl.value < 25 ,
+                                      'progress-warning': progressBarCtrl.value >= 25 && progressBarCtrl.value < 75,
+                                      'progress-danger': progressBarCtrl.value >= 75 } ">{{progressBarCtrl.value}}%</div>
+</div>

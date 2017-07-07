@@ -1,0 +1,108 @@
+<aside resize scrolly class="device-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content" *ng-if="selected">
+    <!-- Home tab content -->
+    <div class="tab-pane active" ng-if="deviceCtrl.device">
+      <h2>
+        <span class="light">Group:</span>
+        <span class="padding-right-20">{{deviceCtrl.device.group}}</span>
+
+        <i class="fa icon-{{deviceCtrl.device.platform}}"></i>
+        <span class="light">Host:</span>
+        <span>{{deviceCtrl.device.displayName}}</span>
+        <i class="pull-right close fa fa-times-circle-o" ng-click="deviceCtrl.toggleDevice()"></i>
+      </h2>
+
+      <p class="status"  ng-class="{'progress-bar-success': deviceCtrl.deviceStatus == 'UP',
+                 'progress-bar-danger': deviceCtrl.deviceStatus == '???'}">
+        <span>Status:</span> <strong>{{deviceCtrl.deviceStatus}}</strong>
+        <span class="pull-right"><strong>Last Seen:</strong> {{deviceCtrl.device.updatedAt | date:'medium' }}</span>
+      </p>
+
+      <div class="tag-group clearfix">
+        <div class="tag label bg-gray" ng-repeat="(key, tag) in deviceCtrl.device.tags |limitTo:10">
+         #{{tag}}
+        </div>
+        <div class="tag-more" ng-if="alert.tags.length > 10">...</div>
+      </div>
+
+      <h3 class="module-sidebar-heading">Host Rules</h3>
+      <div class="status update-success hide progress-bar-success"><span>Successfully updated thresholds.</span></div>
+      <div class="status update-failed hide progress-bar-danger"><span>Failed to update thresholds.</span></div>
+
+        <form name="thresholdsForm" ng-submit="deviceCtrl.alterThresholds(thresholdsForm)">
+          <input name="name" ng-model="deviceCtrl.thresholdsForm.name" type="hidden" />
+          <input name="location" ng-model="deviceCtrl.thresholdsForm.location" type="hidden" />
+          <ul class="module-sidebar-menu">
+            <li class="rule" ng-repeat="(key, rule) in  deviceCtrl.rules">
+              <span ng-if="rule.platform" class="label label-primary" title="Global Threshold">Global</span>
+              <span ng-if="!rule.platform" class="label label-success" title="Device Threshold">Device</span>
+              <span ng-click="deviceCtrl.showThresholds($event)">{{rule.name}}</span>
+              <ul class="module-sidebar-submenu hide">
+                <li  ng-repeat="(key, severity) in  rule.thresholds">
+                  <div class="pull-left" style="width: 100px;">
+                    <strong>Severity</strong> {{severity.severity}}:
+                  </div>
+                  <p>&nbsp;</p>
+                  <ul class="module-sidebar-submenu">
+                    <li ng-repeat="(key, threshold) in severity.thresholds">
+                      <div class="pull-left" style="width: 100px;">
+                        <strong>{{threshold.name}}</strong>:
+                      </div>
+                      <input name="{{rule.name}}-{{severity.severity}}-{{threshold.name}}" ng-model="deviceCtrl.thresholdsForm[rule.name+'-'+severity.severity+'-'+threshold.name]" ng-change="deviceCtrl.onThresholdChange()" type="number" min="0" max="100" placeholder="{{threshold.value}}">
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>&nbsp;</li>
+            <li class="form-hidden hide">
+              <input name="thisDeviceOnly" type="checkbox" ng-model="deviceCtrl.thresholdsForm.thisDeviceOnly"> Update this device ONLY?
+            </li>
+            <li class="form-hidden hide">
+              <button type="submit">Update</button>
+            </li>
+          </ul>
+        </form>
+      <hr />
+
+      <div ng-if="deviceCtrl.device.alertsCount >= 1">
+        <h3 class="module-sidebar-heading">Device Alerts</h3>
+        This device currently has <mark>{{deviceCtrl.device.alertsCount}}</mark> problem(s).
+        <ul class="module-sidebar-submenu list-group row">
+          <li ng-repeat="(key, alert) in deviceCtrl.device.alerts" ng-if="deviceCtrl.alert.ruleName != alert.id">
+            <strong>Rule Breached:</strong> {{alert.id}}
+          </li>
+        </ul>
+      </div>
+
+      <div ng-if="deviceCtrl.device.details">
+        <h3 class="device-sidebar-heading">Host Information</h3>
+        <hr />
+        <ul class="module-sidebar-submenu list-group row">
+          <li class="col-xs-6" ng-repeat="(key, value) in deviceCtrl.device.details">
+            <label for="{{key  | lowercase}}"> {{key}}: </label> <span id="{{key  | lowercase}}"> {{ value }} </span>
+          </li>
+        </ul>
+      </div>
+
+<!-- TODO we aren't storing disk metrics
+      <h4>Disks</h4>
+      <div class="disks row">
+        <div class="col-md-3 col-sm-6 col-xs-12" ng-repeat="(key, disk) in deviceCtrl.device.metrics.disks">
+          {{key}}
+          <progress-bar value="disk.diskUsed.value"></progress-bar>
+        </div>
+      </div>
+      <!-- /.control-sidebar-menu -->
+
+    </div>
+    <!-- /.tab-pane -->
+
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

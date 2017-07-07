@@ -1,0 +1,148 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis-sentinel1-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.23
+    - network_hostname: mxc-redis-sentinel2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis-sentinel2-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.24
+    - network_hostname: mxc-redis-sentinel3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis-sentinel3-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.25
+    - network_hostname: mxc-redis-sentinel3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis1-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.19
+    - network_hostname: mxc-redis1-ub-16-04
+
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis2-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.20
+    - network_hostname: mxc-redis2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis3-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.21
+    - network_hostname: mxc-redis3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-redis4-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.22
+    - network_hostname: mxc-redis4-ub-16-04

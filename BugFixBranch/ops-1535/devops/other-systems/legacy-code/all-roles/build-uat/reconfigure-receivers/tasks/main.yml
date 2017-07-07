@@ -1,0 +1,34 @@
+---
+- name: Deploy receiver app.env.json template
+  template:
+    src: app.json.j2
+    dest: "/opt/itheon/rule-engine-receiver/config/app.env.json"
+
+- name: set npm registry
+  command: npm set registry {{ itheonx_sinopia_server }}
+  args:
+    chdir: /opt/itheon/rule-engine-receiver
+
+- name: npm install
+  command: npm install
+  args:
+    chdir: /opt/itheon/rule-engine-receiver
+
+- name: stop pm2
+  command: pm2 stop all
+
+- name: delete all pm2 jobs
+  command: pm2 delete all
+
+- name: Run pm2 command to start receiver app.js
+  command: pm2 start /opt/itheon/rule-engine-receiver/app.js --name "receiver"
+
+- name: Run pm2 save
+  command: pm2 save
+  args:
+    chdir: ~/
+
+- name: Set pm2 startup
+  command: pm2 startup ubuntu
+  args:
+    chdir: ~/

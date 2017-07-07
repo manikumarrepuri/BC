@@ -1,0 +1,12 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: trn-befe-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 4092
+    - network_address: 10.197.56.13

@@ -1,0 +1,33 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-worker1-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - network_address_1: 10.197.55.7
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-worker2-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - network_address_1: 10.197.55.8
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-worker3-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - network_address_1: 10.197.55.9

@@ -1,0 +1,22 @@
+{
+  "globalstrict" : true, // Allowing to use "use strict";
+  "esnext" : true,       // ECMA 6 support
+  "globals"   : {
+
+    /* Node.js */
+    "require" : false,
+    "module" : false,
+    "process" : false,
+    "__filename" : false,
+    "Promise": false,
+
+    /* MOCHA */
+    "describe"   : false,
+    "it"         : false,
+    "before"     : false,
+    "beforeEach" : false,
+    "after"      : false,
+    "afterEach"  : false
+
+  }
+}

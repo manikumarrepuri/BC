@@ -1,0 +1,56 @@
+---
+- name: Check vault exists
+  stat:
+    path: "/usr/bin/vault"
+  register: status
+
+- name: Check vault version
+  shell: "vault -v"
+  register: versionCheck
+  when: (status.stat.exists == true)
+
+- name: Set vault download baseurl.
+  set_fact:
+    vault_baseurl: https://releases.hashicorp.com/vault/
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Get latest vault version.
+  shell: 'curl -sN {{vault_baseurl}} | grep -m 1 -o "vault_.*<" | sed ''s/vault_\(.*\).$/\1/'''
+  register: versionResult
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Set vault version fact.
+  set_fact:
+    vault_latest_version: "{{versionResult.stdout}}"
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Create vault directory.
+  file:
+    path: /opt/vault
+    state: directory
+    mode: 0755
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Download latest version of vault.
+  unarchive:
+    src: "{{vault_baseurl}}{{vault_latest_version}}/vault_{{vault_latest_version}}_linux_amd64.zip"
+    dest: /opt/vault
+    remote_src: True
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Make vault executable
+  file:
+    path: /opt/vault/vault
+    mode: a+x
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Symlink vault binary.
+  file:
+    src: /opt/vault/vault
+    dest: /usr/bin/vault
+    state: link
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)

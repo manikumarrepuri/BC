@@ -1,0 +1,35 @@
+{
+  "name": "itheon-data-provider",
+  "version": "3.2.2",
+  "publishConfig": {
+    "registry": "https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "amqplib": "^0.4.1",
+    "ioredis": "^2.4.0",
+    "itheon-config": "^2.0.0",
+    "itheon-entity": "^1.2.3",
+    "itheon-error": "^1.0.0",
+    "itheon-logger": "^1.0.0",
+    "itheon-request": "^1.4.0",
+    "itheon-utility": "^1.0.0",
+    "q-io": "^1.13.2",
+    "qs": "^6.1.0",
+    "rethinkdbdash": "^2.3.7",
+    "syswide-cas": "^3.0.0",
+    "urlencode": "^1.1.0"
+  },
+  "devDependencies": {
+    "app-root-path": "^1.0.0",
+    "chai": "^3.5.0",
+    "nock": "^8.0.0"
+  }
+}

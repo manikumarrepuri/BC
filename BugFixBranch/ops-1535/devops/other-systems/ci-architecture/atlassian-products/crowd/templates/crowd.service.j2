@@ -1,0 +1,18 @@
+[Unit]
+Description=Atlassian Crowd
+After=network.target auditd.service
+ConditionPathExists={{install_path}}/start_crowd.sh
+
+[Service]
+ExecStart=/bin/bash {{install_path}}/start_crowd.sh
+ExecStop=/bin/bash {{install_path}}/stop_crowd.sh
+ExecReload=/bin/kill -9 `cat $CATALINA_HOME/work/catalina.pid`; /bin/bash {{install_path}}/start_crowd.sh
+KillMode=process
+Restart=always
+Type=forking
+User={{crowd_user}}
+Group={{crowd_user}}
+RemainAfterExit=yes
+
+[Install]
+Alias=crowd

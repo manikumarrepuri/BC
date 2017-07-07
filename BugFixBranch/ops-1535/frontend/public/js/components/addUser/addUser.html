@@ -1,0 +1,71 @@
+<aside class="user-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Home tab content -->
+    <div class="tab-pane active">
+      <section class="content-header">
+        <h1>
+          Add New User
+          <i class="pull-right close fa fa-times-circle-o" ng-click="addUserCtrl.toggleUser()"></i>
+        </h1>
+      </section>
+
+      <!-- /Main content is here -->
+      <div>
+        <div class="box-primary">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="status update-success hide progress-bar-success"><span>Successfully added the user {{addUserCtrl.addUserForm.username}}.</span></div>
+            <div class="status update-failed hide progress-bar-danger"><span>Failed to add the user: {{addUserCtrl.errorMessage}}.</span></div>
+            <div class="callout callout-danger" ng-show="addUserForm.$submitted && addUserForm.$invalid">
+              <div ng-show="addUserForm.username.$invalid">Please provide a username.</div>
+              <div ng-show="addUserForm.email.$invalid">Please provide a valid email address.</div>
+              <div ng-show="addUserForm.password.$invalid">Please provide a password.</div>
+              <div ng-show="addUserForm.title.$invalid">Please provide a job title.</div>
+              <div ng-show="addUserForm.role.$invalid">Please provide a job role.</div>
+            </div>
+
+            <form name="addUserForm" ng-submit="addUserCtrl.addUser(addUserForm)">
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.username.$invalid}">
+                <label class="control-label" for="username">Username: </label>
+                <input name="username" ng-model="addUserCtrl.addUserForm.username" placeholder="Username" autofocus required>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.email.$invalid}">
+                <label class="control-label" for="email">Email: </label>
+                <input name="email" ng-model="addUserCtrl.addUserForm.email" required type="email" placeholder="Email">
+              </div>
+              <!-- <div ng-form-model="passwordRetry"> -->
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.password.$invalid}">
+                <label class="control-label" for="password">Password: </label>
+                <input name="password" ng-model="addUserCtrl.addUserForm.password" required type="password" placeholder="Password">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.confirm.$invalid}">
+                <label class="control-label" for="username">Confirm: </label>
+                <input name="confirm" ng-model="addUserCtrl.addUserForm.confirm" required type="password" placeholder="Confirm Password">
+              </div>
+              <!--    </div> -->
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.title.$invalid}">
+                <label class="control-label" for="title">Job Title: </label>
+                <input name="title" ng-model="addUserCtrl.addUserForm.title" required placeholder="Job Title">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addUserForm.$dirty && addUserForm.role.$invalid}">
+                <label class="control-label" for="role">Role: </label>
+                <multi-select-box name="roles" ng-model="addUserCtrl.addUserForm.roles" serviceName="AclRoleService" service-name="AclRoleService" collection-variable-name="roles"></multi-select-box>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add User</button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+      </div>
+      <!-- /Main content ends here -->
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

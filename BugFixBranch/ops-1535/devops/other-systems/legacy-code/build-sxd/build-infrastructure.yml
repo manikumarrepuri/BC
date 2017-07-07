@@ -1,0 +1,28 @@
+---
+- name: Build and configure OpServe Infrastructure
+  become: yes
+  hosts: vagrant
+  remote_user: ansible
+
+  tasks:
+
+- include: create-rabbitmq.yml
+- include: create-redis.yml
+- include: create-rethinkdb.yml
+- include: create-befe.yml
+- include: create-receivers.yml
+- include: create-haproxy.yml
+- include: create-handlers.yml
+- include: create-workers.yml
+# hosts file
+- include: ../installation-playbooks/configure-hosts.yml
+# installing
+- include: ../installation-playbooks/install-rabbitmq.yml
+- include: ../installation-playbooks/install-redis.yml
+- include: ../installation-playbooks/install-rethinkdb.yml
+- include: ../installation-playbooks/install-backend-frontend.yml
+- include: ../installation-playbooks/configure-receivers.yml
+- include: ../installation-playbooks/install-haproxy.yml
+- include: ../installation-playbooks/install-haproxy-rmq.yml
+- include: ../installation-playbooks/install-handler.yml
+- include: ../installation-playbooks/configure-workers.yml

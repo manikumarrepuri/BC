@@ -1,0 +1,95 @@
+{
+  "certificate_paths": {
+    "ca" : "/opt/itheon/certs/appdev.ca.cer",
+    "cert" : "/opt/itheon/certs/wildcard.appdev.crt",
+    "key" : "/opt/itheon/certs/wildcard.appdev.key"
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "amqp": {
+    "connectionString": "amqp://test:test@rabbitmq"
+  },
+  "mongo": {
+    "db": "mongodb://mongo:27017/itheon"
+  },
+  "rethinkdb": {
+    "servers": [
+      {
+        "host" :  "rethinkdb",
+        "port" : 28015
+      }
+    ],
+    "db" : "itheon",
+    "replicas": 1
+  },
+  "redis": {
+      "host": "redis",
+      "port": 6379,
+      "family": 4,
+      "db": 0,
+      "password": ""
+  },
+  "server" : {
+    "protocol": "http",
+    "ssl": false,
+    "port": 9443
+  },
+  "receiver" : {
+    "listenport" : 2919
+   },
+  "backend-api": {
+    "hostname": "backend",
+    "host": "backend:9443",
+    "port": 9443,
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  "express": {
+    "port" : 3002
+  },
+  "socket.io": {
+    "port": 5000,
+    "ssl" : false
+  },
+  "session": {
+    "secret": "10f4ca0256bed83fcc7d853c227958944981c13f"
+  },
+  "authentication": {
+    "secret": "1244sdklf^&*$#@hasdjkl35345346533!!$%^&*$#@"
+  },
+  "frontendApi": {
+    "host": "localhost",
+    "protocol": "http://",
+    "port": 8080,
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

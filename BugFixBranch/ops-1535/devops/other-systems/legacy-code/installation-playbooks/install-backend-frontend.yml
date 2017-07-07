@@ -1,0 +1,27 @@
+---
+- name: See Sentinel group
+  hosts: redis-sentinel
+  become: yes
+  tasks: [ ]
+
+- name: See RethinkDB group
+  hosts: rethinkdb
+  become: yes
+  tasks: [ ]
+
+- name: Install Itheon OpServe Backend/Frontend
+  hosts: be-fe
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-nginx
+    - install-nodejs
+    - install-pm2
+    - install-pm2-logrotate
+    - install-bower
+    - install-git
+    - install-rethinkdb
+    - configure-rethinkdb-proxy
+    - deploy-certs
+    - install-backend-frontend

@@ -1,0 +1,61 @@
+<div class="selection-container" infinite-scroll="alertListCtrl.loadMore()" infinite-scroll-distance="1">
+  <div class="alert-container"
+    context-menu="alertListCtrl.menuOptions"
+    ng-repeat="alert in alertListCtrl.alerts track by alert.id"
+    selection-model
+    selection-model-mode="'multiple'"
+    selection-model-selected-items="alertListCtrl.parentCtrl.selected"
+    selection-model-selected-class="'row-selected'"
+    ng-class="{'acknowledged-row': alert.acknowledged}"
+    ng-click="alertListCtrl.requestAlert($event, alert.id);">
+    <div class="alert-severity" ng-class="{'bg-green': alert.severity >= 7 || alert.severity == 5,
+       'bg-orange': alert.severity >= 3 && alert.severity  <= 6 && alert.severity != 5,
+       'bg-red': alert.severity <= 2}"><span>{{alert.severity}}</span></div>
+    <div class="alert-details">
+      <div class="alert-header clearfix">
+        <ng-letter-avatar ng-if="alert.assignee" class="pull-left" data="{{alert.assignee}}" charcount="2" dynamic="true" width="20" height="20" fontsize="10" avatarcustomborder="border:2px solid #cccccc;" shape="round"></ng-letter-avatar>
+        <i data-ng-if="alert.acknowledged" class="fa fa-check-circle-o acknowledged-icon pull-left"></i>
+        <h2 class="pull-left alert-title truncate" ng-bind-html="alert.brief"></h2>
+        <div class="tag label bg-gray" ng-repeat="(key, tag) in alert.tags |limitTo:3">
+          #{{tag}}
+        </div>
+        <div class="tag-more" ng-if="alert.tags.length > 3">...</div>
+        <span class="alert-tag label label-primary pull-right">
+            {{alert.ruleName}}
+          </span>
+      </div>
+      <p ng-bind-html="alert.fullText"></p>
+
+      <div class="alert-footer clearfix">
+        <div ng-if="alert.occurrences > 0" class="pull-left">
+          <div class="btn-group">
+            <button type="button" class="btn btn-xs" ng-click="alertListCtrl.requestHistory($event, alert.id); $event.stopPropagation();">{{alert.occurrences}} Alerts</button>
+            <button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#" class="dropdown-option" ng-click="alertListCtrl.requestHistory($event, alert.id); $event.preventDefault();">View History</a></li>
+              <!-- <li class="divider"></li> -->
+              <!-- <li><a href="#">Amend Rule</a></li> -->
+            </ul>
+          </div>
+        </div>
+        <span class="alert-occured">
+            <i class="fa fa-clock-o"></i>
+            <time title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ alert.createdAt | amCalendar:null:alertListCtrl.calendarFormat }}</time>
+          </span>
+        <div class="alert-actions">
+          <a href="#" ng-if="!alert.acknowledged" ng-click="alertListCtrl.acknowledge($event, alert.id); $event.stopPropagation(); $event.preventDefault();">Acknowledge</a>
+          <a href="#" ng-click="alertListCtrl.assignToMe($event, alert.id); $event.stopPropagation(); $event.preventDefault();">Assign to me</a>
+          <!-- TODO: Hidden for now since these are not implemented
+          <a href="#">Add Comment</a>
+          <a href="#">Lower Severity</a>
+          <a href="#">Alter Thresholds</a>
+          //-->
+        </div>
+      </div>
+    </div>
+    <alert-history alert-history-active="alert"></alert-history>
+  </div>
+</div>

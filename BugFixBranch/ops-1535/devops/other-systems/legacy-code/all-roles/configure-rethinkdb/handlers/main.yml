@@ -1,0 +1,11 @@
+---
+
+
+
+- name: reload rethinkdb
+  become: yes
+  service: name=rethinkdb state=reloaded
+
+- name: restart rethinkdb
+  become: yes
+  service: name=rethinkdb state=restarted

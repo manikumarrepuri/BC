@@ -1,0 +1,52 @@
+{
+  "name": "rule-engine-receiver",
+  "version": "1.2.1",
+  "description": "Rule Engine Receiver is a handler server that decodes incoming data and stores it in queue",
+  "main": "app.js",
+  "private": true,
+  "publishConfig": {
+    "registry": "http://10.197.55.249/"
+  },
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/",
+    "test-debug": "mocha --debug-brk --require tests/bootstrap.js --recursive tests/cases/",
+    "start": "sudo forever list | grep $(pwd) | cut -d' ' -f6 | xargs -I {} sudo forever stop {} && sudo forever start $(pwd)/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@10.187.75.160:itheonx/rule-engine-receiver.git"
+  },
+  "keywords": [
+    "RuleEngine",
+    "Receiver"
+  ],
+  "author": "Kamil Skowron <kamil.skowron@bluechip.co.uk, Terry Novis <terry.novis@bluechip.co.uk>",
+  "license": "SEE LICENSE IN license.md",
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "handlebars": "^4.0.5",
+    "itheon-entity": "^1.0.9",
+    "itheon-module-device-entity": "^1.0.3",
+    "itheon-module-performance-entity": "^1.0.3",
+    "itheon-module-reminder-entity": "^1.0.8",
+    "itheon-module-rule-entity": "^1.0.1",
+    "itheon-rule-engine": "^1.0.0",
+    "itheon-service": "^1.0.0",
+    "itheon-subscriber": "^1.3.0",
+    "itheon-subscriber-entity": "^1.0.4",
+    "moment": "^2.10.6",
+    "opserve-common": "^1.3.0",
+    "require-all": "^1.1.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-test": "^2.4.0",
+    "mocha": "^2.5.3",
+    "mocha-bamboo-reporter": "*",
+    "q": "^1.4.1",
+    "redis-js": "^0.1.2",
+    "sinon": "^1.17.6",
+    "sinon-stub-promise": "^3.0.1"
+  }
+}

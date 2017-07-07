@@ -1,0 +1,44 @@
+---
+- name: create postgres group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - postgres
+
+- name: create postgres user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    group: "{{item}}"
+  with_items:
+    - postgres
+
+- name: create data directory
+  file:
+    path: "{{item.src}}"
+    state: directory
+    group: "{{item.owner}}"
+    owner: "{{item.owner}}"
+  with_items:
+    - {src: "/var/postgres", owner: "postgres"}
+
+- name: "Create PostgresDB container"
+  docker_container:
+    name: postgres
+    image: docker.appdev.bluechipdomain.co.uk/postgres:9.6.2-alpine
+    volumes:
+      - /var/postgres:/var/lib/postgresql/data
+      - /etc/passwd:/etc/passwd:ro
+    env:
+      POSTGRES_PASSWORD: "{{postgresql_password}}"
+      POSTGRES_USER: "{{postgresql_user}}"
+      POSTGRES_DB: "{{postgresql_db}}"
+    exposed_ports:
+      - 5432
+    published_ports:
+      - 5432:5432
+    state: started
+    restart_policy: always
+- name: Prune docker system.
+  shell: docker system prune -f

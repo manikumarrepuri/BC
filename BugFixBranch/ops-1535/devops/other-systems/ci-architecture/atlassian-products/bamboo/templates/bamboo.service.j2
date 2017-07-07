@@ -1,0 +1,18 @@
+[Unit]
+Description=Atlassian Bamboo
+After=network.target auditd.service
+ConditionPathExists={{install_path}}/bin/start-bamboo.sh
+
+[Service]
+ExecStart=/bin/bash {{install_path}}/bin/start-bamboo.sh
+ExecStop=/bin/bash {{install_path}}/bin/stop-bamboo.sh
+ExecReload=/bin/kill -9 `cat $CATALINA_HOME/work/catalina.pid`; /bin/bash {{install_path}}/bin/start-bamboo.sh
+KillMode=process
+Restart=always
+Type=forking
+User={{bamboo_user}}
+Group={{bamboo_user}}
+RemainAfterExit=yes
+
+[Install]
+Alias=bamboo

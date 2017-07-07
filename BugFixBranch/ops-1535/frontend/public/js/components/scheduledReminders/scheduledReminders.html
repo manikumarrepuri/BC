@@ -1,0 +1,20 @@
+<ul id="sortable" class="list-unstyled">
+  <li>
+    <div>
+      <ng-letter-avatar  data="" charcount="2" dynamic="true" fontsize="12" width="23" height="23" avatarborder="true" avatarcustomborder="border:2px dotted #bfbbbb" shape="round"></ng-letter-avatar>
+      <input type="text" name="description" placeholder="Add a new reminder..." ng-model="scheduledRemindersCtrl.description" ng-keyup="scheduledRemindersCtrl.reminderText()" ng-click="scheduledRemindersCtrl.addReminder()" />
+    </div>
+  </li>
+  <li ng-repeat="reminder in scheduledRemindersCtrl.reminders" class="ui-state-default" ng-click="scheduledRemindersCtrl.editReminder($event, reminder.id)">
+    <div>
+      <ng-letter-avatar  data="{{reminder.defaultAssignee}}" charcount="2" dynamic="true" fontsize="12" width="23" height="23" avatarborder="true" avatarcustomborder="border:2px solid #bfbbbb" shape="round"></ng-letter-avatar>
+      <span class="tag label monospace bg-aqua">{{reminder.type | padRight: '8':'&nbsp;' }}</span>
+      <span class="reminder-description">{{reminder.description}}</span>
+      <span class="tag label bg-gray" ng-repeat="(key, tag) in reminder.tags |limitTo:3">
+        #{{tag}}
+      </span>
+      <span class="tag-more" ng-if="alert.tags.length > 3">...</span>
+      <span class="pull-right next-date">{{reminder.nextOccurrence | amCalendar}}</span>
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,33 @@
+# Artifactory
+
+variable "artifactory_url" {
+  default = "{{artifactory_url}}"
+}
+
+variable "artifactory_user" {
+  default = "{{artifactory_user}}"
+}
+
+variable "artifactory_password" {
+  default = "{{artifactory_password}}"
+}
+
+variable "artifactory_repo" {
+  default = "{{artifactory_repo}}"
+}
+
+output "artifactory_url" {
+  value = "${var.artifactory_url}"
+}
+
+output "artifactory_user" {
+  value = "${var.artifactory_user}"
+}
+
+output "artifactory_password" {
+  value = "${var.artifactory_password}"
+}
+
+output "artifactory_repo" {
+  value = "${var.artifactory_repo}"
+}

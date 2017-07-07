@@ -1,0 +1,3 @@
+---
+- include: install-vault.yml
+- include: configure-vault.yml

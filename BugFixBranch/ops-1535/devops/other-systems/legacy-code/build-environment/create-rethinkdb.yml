@@ -1,0 +1,104 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rethinkdb-master-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.26
+    - network_hostname: mxc-rethinkdb-master-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rethinkdb-slave1-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.27
+    - network_hostname: mxc-rethinkdb-slave1-ub-16-04
+    - vsphere_memory: 8192
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rethinkdb-slave2-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.28
+    - network_hostname: mxc-rethinkdb-slave2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rethinkdb-slave3-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.29
+    - network_hostname: mxc-rethinkdb-slave3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rethinkdb-slave4-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.30
+    - network_hostname: mxc-rethinkdb-slave4-ub-16-04

@@ -1,0 +1,13 @@
+.tag-sidebar dl {
+  margin-bottom: 0;
+}
+
+.tag-sidebar dl dd {
+  padding-bottom: 10px;
+}
+
+.severity-icon i.severity-text {
+  color: #fff !important;
+  font-weight: bold;
+  font-style: normal;
+}

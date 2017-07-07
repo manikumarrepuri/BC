@@ -1,0 +1,50 @@
+---
+- name: Install nginx
+  apt:
+    name: nginx
+    state: latest
+    cache_valid_time: 3600
+
+- name: Delete default nginx config symlink
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  register: nginx
+
+- name: Delete default nginx config
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+  register: nginx
+
+- name: Deploy main nginx config
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/nginx.conf"
+  register: nginxconfig
+
+- name: Deploy nginx config(s).
+  template:
+    src: "{{item.src}}"
+    dest: "/etc/nginx/sites-available/{{item.name}}"
+  with_items: "{{nginx_config_items}}"
+  register: nginxconfig
+
+- name: Symlink nginx configs.
+  file:
+    src: "/etc/nginx/sites-available/{{item.name}}"
+    dest: "/etc/nginx/sites-enabled/{{item.name}}"
+    state: link
+  with_items: "{{nginx_config_items}}"
+  register: nginxsymlink
+
+- name: Restart nginx service
+  service:
+    name: nginx
+    state: restarted
+  when: nginx.changed or nginxconfig.changed or nginxsymlink.changed
+
+- name: Ensure nginx service is running
+  service:
+    name: nginx
+    state: started

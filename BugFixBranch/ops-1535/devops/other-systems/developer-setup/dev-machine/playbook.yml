@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install ansible pre-reqs'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts : all
+  roles:
+   - role: ../../shared/ansible/common
+   - role: ../../shared/ansible/ssl-certificates
+   - role: ../../shared/ansible/install-docker
+  become: yes

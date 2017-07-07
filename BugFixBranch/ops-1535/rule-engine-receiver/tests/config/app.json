@@ -1,0 +1,41 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : false,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  } ,
+  "amqp": {
+    "connectionString": "amqp://guest:guest@127.0.0.1"
+  },
+  "frontendApi": {
+    "host": "www.test.com",
+    "protocol": "http://",
+    "port": "80",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

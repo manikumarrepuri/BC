@@ -1,0 +1,50 @@
+---
+- name: Deploy worker app.env.json template
+  template:
+    src: app.json.j2
+    dest: "/opt/itheon/rule-engine-worker/config/app.env.json"
+
+- name: set npm registry
+  command: npm set registry {{ itheonx_sinopia_server }}
+  args:
+    chdir: /opt/itheon/rule-engine-worker
+
+- name: npm install rule engine worker
+  command: npm install
+  args:
+    chdir: /opt/itheon/rule-engine-worker
+
+- name: stop pm2
+  command: pm2 stop all
+
+- name: delete all pm2 jobs
+  command: pm2 delete all
+
+- name: Run pm2 command to start worker app.js
+  command: pm2 start /opt/itheon/rule-engine-worker/app.js --name "Worker"
+
+- name: Run pm2 save
+  command: pm2 save
+  args:
+    chdir: ~/
+
+- name: Set pm2 startup
+  command: pm2 startup ubuntu
+  args:
+    chdir: ~/
+
+- name: Create Itheon group on RethinkDB cluster
+  command: recli 'r.dbCreate("itheon")' -h "{{ itheonx_rethinkdb_master }}"
+  ignore_errors: yes
+  when: ansible_default_ipv4.address == "{{ hostvars[groups[group_names[0]][0]].ansible_default_ipv4.address }}"
+
+- name: Deploy build-rethinkdb.sh
+  template: src=build-rethinkdb.sh
+            dest=/home/ansible/build-rethinkdb.sh
+  when: ansible_default_ipv4.address == "{{ hostvars[groups[group_names[0]][0]].ansible_default_ipv4.address }}"
+
+- name: Run build-rethinkdb.sh
+  command: bash build-rethinkdb.sh
+  args:
+    chdir: /home/ansible/
+  when: ansible_default_ipv4.address == "{{ hostvars[groups[group_names[0]][0]].ansible_default_ipv4.address }}"

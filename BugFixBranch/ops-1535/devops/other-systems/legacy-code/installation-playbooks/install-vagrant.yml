@@ -1,0 +1,7 @@
+---
+- name: Install Vagrant on target machine
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - install-vagrant

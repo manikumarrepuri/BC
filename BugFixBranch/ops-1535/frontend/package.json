@@ -1,0 +1,56 @@
+{
+  "name": "itheon-10-frontend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "private": true,
+  "publishConfig": {
+    "registry": "https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+  },
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "body-parser": "^1.14.1",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^3.0.1",
+    "cookie-parser": "^1.4.0",
+    "express": "^4.13.3",
+    "express-session": "^1.12.1",
+    "itheon-gateway": "^3.3.24",
+    "itheon-module-acl-entity": "^1.0.0",
+    "itheon-module-agent-rule-entity": "^1.0.2",
+    "itheon-module-alert-entity": "^1.0.0",
+    "itheon-module-device-entity": "^1.0.0",
+    "itheon-module-metric-entity": "^1.0.1",
+    "itheon-module-performance-entity": "^1.0.0",
+    "itheon-module-reminder-entity": "^1.0.4",
+    "itheon-module-rule-entity": "^1.0.0",
+    "itheon-module-tag-entity": "^1.0.2",
+    "itheon-module-user-entity": "^1.0.0",
+    "itheon-route": "^3.0.7",
+    "morgan": "^1.6.1",
+    "node-zip": "^1.1.1",
+    "opserve-common": "^1.3.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "sha1": "^1.1.1",
+    "socket.io": "^1.3.7",
+    "syswide-cas": "^3.0.0",
+    "urlencode": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "itheon-test": "^1.0.0",
+    "mocha": "^2.3.3",
+    "should": "^7.1.0",
+    "supertest": "^1.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "10.187.75.160:itheonx/itheon-10-frontend.git"
+  },
+  "author": "Blue Chip",
+  "license": "ISC",
+  "description": ""
+}

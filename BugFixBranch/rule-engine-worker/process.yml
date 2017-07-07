@@ -1,0 +1,7 @@
+apps:
+  - script   : 'app.js'
+    name     : 'worker'
+    exec_mode: 'cluster'
+    instances: 1
+    error_file: ./logs/worker-error.log
+    out_file: ./logs/worker-out.log

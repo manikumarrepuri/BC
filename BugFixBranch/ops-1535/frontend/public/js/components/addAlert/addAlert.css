@@ -1,0 +1,12 @@
+/*
+ * Component: Control sidebar. By default, this is the right sidebar.
+ */
+
+ .add-alert-sidebar .control-label {
+   width: 8em;
+   vertical-align: top;
+ }
+
+.add-alert-sidebar input, .add-alert-sidebar textarea {
+  width: 15em;
+}

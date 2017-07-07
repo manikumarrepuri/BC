@@ -1,0 +1,7 @@
+---
+- name: configure network
+  hosts: all-hosts
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network

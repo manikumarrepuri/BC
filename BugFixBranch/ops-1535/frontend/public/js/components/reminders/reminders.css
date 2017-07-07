@@ -1,0 +1,152 @@
+reminders {
+  font-size: 120%;
+}
+
+reminders .toolbar {
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+  margin-bottom: 1em;
+  margin-top: 40px;
+}
+
+reminders .toolbar .left {
+    float: left
+}
+reminders .toolbar .right {
+    float: right
+}
+reminders .toolbar .center {
+    display: inline-block
+}
+
+reminders .toolbar>*>* {
+    float: left;
+    margin-left: .75em
+}
+reminders .toolbar>*>:first-child {
+    margin-left: 0
+}
+reminders .toolbar h2 {
+    margin: 0
+}
+reminders .toolbar button {
+    position: relative
+}
+reminders .toolbar .state-hover,
+reminders .toolbar .ui-state-hover {
+    z-index: 2
+}
+reminders .toolbar .state-down {
+    z-index: 3
+}
+
+reminders .toolbar .state-active,
+reminders .toolbar .ui-state-active {
+    z-index: 4
+}
+reminders .toolbar button:focus {
+    z-index: 5
+}
+
+reminders button {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    height: 2.1em;
+    padding: 0 .6em;
+    font-size: 1em;
+    white-space: nowrap;
+    cursor: pointer
+}
+reminders button::-moz-focus-inner {
+    margin: 0;
+    padding: 0
+}
+reminders button span {
+  font-weight: bold;
+}
+
+reminders .state-default {
+    border: 1px solid
+}
+
+reminders .state-default.corner-left {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px
+}
+
+reminders .state-default.corner-right {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px
+}
+reminders button .icon {
+    position: relative;
+    top: .05em;
+    margin: 0 .1em
+}
+
+reminders .state-default {
+    background-color: #f5f5f5;
+    background-image: -moz-linear-gradient(top, #fff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #fff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #fff, #e6e6e6);
+    background-image: linear-gradient(to bottom, #fff, #e6e6e6);
+    background-repeat: repeat-x;
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+    color: #333;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, .75);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05)
+}
+
+reminders .state-active,
+reminders .state-disabled,
+reminders .state-down,
+reminders .state-hover {
+    color: #333;
+    background-color: #e6e6e6
+}
+reminders .state-hover {
+    color: #333;
+    text-decoration: none;
+    background-position: 0 -15px;
+    -webkit-transition: background-position .1s linear;
+    -moz-transition: background-position .1s linear;
+    -o-transition: background-position .1s linear;
+    transition: background-position .1s linear
+}
+reminders .state-active,
+reminders .state-down {
+    background-color: #ccc;
+    background-image: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05)
+}
+reminders .state-disabled {
+    cursor: default;
+    background-image: none;
+    opacity: .65;
+    filter: alpha(opacity=65);
+    box-shadow: none
+}
+reminders .button-group {
+    display: inline-block
+}
+reminders .button-group>* {
+    float: left;
+    margin: 0 0 0 -1px
+}
+reminders .button-group>:first-child {
+    margin-left: 0
+}
+
+reminders .page-options {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+reminders .page-options.pull-right .btn-group .dropdown-menu {
+  margin-left: -100px;
+}

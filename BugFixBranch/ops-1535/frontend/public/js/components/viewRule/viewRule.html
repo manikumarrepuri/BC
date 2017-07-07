@@ -1,0 +1,37 @@
+<aside scrolly class="rule-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content" *ng-if="selected">
+    <!-- Home tab content -->
+    <div class="tab-pane active" ng-if="ruleCtrl.rule">
+      <h2>
+        <span class="light">Rule Name</span>
+        <span class="padding-right-20">{{ruleCtrl.rule.name}}</span>
+        <i class="pull-right close fa fa-times-circle-o" ng-click="ruleCtrl.toggleRuleDetails()"></i>
+      </h2>
+
+      <h3 class="module-sidebar-heading">Rule Details</h3>
+
+      <div class="status update-success hide progress-bar-success"><span>Successfully updated the rule.</span></div>
+      <div class="status update-failed hide progress-bar-danger"><span>Failed to update the rule: {{ruleCtrl.errorMessage}}.</span></div>
+
+      <pre ng-show="!ruleCtrl.edit">{{ ruleCtrl.rule | prettyJSON}}</pre>
+      <div ng-show="ruleCtrl.edit">
+        <textarea id="editRule" spellcheck="false" class="form-control smart-area code" ng-model="ruleCtrl.editRuleForm" rows="30" smart-area="ruleCtrl.config"></textarea>
+      </div>
+      <div class="pull-right" style="margin-top: 10px;">
+        <button ng-show="!ruleCtrl.edit" class="btn btn-success" ng-click="ruleCtrl.edit=true">Edit</button>
+        <button ng-show="ruleCtrl.edit" ng-click="ruleCtrl.saveRule(ruleCtrl.editRuleForm)" class="btn btn-danger"><i class="fa fa-floppy"></i> Save </button>
+        <button ng-show="ruleCtrl.edit" ng-click="ruleCtrl.cancelEdit()" class="btn"><i class="fa fa-cancel"></i> Cancel </button>
+      </div>
+
+      <!-- /.control-sidebar-menu -->
+    </div>
+    <!-- /.tab-pane -->
+
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

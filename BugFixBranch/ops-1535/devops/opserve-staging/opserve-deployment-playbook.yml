@@ -1,0 +1,299 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  become: no
+  vars_files:
+    - ./vars/opserve-vars.yml
+  roles:
+    - ../shared/ansible/terraform-vm-deploy
+
+- hosts: all
+  remote_user: ansible
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts: all
+  remote_user: ansible
+  become: yes
+  vars_files:
+    - ./vars/opserve-vars.yml
+  roles:
+    - ../shared/ansible/common
+    - ../shared/ansible/ssl-certificates
+    - ../shared/ansible/install-docker
+
+# Gather facts for all hosts after running the common config.
+- hosts: all
+  remote_user: ansible
+  become: yes
+  gather_facts: yes
+  tasks: []
+
+- hosts: mongodb
+  remote_user: ansible
+  become: yes
+  roles:
+    - ../shared/ansible/docker-mongodb
+
+- hosts: rabbitmq
+  remote_user: ansible
+  become: yes
+  vars_files:
+    - ./vars/opserve-vars.yml
+  tasks:
+  - name: Create rabbitmq container
+    docker_container:
+      name: rabbitmq
+      image: "{{docker_repository}}/rabbitmq:management"
+      ports:
+        - "8080:15672"  # management port
+        - "25672:25672" # clustering port
+        - "5672:5672"   # listen port
+      env:
+        RABBITMQ_DEFAULT_USER: test
+        RABBITMQ_DEFAULT_PASS: test
+        RABBITMQ_ERLANG_COOKIE: "{{rabbitmq_erlang_cookie}}"
+        RABBITMQ_HIPE_COMPILE: 1
+      state: started
+      restart_policy: always
+  - name: Prune docker system.
+    shell: docker system prune -f
+
+- hosts: rethinkdb
+  remote_user: ansible
+  become: yes
+  vars_files:
+  - ./vars/opserve-vars.yml
+  tasks:
+  - name: Create data container
+    docker_container:
+      name: rethink_data
+      image: busybox
+      volumes:
+        - /data
+      state: started
+      restart_policy: always
+  - name: Create and start rethink container
+    docker_container:
+      name: rethinkdb
+      image: "{{docker_repository}}/rethinkdb:latest"
+      recreate: yes
+      ports:
+        - "8080:8080"
+        - "28015:28015"
+      volumes_from:
+        - rethink_data
+      state: started
+      restart_policy: always
+  - name: Prune docker system.
+    shell: docker system prune -f
+
+- hosts: redis
+  remote_user: ansible
+  become: yes
+  vars_files:
+  - ./vars/opserve-vars.yml
+  roles:
+  - ../shared/ansible/install-redis
+
+- hosts: opserve
+  remote_user: ansible
+  become: yes
+  vars_files:
+  - ./vars/opserve-vars.yml
+  pre_tasks:
+  - name: Get docker image map
+    shell: "get-dockerimagemap --tag {{environment_identifier}}"
+    register: imagemap
+    delegate_to: 127.0.0.1
+  - name: Set docker image map
+    set_fact:
+      opserve_images: "{{imagemap.stdout}}"
+  tasks:
+  - name: Create host installation directory
+    file:
+      path: "{{item}}"
+      state: directory
+    with_items:
+      - /opt/opserve/config
+      - /opt/opserve/logs
+  - name: Deploy config file
+    template:
+      src: "app.json.j2"
+      dest: /opt/opserve/config/app.json
+  - name: Deploy backend container
+    docker_container:
+      name: backend
+      image: "{{docker_repository}}/opserve/backend:{{opserve_images['backend']}}"
+      recreate: yes
+      pull: yes
+      volumes:
+        - /opt/opserve/config:/opt/itheon/config
+        - /opt/opserve/logs:/opt/itheon/logs
+      ports:
+        - "{{opserve_backend_port}}:9443"
+      state: started
+      restart_policy: always
+  - name: Deploy frontend container
+    docker_container:
+      name: frontend
+      image: "{{docker_repository}}/opserve/frontend:{{opserve_images['frontend']}}"
+      recreate: yes
+      pull: yes
+      volumes:
+        - /opt/opserve/config:/opt/itheon/config
+      ports:
+        - "{{opserve_frontend_port}}:3002"
+      state: started
+      restart_policy: always
+  - name: Prune docker system.
+    shell: docker system prune -f
+
+- hosts: receivers
+  remote_user: ansible
+  become: yes
+  vars_files:
+  - ./vars/opserve-vars.yml
+  pre_tasks:
+  - name: Get docker image map
+    shell: "get-dockerimagemap --tag {{environment_identifier}}"
+    register: imagemap
+    delegate_to: 127.0.0.1
+  - name: Set docker image map
+    set_fact:
+      opserve_images: "{{imagemap.stdout}}"
+  tasks:
+  - name: Create host installation directory
+    file:
+      path: "{{item}}"
+      state: directory
+    with_items:
+      - /opt/opserve/config
+      - /opt/opserve/logs
+  - name: Deploy config file
+    template:
+      src: "app.json.j2"
+      dest: /opt/opserve/config/app.json
+  - name: Deploy receiver containers
+    docker_container:
+      name: "rule-engine-receiver{{item}}"
+      image: "{{docker_repository}}/opserve/rule-engine-receiver:{{opserve_images['rule-engine-receiver']}}"
+      recreate: yes
+      pull: yes
+      volumes:
+        - /opt/opserve/config:/opt/itheon/config
+        - /opt/opserve/logs:/opt/itheon/logs
+      ports:
+        - "{{2918 + (item | int)}}:2919"
+      state: started
+      restart_policy: always
+    with_sequence: "count={{receiver_container_count}}"
+  - name: Prune docker system.
+    shell: docker system prune -f
+
+- hosts: ruleengine
+  remote_user: ansible
+  become: yes
+  vars_files:
+  - ./vars/opserve-vars.yml
+  pre_tasks:
+  - name: Get docker image map
+    shell: "get-dockerimagemap --tag {{environment_identifier}}"
+    register: imagemap
+    delegate_to: 127.0.0.1
+  - name: Set docker image map
+    set_fact:
+      opserve_images: "{{imagemap.stdout}}"
+  tasks:
+  - name: Create host installation directory
+    file:
+      path: "{{item}}"
+      state: directory
+    with_items:
+      - /opt/opserve/config
+      - /opt/opserve/logs
+  - name: Deploy config file
+    template:
+      src: "app.json.j2"
+      dest: /opt/opserve/config/app.json
+  - name: Deploy worker container
+    docker_container:
+      name: rule-engine-worker
+      image: "{{docker_repository}}/opserve/rule-engine-worker:{{opserve_images['rule-engine-worker']}}"
+      pull: yes
+      recreate: yes
+      volumes:
+        - /opt/opserve/config:/opt/itheon/config
+        - /opt/opserve/logs:/opt/itheon/logs
+      state: started
+      restart_policy: always
+  - name: Deploy handler container
+    docker_container:
+      name: rule-engine-handler
+      image: "{{docker_repository}}/opserve/rule-engine-handler:{{opserve_images['rule-engine-handler']}}"
+      pull: yes
+      recreate: yes
+      volumes:
+        - /opt/opserve/config:/opt/itheon/config
+        - /opt/opserve/logs:/opt/itheon/logs
+      state: started
+      restart_policy: always
+  - name: Build rethinkdb
+    shell: docker exec rule-engine-worker /bin/sh -c "[ -f build/RethinkDb/init.js ] && node build/RethinkDb/init.js || echo rethink init file not found"
+    register: output
+  - debug:
+     var: output.stdout_lines
+  - name: Build mongodb
+    shell: docker exec rule-engine-worker /bin/sh -c "[ -f build/MongoDb/init.js ] && node build/MongoDb/init.js || echo mongo init file not found"
+    register: output
+  - debug:
+     var: output.stdout_lines
+  - name: Prune docker system.
+    shell: docker system prune -f
+
+
+- hosts: loadbalancer
+  remote_user: ansible
+  become: yes
+  vars:
+    nginx_config_items:
+      - {name: "opserve", 
+          src: "nginx-opserve.j2"}
+    haproxy_config_src: "haproxy-opserve.cfg.j2"
+    certificate_items:
+        - {src: "wildcard.appdev.bundle.crt", 
+            dest: "/etc/ssl/{{fqdn}}.crt"}
+        - {src: "wildcard.appdev.key", 
+            dest: "/etc/ssl/{{fqdn}}.key"}
+        - {src: "appdev.ca.cer", 
+            dest: "/etc/ssl/appdev.ca.cer"}    
+  vars_files:
+    - ./vars/opserve-vars.yml
+  roles:
+    - ../shared/ansible/ssl-certificates
+    - ../shared/ansible/nginx
+    - ../shared/ansible/haproxy
+  tasks:
+  - name: Get docker image map
+    shell: "get-dockerimagemap --tag {{environment_identifier}}"
+    register: imagemap
+    delegate_to: 127.0.0.1
+    changed_when: no
+  - name: Set docker image map
+    set_fact:
+      opserve_images: "{{imagemap.stdout}}"
+    changed_when: no
+  - name: Deploy goreceive forwarder
+    docker_container:
+      name: goreceive
+      network_mode: host
+      image: "{{docker_repository}}/opserve/goreceive:{{opserve_images['goreceive']}}"
+      env:
+        GOREC_RABBITMQ_HOSTNAME: itheon-in.appdev.bluechipdomain.co.uk
+      pull: yes
+      recreate: yes
+      state: started
+      restart_policy: always

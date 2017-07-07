@@ -1,0 +1,30 @@
+{
+  "name": "itheon-acl",
+  "version": "2.0.0",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "acl": "^0.4.9",
+    "itheon-config": "^2.0.1",
+    "itheon-data-provider": "^3.1.2",
+    "itheon-gateway": "^3.2.8",
+    "itheon-module-acl-entity": "^1.0.0",
+    "itheon-module-user-entity": "^1.0.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "itheon-config": "^2.0.1",
+    "itheon-data-provider": "^3.1.2",
+    "itheon-test": "^2.2.1",
+    "nock": "^8.0.0"
+  }
+}

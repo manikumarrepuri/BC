@@ -1,0 +1,1 @@
+ansible-playbook opserve-deployment-playbook.yml --extra-vars "environment_identifier=$1 host_key_checking=no"

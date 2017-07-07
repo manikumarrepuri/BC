@@ -1,0 +1,70 @@
+---
+- name: configure network
+  hosts: 10.197.55.126
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.26
+    - network_hostname: staging-rethinkdb-master-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.127
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.27
+    - network_hostname: staging-rethinkdb-slave1-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.128
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.28
+    - network_hostname: staging-rethinkdb-slave2-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.129
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.29
+    - network_hostname: staging-rethinkdb-slave3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0
+
+- name: configure network
+  hosts: 10.197.55.130
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.56.30
+    - network_hostname: staging-rethinkdb-slave4-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.56.255
+    - network_gateway: 10.197.56.254
+    - network_network: 10.197.56.0

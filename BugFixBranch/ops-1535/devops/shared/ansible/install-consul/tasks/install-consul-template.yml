@@ -1,0 +1,57 @@
+---
+- name: Check consul-template exists
+  changed_when: no
+  stat:
+    path: "/usr/bin/consul-template"
+  register: status
+
+- name: Check consul-template version
+  shell: "consul-template -v"
+  register: versionCheck
+  when: (status.stat.exists == true)
+
+- name: Set consul-template download baseurl.
+  set_fact:
+    consul_template_baseurl: https://releases.hashicorp.com/consul-template/
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Get latest consul-template version.
+  shell: 'curl -sN {{consul_template_baseurl}} | grep -m 1 -o "consul-template_.*<" | sed ''s/consul-template_\(.*\).$/\1/'''
+  register: versionResult
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Set consul-template version fact.
+  set_fact:
+    consul_template_latest_version: "{{versionResult.stdout}}"
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Create consul-template directory.
+  file:
+    path: /opt/consul-template
+    state: directory
+    mode: 0755
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Download latest version of consul-template.
+  unarchive:
+    src: "{{consul_template_baseurl}}{{consul_template_latest_version}}/consul-template_{{consul_template_latest_version}}_linux_amd64.zip"
+    dest: /opt/consul-template
+    remote_src: True
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Make consul-template executable
+  file:
+    path: /opt/consul-template/consul-template
+    mode: a+x
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Symlink consul-template binary.
+  file:
+    src: /opt/consul-template/consul-template
+    dest: /usr/bin/consul-template
+    state: link
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)

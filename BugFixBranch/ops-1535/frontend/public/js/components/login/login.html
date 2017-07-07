@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="card card-container center-block">
+    <img id="logo-img" class="logo-img-card" src="/static/images/itheon%20logo.png" />
+    <form method="post" data-ng-submit="loginCtrl.login(loginCtrl)">
+      <span id="error-message" class="error-message">{{loginCtrl.error}}</span>
+      <div class="form-group has-feedback">
+        <input type="text" class="form-control" placeholder="Username" autofocus data-ng-model="loginCtrl.username">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" class="form-control" placeholder="Password" data-ng-model="loginCtrl.password">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin">Sign In</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+  </div><!-- /card-container -->
+</div><!-- /container -->

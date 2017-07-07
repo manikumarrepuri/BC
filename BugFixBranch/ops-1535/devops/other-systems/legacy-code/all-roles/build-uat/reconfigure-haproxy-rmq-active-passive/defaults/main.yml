@@ -1,0 +1,4 @@
+haproxy_mcast: 225.0.0.1
+haproxy_ucast: # Passive address if active, Active address if passive
+haproxy_udp_port: 694
+itheonx_haproxy_group: # Define in playbook

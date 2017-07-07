@@ -1,0 +1,60 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-master-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.14
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave1-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.15
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave2-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.16
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave3-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.17
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-rabbitmq-slave4-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - network_address_1: 10.197.55.18

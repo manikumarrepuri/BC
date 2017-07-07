@@ -1,0 +1,6 @@
+---
+- name: Install built software
+  include: build-software.yml
+  
+- name: Bamboo agent setup
+  include: bamboo-agent.yml

@@ -1,0 +1,3 @@
+---
+nomad_deployment: "client"
+nomad_user: "nomad"

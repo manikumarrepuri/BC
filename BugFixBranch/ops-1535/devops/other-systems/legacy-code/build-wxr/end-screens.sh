@@ -1,0 +1,9 @@
+screen -S vagrant -X stuff 'exit'`echo -ne '\015'`
+screen -S rabbitmq -X stuff 'exit'`echo -ne '\015'`
+screen -S redis -X stuff 'exit'`echo -ne '\015'`
+screen -S rethinkdb -X stuff 'exit'`echo -ne '\015'`
+screen -S befe -X stuff 'exit'`echo -ne '\015'`
+screen -S receivers -X stuff 'exit'`echo -ne '\015'`
+screen -S haproxy -X stuff 'exit'`echo -ne '\015'`
+screen -S handlers -X stuff 'exit'`echo -ne '\015'`
+screen -S workers -X stuff 'exit'`echo -ne '\015'`

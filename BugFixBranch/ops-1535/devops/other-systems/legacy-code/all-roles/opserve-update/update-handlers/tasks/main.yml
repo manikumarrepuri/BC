@@ -1,0 +1,71 @@
+---
+- name: Stop PM2 jobs
+  shell: pm2 stop all
+  ignore_errors: true
+
+- name: Delete PM2 jobs
+  shell: pm2 delete all
+  ignore_errors: true
+
+- name: Clear out /opt/itheon/*
+  file: path=/opt/itheon
+        state=absent
+
+- name: Create directory for Git cloning
+  file: path=/opt/itheon
+        state=directory
+        mode=755
+        recurse=yes
+        owner=ansible
+
+- name: Git clone cert repo
+  become: no
+  git: repo={{ itheonx_cert_repo }}
+       dest=/opt/itheon
+       version=develop
+       clone=yes
+       accept_hostkey=yes
+
+- name: Create directory for Itheon 7 RoboEDA
+  file: path=/opt/RoboEDA/events
+        state=directory
+        mode=755
+        recurse=yes
+        owner=ansible
+
+- name: Git clone the Itheon OpServe Rule Engine handler
+  become: no
+  git: repo={{ handler_git_repo }}
+       dest=/opt/itheon/rule-engine-handler
+       clone=yes
+       accept_hostkey=yes
+
+- name: Deploy handler app.env.json template
+  template:
+    src: app.json.j2
+    dest: "/opt/itheon/rule-engine-handler/config/app.env.json"
+
+- name: set npm registry
+  command: npm set registry {{ itheonx_sinopia_server }}
+  args:
+    chdir: /opt/itheon/rule-engine-handler
+
+- name: npm install
+  command: npm install
+  args:
+    chdir: /opt/itheon/rule-engine-handler
+
+- name: Run pm2 command to start handler app.js
+  command: pm2 start /opt/itheon/rule-engine-handler/app.js --name "handler"
+
+- include: pubsub.yml
+
+- name: Run pm2 save
+  command: pm2 save
+  args:
+    chdir: ~/
+
+- name: Set pm2 startup
+  command: pm2 startup ubuntu
+  args:
+    chdir: ~/

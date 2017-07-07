@@ -1,0 +1,6 @@
+---
+server_node_ips: "10.197.55.242 10.197.55.243 10.197.55.244 10.197.55.245"
+consul_deployment: "client"
+consul_user: "consul"
+advertise_addr: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+wan_join: false

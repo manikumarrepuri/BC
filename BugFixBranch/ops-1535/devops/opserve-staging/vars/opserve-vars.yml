@@ -1,0 +1,65 @@
+---
+#
+artifactory_url: "http://artifactory.{{appdev_domain_suffix}}"
+artifactory_repo: "terraform-state"
+artifactory_user: "opserve-devops"
+artifactory_password: "qt5lZEJDH31TpZHdtLFnaHBVB"
+docker_repository: "docker.{{appdev_domain_suffix}}"
+#
+host_vms:
+  - {category: "mongodb", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 8192, 
+      disk_size: 100}
+  - {category: "rethinkdb", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 8192, 
+      disk_size: 100}
+  - {category: "rabbitmq", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 10240, 
+      disk_size: 100}
+  - {category: "receivers", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 4096, 
+      disk_size: 10,
+      count: 2}
+  - {category: "ruleengine", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 4096, 
+      disk_size: 10}
+  - {category: "opserve", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 4096, 
+      disk_size: 20}
+  - {category: "redis", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 8192, 
+      disk_size: 10}
+  - {name_prefix: "{{environment_identifier}}", 
+      category: "loadbalancer", 
+      network_label: "AR_Itheon_PreProd_178", 
+      cpu: 4, 
+      memory: 4096, 
+      disk_size: 10}
+#
+rabbitmq_erlang_cookie: b65c398c450afa9dc897d2bc4019aad76202af9d7157aeaa2dbe5abf7f07d30b
+#
+opserve_pubsub_port: 5000
+opserve_backend_port: 9443
+opserve_frontend_port: 8080
+opserve_receiver_port: 2919
+receiver_container_count: 4
+haproxy_stats_port: 8080
+#
+graylog_fqdn: "graylog.{{appdev_domain_suffix}}"
+#
+appdev_domain_suffix: appdev.bluechipdomain.co.uk
+fqdn: "{{environment_identifier}}-1.{{appdev_domain_suffix}}"

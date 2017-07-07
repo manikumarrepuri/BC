@@ -1,0 +1,88 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-haproxy-active-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /etc/vagrant/staging-haproxy-active-ub-16-04
+    - network_address_1: 10.197.55.102
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.102
+    - network_hostname: staging-haproxy-active-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-haproxy-passive-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-haproxy-passive-ub-16-04
+    - network_address_1: 10.197.55.103
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.103
+    - network_hostname: staging-haproxy-passive-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-haproxy-rmq-active-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-haproxy-rmq-active-ub-16-04
+    - network_address_1: 10.197.55.132
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.132
+    - network_hostname: staging-haproxy-rmq-active-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-haproxy-rmq-passive-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-haproxy-rmq-passive-ub-16-04
+    - network_address_1: 10.197.55.133
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.133
+    - network_hostname: staging-haproxy-rmq-passive-ub-16-04

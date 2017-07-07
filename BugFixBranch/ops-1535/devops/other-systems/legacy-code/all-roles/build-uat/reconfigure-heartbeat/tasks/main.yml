@@ -1,0 +1,28 @@
+---
+- name: Tweak dpkg
+  shell: yes | dpkg --configure -a
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get upgrade
+  ignore_errors: true
+
+- name: Upgrade packages
+  shell: yes | apt-get -f install
+  ignore_errors: true
+
+- name: Install Heartbeat
+  shell: yes | apt-get install heartbeat
+
+- name: Copy authkeys file
+  template:
+    src: authkeys
+    dest: /etc/ha.d/authkeys
+    force: yes
+    mode: 0600
+
+- name: Copy haresources configuration
+  template:
+    src: haresources.j2
+    dest: /etc/ha.d/haresources
+    force: yes

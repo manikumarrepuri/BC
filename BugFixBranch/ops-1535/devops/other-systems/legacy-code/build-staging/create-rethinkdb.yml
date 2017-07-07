@@ -1,0 +1,115 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-master-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+    - vagrant_project: /opserve/staging-rethinkdb-master-ub-16-04
+    - network_address_1: 10.197.55.126
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.126
+    - network_hostname: staging-rethinkdb-master-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave1-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+    - vagrant_project: /opserve/staging-rethinkdb-slave1-ub-16-04
+    - network_address_1: 10.197.55.127
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.127
+    - network_hostname: staging-rethinkdb-slave1-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave2-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+    - vagrant_project: /opserve/staging-rethinkdb-slave2-ub-16-04
+    - network_address_1: 10.197.55.128
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.128
+    - network_hostname: staging-rethinkdb-slave2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave3-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+    - vagrant_project: /opserve/staging-rethinkdb-slave3-ub-16-04
+    - network_address_1: 10.197.55.129
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.129
+    - network_hostname: staging-rethinkdb-slave3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rethinkdb-slave4-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 8192
+    - vagrant_project: /opserve/staging-rethinkdb-slave4-ub-16-04
+    - network_address_1: 10.197.55.130
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.130
+    - network_hostname: staging-rethinkdb-slave4-ub-16-04

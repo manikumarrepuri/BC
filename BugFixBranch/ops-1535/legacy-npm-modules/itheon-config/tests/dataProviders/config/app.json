@@ -1,0 +1,10 @@
+{
+  "works": true,
+  "second": "string",
+  "third": 23,
+  "fourth": {
+    "bool": false,
+    "test": "xyz"
+  },
+  "list": []
+}

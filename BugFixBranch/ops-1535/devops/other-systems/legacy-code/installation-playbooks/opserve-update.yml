@@ -1,0 +1,38 @@
+---
+- name: See Sentinel group
+  hosts: redis-sentinel
+  become: yes
+  tasks: [ ]
+
+- name: See RethinkDB group
+  hosts: rethinkdb
+  become: yes
+  tasks: [ ]
+
+- name: Update backend/frontend with latest code from Git
+  become: yes
+  hosts: be-fe
+  remote_user: ansible
+  roles:
+    - update-backend-frontend
+
+- name: Update receivers with latest code from Git
+  become: yes
+  hosts: receivers
+  remote_user: ansible
+  roles:
+    - update-receivers
+
+- name: Update handlers with latest code from Git
+  become: yes
+  hosts: handlers
+  remote_user: ansible
+  roles:
+    - update-handlers
+
+- name: Update workers with latest code from Git
+  become: yes
+  hosts: workers
+  remote_user: ansible
+  roles:
+    - update-workers

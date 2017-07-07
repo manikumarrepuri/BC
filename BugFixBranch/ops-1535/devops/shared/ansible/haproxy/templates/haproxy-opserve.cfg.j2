@@ -1,0 +1,45 @@
+global
+  stats socket /var/haproxy level admin
+  daemon
+
+defaults
+  log     global
+  mode    http
+  option  dontlognull
+  option  redispatch
+  option  tcp-smart-accept
+  option  tcp-smart-connect
+  retries 3
+  maxconn 2000000
+  timeout connect 5s
+  timeout queue 5s
+  timeout client 30s
+  timeout server 30s
+  timeout tunnel 1h
+  timeout http-request 5s
+  timeout http-keep-alive 15s
+
+
+listen Receivers
+  bind 0.0.0.0:{{opserve_receiver_port}}
+  bind 127.0.0.1:{{opserve_receiver_port}}
+  mode tcp
+  balance roundrobin
+  maxconn 2000000
+{% for host in groups['receivers'] %}
+{% set count = 1 %}
+{% set outer_loop = loop %}
+{% set this_host = hostvars[host]['ansible_hostname'] %}
+{% for n in range(0,receiver_container_count) %}
+  server Receiver{{ outer_loop.index }}-{{n + 1}} {{this_host}}.{{appdev_domain_suffix}}:{{opserve_receiver_port + n}} check
+{% endfor %}
+{% endfor %}
+
+listen stats
+  bind 0.0.0.0:{{ haproxy_stats_port }}
+  mode http
+  stats enable
+  stats hide-version
+  stats realm Haproxy\ Statistics
+  stats uri /
+  stats auth test:test

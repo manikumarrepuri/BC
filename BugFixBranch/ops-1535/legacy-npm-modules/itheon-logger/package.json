@@ -1,0 +1,31 @@
+{
+  "name": "itheon-logger",
+  "version": "2.0.0",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "itheon-config": "^2.0.0",
+    "itheon-utility": "^1.0.0",
+    "winston": "^2.1.1",
+    "winston-logentries": "^1.0.1",
+	"winston-log2gelf": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.0",
+    "mocha-sinon": "^1.1.6",
+    "sinon": "^1.17.6",
+    "underscore": "^1.8.3",
+    "winston-spy": "^0.2.0"
+  }
+}

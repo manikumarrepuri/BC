@@ -1,0 +1,8 @@
+---
+- name: Install NodeJS and PM2 on target hosts
+  hosts: # Configure
+  become: yes
+  remote_user: ansible
+  roles:
+    - install-nodejs
+    - install-pm2

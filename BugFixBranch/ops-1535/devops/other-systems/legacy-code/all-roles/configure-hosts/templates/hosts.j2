@@ -1,0 +1,13 @@
+127.0.0.1       {{ ansible_nodename }}
+{{ haproxy_virtual_ip }}       {{ itheonx_website_address }}
+
+{% for host in groups['all'] %}
+{% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+{{ hostvars[host].ansible_default_ipv4.address }}    {{ hostvars[host]['ansible_nodename'] }}
+{% endif %}
+{% endfor %}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters

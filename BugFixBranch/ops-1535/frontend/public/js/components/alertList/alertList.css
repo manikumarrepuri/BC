@@ -1,0 +1,79 @@
+alert-list .alert-container {
+  position: relative;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #666;
+  padding: 6px;
+  cursor: pointer;
+}
+
+alert-list .alert-container:first-child {
+  border-top: 1px solid #666;
+}
+
+alert-list .alert-header {
+  padding-bottom: 10px;
+}
+
+alert-list .alert-details {
+  margin-left: 20px;
+}
+
+alert-list .alert-details .alert-title {
+  line-height: 1.2em;
+  font-size: 1.2em;
+  margin: 0;
+  max-width: 92%;
+  padding-top: 2px;
+  padding-left: 5px;
+}
+
+alert-list .alert-details p {
+  color: #585252;
+}
+
+alert-list .alert-severity {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: -1px;
+  width: 15px;
+  height: 100%;
+  display: block;
+  background-color: #ddd;
+}
+
+alert-list .alert-footer {
+  font-size: 0.85em;
+}
+
+alert-list .alert-severity span{
+  display: inline-block;
+  line-height: 90px;
+  text-indent: 3px;
+}
+
+alert-list .alert-occured {
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+alert-list .alert-actions a {
+  padding-right: 10px;
+}
+
+@media (max-width: 568px) {
+  alert-list .alert-details .alert-tag {
+    margin-top: 5px;
+    margin-left: 0;
+    margin-right: 4px;
+  }
+
+  alert-list .alert-actions {
+    clear: both;
+  }
+
+  alert-list .alert-actions a {
+    float: left;
+  }
+}

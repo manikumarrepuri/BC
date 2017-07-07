@@ -1,0 +1,54 @@
+<section class="timeline" ng-show="alertHistoryCtrl.visible">
+  <i class="pull-right close fa fa-times-circle-o" style="font-size: 150%" ng-click="alertHistoryCtrl.toggleVisibility($event)"></i>
+  <!-- row -->
+  <div class="row">
+    <div class="col-md-12">
+      <!-- The time line -->
+      <ul class="timeline" ng-repeat="(key, alerts) in alertHistoryCtrl.history">
+        <!-- timeline time label -->
+        <li class="time-label">
+          <span class="bg-blue">
+            <time title="{{ key | amDateFormat: 'dddd, MMMM Do YYYY' }}">{{ key | amDateFormat: 'D MMM. YYYY' }}</time>
+          </span>
+        </li>
+        <!-- /.timeline-label -->
+        <!-- timeline item -->
+        <li ng-repeat="(index, alert) in alerts" ng-click="alertHistoryCtrl.requestAlert($event,index); $event.stopPropagation();">
+
+          <i ng-if="alert.fullText" class="fa fa-bell-o"  ng-class="{'bg-green': alert.severity >= 7 || alert.severity == 5,
+             'bg-orange': alert.severity >= 3 && alert.severity  <= 6 && alert.severity != 5,
+             'bg-red': alert.severity <= 2}"></i>
+          <i ng-if="!alert.fullText" class="fa bg-blue"  ng-class="alert.icon"></i>
+
+        <!--
+          <span class="fa-stack fa-badge-stack fa-2x" ng-class="{'bg-green': alert.severity >= 7 || alert.severity == 5,
+             'bg-orange': alert.severity >= 3 && alert.severity  <= 6 && alert.severity != 5,
+             'bg-red': alert.severity <= 2}">
+            <i class="fa fa-bell-o fa-stack-1x"></i>
+            <i class="fa-badge fa-badge-bottom-circle-surround fa-inverse fa-stack-1x"></i>
+            <i class="fa-badge fa-stack-1x" ng-class="{
+              'fa-badge-bottom-plus': alert.state == 'N',
+              'fa-badge-bottom-clock-o': alert.state == 'U',
+              'fa-badge-bottom-check-circle': alert.state == 'C',
+              'text-danger': alert.state == 'C',
+              'text-success': alert.state != 'C'}">
+            </i>
+          </span>
+          -->
+
+          <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i>  <time title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm:ss a' }}">{{ alert.createdAt | amDateFormat: 'h:mm a' }}</time></span>
+            <h3 ng-if="!alert.fullText" class="timeline-header" ng-bind-html="alert.brief"></h3>
+             <div ng-if="alert.fullText" class="timeline-body" ng-bind-html="alert.brief"></div>
+          </div>
+        </li>
+        <!-- END timeline item -->
+      </ul>
+      <ul class="timeline">
+        <li>
+          <i class="fa fa-clock-o bg-gray"></i>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,92 @@
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <a href="/ruleEditor" class="add btn bg-teal btn-flat">
+      <i class="fa fa-plus"></i> <strong>Rule</strong>
+    </a>
+  </div>
+  <app-search service="rulesCtrl.service"></app-search>
+</div>
+
+<div class="box-header">
+  <h3 class="box-title">
+    <span ng-if="rulesCtrl.totals.totalUp != 0"><span class="label label-success">{{rulesCtrl.totals.totalUp}}</span> Up / </span>
+    <span ng-if="rulesCtrl.totals.totalDown != 0"><span class="label label-danger">{{rulesCtrl.totals.totalDown}}</span> Down / </span>
+    <span class="label label-default">{{rulesCtrl.totals.total}}</span> Rules
+  </h3>
+  <table class="table table-fixed table-bordered table-head">
+    <thead>
+      <tr>
+        <th class='hover col-xs-1' data-ng-click="rulesCtrl.service.sort('enabled')">
+          <i class="fa" ng-class="{'fa-sort-numeric-asc': rulesCtrl.options.orderBy == 'enabled' && rulesCtrl.options.orderASC,
+                              'fa-sort-numeric-desc': rulesCtrl.options.orderBy == 'enabled' && !rulesCtrl.options.orderASC}">
+          </i>
+          Status
+        </th>
+        <th class='hover col-xs-3' data-ng-click="rulesCtrl.service.sort('name')">
+          <i class="fa" ng-class="{'fa-sort-alpha-asc': rulesCtrl.options.orderBy == 'name' && rulesCtrl.options.orderASC,
+                              'fa-sort-alpha-desc': rulesCtrl.options.orderBy == 'name' && !rulesCtrl.options.orderASC}">
+          </i>
+          Name
+        </th>
+        <th class='hover col-xs-4' data-ng-click="rulesCtrl.service.sort('handleWhen.dependencies')">
+          <i class="fa" ng-class="{'fa-sort-alpha-asc': rulesCtrl.options.orderBy == 'handleWhen.dependencies' && rulesCtrl.options.orderASC,
+                              'fa-sort-alpha-desc': rulesCtrl.options.orderBy == 'handleWhen.dependencies' && !rulesCtrl.options.orderASC}">
+          </i>
+          Metrics
+        </th>
+        <th class='hover col-xs-4' data-ng-click="rulesCtrl.service.sort('tags')">
+          <i class="fa" ng-class="{'fa-sort-alpha-asc': rulesCtrl.options.orderBy == 'tags' && rulesCtrl.options.orderASC,
+                              'fa-sort-alpha-desc': rulesCtrl.options.orderBy == 'tags' && !rulesCtrl.options.orderASC}">
+          </i>
+          Tags
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
+<div class="scroll-bar">
+  <div resize class="box rule-box" ng-if="rulesCtrl.totals.total != 0">
+    <div class="box-body table-responsive no-padding" infinite-scroll="rulesCtrl.loadMore()" infinite-scroll-distance="3">
+      <table class="table table-striped table-fixed table-list-page table-bordered table-hover table-rules">
+        <tbody>
+          <tr bindonce ng-repeat="rule in rulesCtrl.rules track by rule.id" ng-click="rulesCtrl.loadRule($event,rule.id)">
+            <td class="col-xs-1">
+              <span class="label" bo-class="{'label-success': rule.enabled == true,
+                         'label-danger': rule.enabled == false}">
+                {{rule.enabled | OkAlert}}
+              </span>
+              &nbsp;
+              <span ng-show="!rule.enabled" class="label label-warning">
+                Muted
+              </span>
+            </td>
+            <td class="col-xs-3">
+              {{rule.name}}
+              <div class="show-helper pull-right">Show Rule</div>
+            </td>
+            <td class="col-xs-4 truncate" title="{{rule.handleWhen.dependencies}}">
+                {{rule.handleWhen.dependencies}}
+            </td>
+            <td class="col-xs-4 truncate">
+              <div class="tag label bg-gray" ng-repeat="(key, tag) in rule.handleWhen.tags |limitTo:3">
+                #{{tag}}
+              </div>
+              <div class="tag-more" ng-if="rule.tags.length > 3">...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div ng-if="rulesCtrl.totals.total == 0" class="no-items">
+  <h3>Start Monitoring</h3>
+  <p>
+    Click the <a href="#">+ Rule button</a> in the top right to get started. Once you have
+    added your first rule, you will be able to install the monitoring agent
+    and start collecting important metrics.
+  </p>
+</div>
+
+<view-rule></view-rule>

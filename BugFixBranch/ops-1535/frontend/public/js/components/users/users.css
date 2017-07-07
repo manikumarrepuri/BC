@@ -1,0 +1,67 @@
+.btn-group {
+    white-space: nowrap;
+}
+.btn-group .btn {
+    float: none;
+    display: inline-block;
+}
+ .btn + .dropdown-toggle {
+    margin-left: -4px !important;
+}
+
+.user-box {
+  margin-top: 80px;
+}
+
+.user-box .alert {
+  border-radius: 0px;
+}
+
+#pagination {
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  width: 15em;
+  margin-left: -7.5em;
+  display: none;
+}
+
+table.table-users td.hover,
+table.table-users th.hover {
+  cursor: pointer;
+}
+
+table.table-users > tbody > tr.active > td {
+  background: rgba(206, 210, 214, 0.5);
+}
+
+table.table-users .show-helper {
+  visibility: hidden;
+  text-align: center;
+  padding: 1px 4px;
+  color: #FFF;
+  background: rgba(115, 108, 108, 0.5);
+  border-radius: 5px;
+}
+
+table.table-users td.hover .show-helper {
+  visibility: visible;
+}
+
+table.table-users .na {
+  padding-top: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.state-column {
+  padding-left: 15px !important;
+}
+
+.state-column .state-icon {
+  padding-left: 11px;
+}
+
+.state-column .state-icon .state-text {
+  font-size: 90%;
+}

@@ -1,0 +1,4 @@
+---
+- include: install-consul.yml
+- include: configure-consul.yml
+- include: install-consul-template.yml

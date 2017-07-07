@@ -1,0 +1,12 @@
+{
+  "name": "itheon-module-dummy-entity",
+  "version": "1.0.3",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ]
+}

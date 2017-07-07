@@ -1,0 +1,49 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : false,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "backend-api": {
+    "hostname": "backend-api",
+    "host": "backend-api:9443",
+    "port": 9443,
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  "rethinkdb": {
+    "servers": [
+      {
+        "host" :  "127.0.0.1",
+        "port" : 28015
+      }
+    ],
+    "db" : "itheon_test",
+    "replicas": 5
+  }
+}
+

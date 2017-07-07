@@ -1,0 +1,82 @@
+{
+  "express": {
+    "port" : {{ itheonx_frontend_port }},
+    "ssl": true
+  },
+  "socket.io": {
+    "port": {{ itheonx_socket_port }},
+    "ssl": true
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "backend-api": {
+    "hostname": "{{ itheonx_website_address }}",
+    "host": "{{ itheonx_website_address }}:{{ itheonx_backend_port }}",
+    "ssl": true,
+    "port": {{ itheonx_backend_port }},
+    "headers": {
+      "content-type": "application/json"
+    }
+   },
+    "redis": {
+      "sentinels": [
+    {% for host in groups[itheonx_sentinel_group] %}
+     {% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+
+      {
+         "host": "{{ hostvars[host].ansible_default_ipv4.address }}",
+         "port": {{ itheonx_sentinel_port }}
+       }{% if loop.index != loop.length %},{% endif %}
+     {% endif %}
+    {% endfor %}
+      ],
+      "name": "master01"
+    },
+  "rethinkdb": {
+    "servers": [
+    {% for host in groups[itheonx_rethinkdb_group] %}
+     {% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+
+      {
+         "host": "{{ hostvars[host].ansible_default_ipv4.address }}",
+         "port": {{ itheonx_rethinkdb_port }}
+       }{% if loop.index != loop.length %},{% endif %}
+     {% endif %}
+    {% endfor %}
+    ],
+    "db" : "itheon",
+    "replicas": {{ groups[itheonx_rethinkdb_group]|length }}
+  },
+  "session": {
+    "secret": "10f4ca0256bed83fcc7d853c227958944981c13f"
+  },
+  "authentication": {
+    "secret": "1244sdklf^&*$#@hasdjkl35345346533!!$%^&*$#@"
+  }
+}

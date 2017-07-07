@@ -1,0 +1,36 @@
+.btn-bold {
+  height: 20px;
+  min-width: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+textarea.sa-realArea {
+  overflow: auto;
+}
+
+.highlight.ruleMain {
+  color: #DA2E7C;
+}
+.highlight.ruleSections {
+  color: #22C3DC;
+}
+.highlight.ruleCondtions {
+  color: #88B940;
+}
+.highlight.ruleActions {
+  color: #239A0F;
+}
+.highlight.ruleActionOptions {
+  color: #2EDA64;
+}
+.highlight.ruleVariables {
+  color: #DA872E;
+}
+.highlight.ruleComments {
+  color: #A0A0A0;
+}
+
+.box {
+  width: 98%;
+}

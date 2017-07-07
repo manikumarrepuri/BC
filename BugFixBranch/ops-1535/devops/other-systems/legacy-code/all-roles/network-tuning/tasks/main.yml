@@ -1,0 +1,13 @@
+---
+- name: deploy limits.conf
+  template: src=limits.conf
+            dest=/etc/security/limits.conf
+            force=yes
+
+- name: deploy sysctl.conf
+  template: src=sysctl.conf
+            dest=/etc/security/sysctl.conf
+            force=yes
+
+- name: run sysctl -p
+  command: sysctl -p

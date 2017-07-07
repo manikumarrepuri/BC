@@ -1,0 +1,22 @@
+---
+- name: Install HAProxy
+  apt:
+    name: haproxy
+    state: latest
+  when: ansible_os_family == 'Debian'
+
+- name: Copy HAProxy config
+  template:
+    src: "{{haproxy_config_src}}"
+    dest: /etc/haproxy/haproxy.cfg
+    mode: 0644
+  register: configchange
+
+- name: Ensure HAProxy is started and enabled on boot.
+  service: name=haproxy state=started enabled=yes
+
+- name: Restart HAProxy
+  service:
+    name: haproxy
+    state: restarted
+  when: configchange.changed

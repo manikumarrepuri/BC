@@ -1,0 +1,80 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-haproxy-active-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.2
+    - network_hostname: mxc-haproxy-active-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-haproxy-passive-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.3
+    - network_hostname: mxc-haproxy-passive-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-haproxy-rmq-active-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.32
+    - network_hostname: mxc-haproxy-rmq-active-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: mxc-haproxy-rmq-passive-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.55.33
+    - network_hostname: mxc-haproxy-rmq-passive-ub-16-04

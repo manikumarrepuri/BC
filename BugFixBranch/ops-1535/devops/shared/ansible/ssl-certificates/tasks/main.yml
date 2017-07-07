@@ -1,0 +1,24 @@
+---
+- name: Install Blue Chip Root CA
+  copy:
+    src: appdev.ca.cer
+    dest: /usr/local/share/ca-certificates/appdev.crt
+  register: newca
+
+- name: update CA registry
+  command: update-ca-certificates
+  when: newca.changed
+
+- name: Deploy CA Certificate File
+  copy:
+    src: "appdev.ca.cer"
+    dest: "/etc/ssl/appdev.ca.cer"
+    mode: 0664
+
+- name: Deploy Certificate Files
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: 0664
+  with_items: "{{certificate_items}}"
+  when: certificate_items is defined

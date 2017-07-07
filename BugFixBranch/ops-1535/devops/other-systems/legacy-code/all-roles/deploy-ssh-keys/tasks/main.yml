@@ -1,0 +1,5 @@
+---
+- name: deploy id_rsa
+  template: src=id_rsa.j2
+            dest=/home/{{ ssh_user }}/.ssh/id_rsa
+            force=yes

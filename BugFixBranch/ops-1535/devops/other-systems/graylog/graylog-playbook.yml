@@ -1,0 +1,109 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install ansible pre-reqs'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts : all
+  roles:
+   - role: ../../shared/ansible/common
+   - role: ../../shared/ansible/ssl-certificates
+  become: yes
+
+- hosts: graylog
+  name: Install Docker
+  roles:
+   - role: ../../shared/ansible/install-docker
+  become: yes
+
+- hosts: graylog
+  name: Install & Configure Graylog
+  become: yes
+  tasks:
+  - name: create graylog directories on host
+    file:
+      path: /opt/graylog/config
+      state: directory
+      mode: 0775
+      group: docker
+
+  - name: deploy configuration files
+    template:
+      src: "{{item}}.j2"
+      dest: "/opt/graylog/config/{{item}}"
+    with_items:
+      - log4j2.xml
+      - graylog.conf
+
+  - name: "Launch MongoDB Container"
+    docker_container:
+      name: mongodb
+      image: "docker.appdev.bluechipdomain.co.uk/mongo:3"
+      volumes:
+        - /opt/graylog/data/mongo:/data/db
+      restart_policy: always
+
+  - name: "Launch Elasticsearch Container"
+    docker_container:
+      name: elasticsearch
+      image: "docker.appdev.bluechipdomain.co.uk/elasticsearch:2"
+      command: "elasticsearch -Des.cluster.name='graylog'"
+      volumes:
+        - /opt/graylog/data/elasticsearch:/usr/share/elasticsearch/data
+      restart_policy: always
+
+  - name: "Launch Greylog Container"
+    docker_container:
+      name: graylog
+      image: docker.appdev.bluechipdomain.co.uk/graylog2/server:latest
+      volumes:
+        - /opt/graylog/data/journal:/usr/share/graylog/data/journal
+        - /opt/graylog/config:/usr/share/graylog/data/config
+      env:
+        GRAYLOG_PASSWORD_SECRET: E6nK2ekk6ZHj8LHUxYDjmTWMFutTKw1TBisqioG1ZSSo8yd20MIZDm72jGz6c9kGEs5OAt84ghsLEJzRNgrk2ofB8GSpUdDS
+        GRAYLOG_ROOT_PASSWORD_SHA2: 73fdb7f6bfe1e82d58684d417b5440a2db2482ebe5cc902ea82d1d91c4ac3d53
+        GRAYLOG_WEB_ENDPOINT_URI: "http://{{inventory_hostname}}/api"
+      links:
+        - mongodb:mongo
+        - elasticsearch:elasticsearch
+      exposed_ports:
+        - "12201/udp"
+        - "9000"
+        - "8080"
+        - "12201"
+        - "514"
+      published_ports:
+        - "0.0.0.0:514:514"
+        - "0.0.0.0:9000:9000"
+        - "0.0.0.0:8080:8080"
+        - "0.0.0.0:12201:12201/udp"
+        - "0.0.0.0:12202:12201"
+      recreate: yes
+      pull: yes
+      restart_policy: always
+
+- hosts: graylog
+  become: yes
+  vars:
+    nginx_config_items:
+      - {name: "graylog", src: "nginx-graylog.j2"}
+  roles:
+    - role: ../../shared/ansible/nginx
+
+# - hosts: graylog
+#   become: yes
+#   tasks:
+#   - name: Firewall rules
+#     ufw:
+#       rule: allow
+#       port: "{{item.port}}"
+#       proto: "{{item.proto}}"
+#       direction: in
+#     with_items:
+#       - {port: 12201, proto: "udp"}
+#       - {port: 12201, proto: "tcp"}
+#       - {port: 1514, proto: "udp"}
+#       - {port: 1514, proto: "tcp"}
+

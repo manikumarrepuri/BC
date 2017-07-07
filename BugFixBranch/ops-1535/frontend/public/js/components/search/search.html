@@ -1,0 +1,59 @@
+
+<!-- DIRECTIVE: Search :START -->
+
+<div class="rookie-tooltip-wrapper">
+  <div class="filter-search-list">
+    <div class="searchContainer devices-list-type">
+      <span class="icon bg-aqua icon-before-search"><i class="fa fa-search"></i></span>
+      <form name="searchForm">
+        <div class="input-group">
+          <input
+            type="text"
+            data-ng-model="searchForm.query"
+            class="form-control input-sm pull-right"
+            placeholder="e.g. ^server-([A-z0-9]+)$"
+            select-on-click
+            ng-model-options="{ debounce: 1000 }"
+          / >
+        </div>
+      </form>
+    </div>
+
+    <!--REMOVED FROM input above for now: uib-popover-html="searchCtrl.popoverHTML" popover-trigger="focus" popover-placement="bottom"-->
+
+<!--     <div class="presets">
+      <a class="toggle fa fa-filter"></a>
+      <div class="controls">
+        <a class="clear">Clear filter</a>
+        <span class="control">
+            <label>Group</label>
+            <select name="group" data-ng-model="searchForm.group">
+              <option value="any">Any</option>
+              <option value="Test Servers">
+                Test Servers
+              </option>
+              <option value="Ungrouped">
+                Ungrouped
+              </option>
+            </select>
+          </span>
+      </div>
+    </div> -->
+  </div>
+  <div class="rookie-tooltip rt--arrow-top-50 can-close hidden" data-tooltip="search">
+    <div class="rt-content">
+      <a href="#" class="icon-before-cancel rt-close" data-close=""></a>
+      <strong class="rt-title">Powerful regex searches</strong>
+      <p>Useful to quickly find a specific device. Filters are accessed by the <span class="icon icon-before-filter"></span> icon.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DIRECTIVE: Search :END -->
+<!-- Disabled in accordance with OPS-1176
+<button ng-click="searchCtrl.openAdvancedSearch()" class="add btn btn-bar bg-teal btn-flat">
+  <strong>Advanced search</strong>
+</button>
+<div data-ng-if="searchCtrl.advancedSearch">
+  <app-condition-builder service="searchCtrl.service"></app-condition-builder>
+</div>-->

@@ -1,0 +1,128 @@
+<aside resize scrolly class="alert-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content" *ng-if="selected">
+    <!-- Home tab content -->
+    <div class="tab-pane active" ng-if="alertCtrl.alert">
+      <h2>
+        <span class="light">Group:</span>
+        <span class="padding-right-20">{{alertCtrl.device.group}}</span>
+
+        <i class="fa icon-{{alertCtrl.device.platform}}"></i>
+        <span class="light">Host:</span>
+        <span>{{alertCtrl.device.displayName}}</span>
+        <i class="pull-right close fa fa-times-circle-o" ng-click="alertCtrl.toggleAlert()"></i>
+      </h2>
+
+      <p class="status"  ng-class="{'progress-bar-success': alertCtrl.device.status == 'UP',
+                 'progress-bar-danger': alertCtrl.device.status == '???'}">
+        <span>Current Server Status:</span> <strong>{{alertCtrl.device.status}}</strong>
+      </p>
+
+      <h3 class="module-sidebar-heading">Alert Details</h3>
+
+      <dl>
+        <dt>Rule Name</dt>
+        <dd>
+          {{alertCtrl.alert.ruleName}}
+          <span ng-if="!alertCtrl.device.rules" class="label label-primary" title="Rule breached the Global Threshold">Global</span>
+          <span ng-if="alertCtrl.device.rules" class="label label-success" title="Rule breached the Device Threshold">Device</span>
+        </dd>
+        <dt>Severity</dt>
+        <dd>
+          <span class="fa-stack fa-1x severity-icon" ng-class="{'text-green': alertCtrl.alert.severity >= 7 || alertCtrl.alert.severity == 5,
+           'text-orange': alertCtrl.alert.severity >= 3 && alertCtrl.alert.severity  <= 6 && alertCtrl.alert.severity != 5,
+           'text-red': alertCtrl.alert.severity <= 2}">
+           <i class="fa fa-circle fa-stack-2x"></i>
+           <i class="fa-stack fa-stack-1x severity-text ng-binding">{{alertCtrl.alert.severity}}</i>
+          </span>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Status</dt>
+        <dd ng-if="alertCtrl.alert.state == 'N'">New</dd>
+        <dd ng-if="alertCtrl.alert.state == 'U'">Updated</dd>
+        <dd ng-if="alertCtrl.alert.state == 'C'">Closed</dd>
+      </dl>
+      <dl ng-if="alertCtrl.alert.state == 'C'">
+        <dt>Time to Close</dt>
+        <dd>{{alertCtrl.alert.timeToClose}} Minutes</dd>
+      </dl>
+      <dl ng-if="alertCtrl.alert.occurrences >= 2">
+        <dt>Occurrences</dt>
+        <dd>{{alertCtrl.alert.occurrences}}</dd>
+        <dt>Last Occured</dt>
+        <dd>{{alertCtrl.alert.lastOccurrence | amCalendar:null:alertCtrl.calendarFormat }}</dd>
+      </dl>
+      <dl>
+        <dt ng-if="alertCtrl.alert.occurrences == 1">Occured</dt>
+        <dt ng-if="alertCtrl.alert.occurrences >= 2">First Occured</dt>
+        <dd>{{alertCtrl.alert.firstOccurrence | amCalendar:null:alertCtrl.calendarFormat }}</dd>
+        <!-- | amDateFormat:'DD/MM/YYYY [at] h:mm:ss A' //-->
+        <dt>Brief Text</dt>
+        <dd ng-bind-html="alertCtrl.alert.brief"></dd>
+        <dt>Full Text</dt>
+        <dd ng-bind-html="alertCtrl.alert.fullText"></dd>
+
+        <dt>
+          Assignee:
+        </dt>
+        <dd>
+          <ng-letter-avatar ng-if="alertCtrl.assignment.assignee" class="pull-left" data="{{alertCtrl.alert.assignee}}" charcount="2" dynamic="true" width="20" height="20" fontsize="10" avatarcustomborder="border:2px solid #cccccc;" shape="round"></ng-letter-avatar>
+          <form name="assignment" method="post">
+            <select-box name="assignee" ng-model="alertCtrl.assignment.assignee.selected" service-name="UserService" collection-variable-name="username"></select-box>
+            <br>
+            <a href="#" ng-click="alertCtrl.setAssignee(); $event.stopPropagation(); $event.preventDefault();">Assign to me</a>
+          </form>
+        </dd>
+
+      </dl>
+
+      <form name="acknowledge" method="post">
+        <button type="submit" class="btn btn-sm btn-success pull-right" data-ng-click="alertCtrl.acknowledge(alertCtrl.alert)" data-ng-if="!alertCtrl.alert.acknowledged">Acknowledge</button>
+      </form>
+
+      <div ng-if="alertCtrl.alert.matchedConditions">
+        <h3 class="module-sidebar-heading">Rule Breached</h3>
+        <ul class="module-sidebar-submenu list-group row">
+          <li ng-repeat="(key, condition) in alertCtrl.alert.matchedConditions">
+            {{condition.name}} <strong>{{condition.operator}}</strong> {{condition.threshold}} breached by <mark>{{condition.value-condition.threshold | number:2}}</mark>
+          </li>
+        </ul>
+      </div>
+
+      <h3 class="module-sidebar-heading">Previous Occurences</h3>
+      <div ng-if="isNumber(alertCtrl.alert.avgTimeToClose)">
+        This alert has an average time to close of <mark>{{alertCtrl.alert.avgTimeToClose}} minute(s)</mark>.
+      </div>
+
+      <div ng-if="alertCtrl.alert.weekCount != alertCtrl.alert.total">
+        This alert has occured <mark>{{alertCtrl.alert.weekCount}} time(s)</mark> in the past 7 days.
+      </div>
+      <div>
+        This event has occured a total of <mark>{{alertCtrl.alert.total}} time(s)</mark> in the past {{alertCtrl.alert.firstOccurrence | amDifference : null : 'days' | abs}} days.
+      </div>
+
+      <h3 class="module-sidebar-heading">Other Issues</h3>
+      <div ng-if="alertCtrl.device.alertsCount <= 1">
+        This device currently has no other issues
+      </div>
+      <div ng-if="alertCtrl.device.alertsCount > 1">
+        This device currently has {{alertCtrl.device.alertsCount-1}} other problems.
+        <ul class="module-sidebar-submenu list-group row">
+          <li ng-repeat="(key, alert) in alertCtrl.device.alerts" ng-if="alertCtrl.alert.ruleName != alert.deviceid">
+            Rule Breached: {{alert.deviceid}}
+          </li>
+        </ul>
+      </div>
+
+      <!-- /.control-sidebar-menu -->
+    </div>
+    <!-- /.tab-pane -->
+
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

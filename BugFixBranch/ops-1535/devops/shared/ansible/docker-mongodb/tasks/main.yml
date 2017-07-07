@@ -1,0 +1,24 @@
+---
+- name: create data directory
+  file:
+    path: "{{item.src}}"
+    state: directory
+    group: "{{item.owner}}"
+    owner: "{{item.owner}}"
+  with_items:
+    - {src: "/var/mongo", owner: "root"}
+
+- name: "Create MongoDb container"
+  docker_container:
+    name: mongo
+    image: docker.appdev.bluechipdomain.co.uk/mongo:3
+    volumes:
+      - /var/mongo:/data/db
+    exposed_ports:
+      - 27017
+    published_ports:
+      - 27017:27017
+    state: started
+    restart_policy: always
+- name: Prune docker system.
+  shell: docker system prune -f

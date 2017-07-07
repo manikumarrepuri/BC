@@ -1,0 +1,83 @@
+<div class="toolbar">
+  <div class="page-options pull-right">
+    <span>Display: </span>
+    <div class="btn-group">
+      <button type="button" class="btn btn-xs">
+        <i title="List View" ng-if="remindersCtrl.display == 'list'" class="fa fa-list"></i>
+        <i title="Calendar View" ng-if="remindersCtrl.display == 'calendar'" class="fa fa-clock-o"></i>
+      </button>
+      <button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-click="remindersCtrl.display = 'list'">
+          &nbsp; <i class="fa fa-list"></i> &nbsp; List View
+        </li>
+        <li class="divider"></li>
+        <li ng-click="remindersCtrl.display = 'calendar'">
+          &nbsp; <i class="fa fa-clock-o"></i> &nbsp; Calendar View
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div ng-if="remindersCtrl.display == 'calendar'">
+    <div class="left">
+      <div class="button-group">
+        <button type="button" class="prev-button button state-default corner-left" ng-click="remindersCtrl.minusOneDay()">
+          <span><</span>
+        </button>
+        <button type="button" class="next-button button state-default corner-right" ng-click="remindersCtrl.plusOneDay()">
+          <span>></span>
+        </button>
+        <button style=" margin-left:5px;" ng-click="remindersCtrl.today()" type="button" class="today-button button state-default corner-left corner-right" ng-class="{'state-disabled': remindersCtrl.dateToday.getTime() == remindersCtrl.reminderStartDate.getTime()}" ng-disabled="remindersCtrl.dateToday.getTime() == remindersCtrl.reminderStartDate.getTime()">today</button>
+      </div>
+    </div>
+    <div class="center">
+      <h2>{{ remindersCtrl.reminderStartDate | date : 'MMMM dd, yyyy'}}</h2>
+    </div>
+    <div class="right">
+      <!-- This directive will handle the form submission -->
+      <!-- <div class="button-group">
+        <button type="button" class="month-button button state-default corner-left">month</button>
+        <button type="button" class="agendaWeek-button button state-default">week</button>
+        <button type="button" class="agendaDay-button button state-default corner-right state-active">day</button>
+      </div> //-->
+      <button type="button" class="add-reminder-button button state-default corner-left corner-right" ng-click="remindersCtrl.addReminder()">
+        <span>&plus; Add</span>
+      </button>
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  <scheduled-reminders ng-if="remindersCtrl.display == 'list'"></scheduled-reminders>
+
+  <div ng-if="remindersCtrl.display == 'calendar' && remindersCtrl.displayType == 'day' && remindersCtrl.totals != 0">
+    <!-- Kanban board component. -->
+    <ds:kanban-board items="remindersCtrl.reminders"
+                     groups="remindersCtrl.groups"
+                     states="remindersCtrl.states"
+                     controller="remindersCtrl"
+                     start-date="remindersCtrl.reminderStartDate"
+                     end-date="remindersCtrl.reminderEndDate"
+                     assignable-resources="remindersCtrl.assignableResources"
+                     on-adding-new-item="remindersCtrl.initializeNewItem(item)"
+                     on-editing-item="remindersCtrl.deleteItem(item)"
+                     edit-item-button-text="'×'"
+                     edit-item-button-tool-tip="'Delete item'"
+                     item-name-field="'briefText'"
+                     group-name-field="'name'"
+                     user-name-field="'username'"
+                     is-group-assignable=false
+                     item-height=130
+                     on-item-selected="remindersCtrl.onItemSelected(item)"
+                     on-item-assignment-changed="remindersCtrl.onItemAssignmentChanged(item)"
+                     on-item-state-changed="remindersCtrl.onItemStateChanged(item, state, previousState)"
+                     on-item-group-changed="remindersCtrl.onItemGroupChanged(item, group, previousGroup)">
+    </ds:kanban-board>
+  </div>
+</div>
+<add-reminder></add-reminder>
+<view-reminder></view-reminder>
+<edit-reminder></edit-reminder>
+<form-submitter></form-submitter>

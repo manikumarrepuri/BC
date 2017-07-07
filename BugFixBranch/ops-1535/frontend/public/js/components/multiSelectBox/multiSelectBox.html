@@ -1,0 +1,12 @@
+<ui-select multiple ng-model="multiSelectBoxCtrl.value" ng-change="multiSelectBoxCtrl.update(this)" theme="bootstrap" reset-search-input="true" close-on-select="true">
+  <ui-select-match allow-clear="true" placeholder="Select {{multiSelectBoxCtrl.service.viewSelectionEntityNamePlural}}...">
+    {{$item[multiSelectBoxCtrl.service.displayFieldName]}}
+    <a class="btn btn-xs btn-link pull-right" ng-click="clear($event, $select)"></a>
+  </ui-select-match>
+  <ui-select-choices repeat="item in multiSelectBoxCtrl.items | propsFilter: {fields: [{name: multiSelectBoxCtrl.service.displayFieldName, value: $select.search}]}">
+    <div ng-bind-html="item[multiSelectBoxCtrl.service.displayFieldName] | highlight: $select.search"></div>
+    <small>
+      {{item[multiSelectBoxCtrl.service.displayFieldName]}}
+    </small>
+  </ui-select-choices>
+</ui-select>

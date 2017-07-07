@@ -1,0 +1,27 @@
+{
+  "name": "itheon-express",
+  "version": "1.0.0",
+  "publishConfig": {
+    "registry": "http://10.187.76.250:80"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "body-parser": "^1.15.0",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^3.0.2",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "http": "0.0.0",
+    "itheon-config": "^1.0.0",
+    "itheon-logger": "^1.0.0",
+    "itheon-middleware": "^1.0.0",
+    "itheon-data-provider": "^1.0.0",
+    "itheon-authentication": "^1.0.0"
+  }
+}

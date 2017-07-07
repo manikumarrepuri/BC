@@ -1,0 +1,118 @@
+---
+- name: set build dir fact
+  set_fact:
+    build_dir: "/tmp/opserve-deploy/{{environment_identifier}}"
+
+- name: set strict ssl off for npm
+  shell: npm config set strict-ssl false
+  become: yes
+
+- name: set strict ssl off for npm
+  shell: npm config set strict-ssl false
+
+- name: ensure that opserve-build-tools is present and at latest
+  npm:
+    registry: "https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+    name: opserve-build-tools
+    state: latest
+    global: yes
+  become: yes
+
+- name: delete and then re-create deployment directory
+  file:
+    path: "{{item.path}}"
+    state: "{{item.state}}"
+    mode: 0755
+  with_items:
+    - {path: "{{build_dir}}", state: absent}
+  become: yes
+
+- name: re-create deployment directory
+  file:
+      path: "{{item.path}}"
+      state: "{{item.state}}"
+      mode: 0755
+  with_items:
+    - {path: "{{build_dir}}/shared", state: directory}
+
+- name: deploy terraform shared and core files
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: "artifactory.tf.j2", dest: "{{build_dir}}/shared/artifactory.tf"}
+    - {src: "vsphere.tf.j2", dest: "{{build_dir}}/shared/vsphere.tf"}
+    - {src: "core-settings.tf.j2", dest: "{{build_dir}}/core-settings.tf"}
+
+- name: deploy vm terraform files
+  template:
+    src: "vm.tf.j2"
+    dest: "{{build_dir}}/{{item.category}}-host.tf"
+  with_items: "{{host_vms}}"
+  when: host_vms is defined
+
+- name: deploy host vm terraform file
+  template:
+    src: "vm.tf.j2"
+    dest: "{{build_dir}}/opserve-host.tf"
+  when: single_machine is defined
+
+- name: terraform get
+  shell: terraform get
+  args:
+    chdir: "{{build_dir}}"
+
+- name: terraform init
+  shell: terraform init
+  args:
+    chdir: "{{build_dir}}"
+
+- name: terraform plan
+  shell: terraform plan -out plan.tmp
+  args:
+    chdir: "{{build_dir}}"
+
+- name: terraform apply
+  shell: terraform apply plan.tmp
+  args:
+    chdir: "{{build_dir}}"
+  async: 300
+  poll: 5
+
+- name: terraform state pull
+  shell: terraform state pull > state.tfstate
+  args:
+    chdir: "{{build_dir}}"
+
+- name: delete ansible hosts file
+  file:
+    path: /etc/ansible/hosts
+    state: absent
+  become: yes
+
+- name: parse output tfstate
+  shell: "parse-tfstate {{build_dir}}/state.tfstate > /etc/ansible/hosts"
+  args:
+    chdir: "{{playbook_dir}}"
+  become: yes
+
+- name: remove known hosts
+  become: yes
+  file:
+    path: ~/.ssh/known_hosts
+    state: absent
+
+- name: adjust .ssh directory permissions
+  file:
+    path: ~/.ssh
+    mode: 0700
+    state: directory
+
+- name: deploy ssh config
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: "ssh.config.j2", dest: "~/.ssh/config"}
+
+- meta: refresh_inventory

@@ -1,0 +1,17 @@
+{
+  "name": "itheon-module-alert-entity",
+  "version": "1.2.1",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "itheon-entity": "^1.4.1",
+    "itheon-utility": "^1.0.0",
+    "itheon-logger": "^1.0.0"
+  }
+}

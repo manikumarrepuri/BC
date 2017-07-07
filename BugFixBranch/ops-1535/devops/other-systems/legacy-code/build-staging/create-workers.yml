@@ -1,0 +1,66 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-worker1-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-worker1-ub-16-04
+    - network_address_1: 10.197.55.107
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.107
+    - network_hostname: staging-worker1-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-worker2-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-worker2-ub-16-04
+    - network_address_1: 10.197.55.108
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.108
+    - network_hostname: staging-worker2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-worker3-ub-16-04
+    - vsphere_template_name: /opserve/template-small-ub-16-04
+    - vagrant_project: /opserve/staging-worker3-ub-16-04
+    - network_address_1: 10.197.55.109
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.109
+    - network_hostname: staging-worker3-ub-16-04

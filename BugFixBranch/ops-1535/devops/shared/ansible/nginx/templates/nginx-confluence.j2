@@ -1,0 +1,53 @@
+upstream confluence {
+  server 127.0.0.1:{{http_port}};
+}
+
+upstream synchrony {
+  server 127.0.0.1:{{synchrony_port}};
+}
+
+server {
+	listen 80;
+	listen [::]:80;
+	server_name {{fqdn}};
+	return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443;
+
+    ssl on;
+    server_name         {{fqdn}};
+    ssl_certificate     /etc/ssl/{{fqdn}}.crt;
+    ssl_certificate_key /etc/ssl/{{fqdn}}.key;
+    ssl_trusted_certificate /etc/ssl/appdev.ca.cer;
+
+    location / {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; 
+        proxy_pass http://confluence/;
+        proxy_redirect http://confluence $scheme://$host;
+        client_max_body_size 150M;
+
+        proxy_connect_timeout       600;
+        proxy_send_timeout          600;
+        proxy_read_timeout          600;
+        send_timeout                600;
+
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+    }
+
+    location /synchrony {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://synchrony/synchrony;
+	    proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+}

@@ -1,0 +1,67 @@
+<aside class="add-agent-rule-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Home tab content -->
+    <div class="tab-pane active">
+      <section class="content-header">
+        <h1>
+          Add New Agent Rule
+          <i class="pull-right close fa fa-times-circle-o" ng-click="addAgentRuleCtrl.toggleAddAgentRule()"></i>
+        </h1>
+      </section>
+
+      <!-- /Main content is here -->
+      <div>
+        <div class="box-primary">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="status update-success hide progress-bar-success"><span>Successfully added an Agent Rule {{addAgentRuleCtrl.addAgentRuleForm.name}}.</span></div>
+            <div class="status update-failed hide progress-bar-danger"><span>Failed to add an Agent Rule: {{addAgentRuleCtrl.errorMessage}}.</span></div>
+            <div class="callout callout-danger" ng-show="addAgentRuleForm.$submitted && addAgentRuleForm.$invalid">
+              <div ng-show="addAgentRuleForm.name.$invalid">Please provide an agent rule name.</div>
+              <div ng-show="addAgentRuleForm.description.$invalid">Please provide a valid description.</div>
+            </div>
+            <form name="addAgentRuleForm" ng-submit="addAgentRuleCtrl.addAgentRule(addAgentRuleForm)">
+              <div class="form-group" ng-class="{'has-error':addAgentRuleForm.$dirty && addAgentRuleForm.name.$invalid}">
+                <label class="control-label" for="name">Name: </label>
+                <input name="name" ng-model="addAgentRuleCtrl.addAgentRuleForm.name" placeholder="Name" autofocus required ng-keyup="(addAgentRuleForm.fileName.$untouched) ? addAgentRuleCtrl.addAgentRuleForm.fileName = addAgentRuleForm.name.$modelValue : return">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAgentRuleForm.$dirty && addAgentRuleForm.fileName.$invalid}">
+                <label class="control-label" for="fileName">File Name: </label>
+                <input name="fileName" ng-model="addAgentRuleCtrl.addAgentRuleForm.fileName" placeholder="FileName" autofocus required>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAgentRuleForm.$dirty && addAgentRuleForm.description.$invalid}">
+                <label class="control-label" for="description">Description: </label>
+                <textarea name="description" ng-model="addAgentRuleCtrl.addAgentRuleForm.description" required placeholder="Description">
+                </textarea>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAgentRuleForm.$dirty && addAgentRuleForm.tags.$invalid}">
+                <label class="control-label" for="tags">Tags: </label>
+                <multi-select-box name="tags" ng-model="addAgentRuleCtrl.addAgentRuleForm.tags" service-name="TagService" collection-variable-name="tags"></multi-select-box>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addAgentRuleForm.$dirty && addAgentRuleForm.textContent.$invalid}">
+                <label class="control-label" for="textContent">Content: </label>
+                <textarea id="textContent" name="textContent" class="form-control smart-area code" ng-model="addAgentRuleCtrl.addAgentRuleForm.content" rows="5" smart-area="addAgentRuleCtrl.config">
+                </textarea>
+
+                <br />or
+                <input type="file" name="fileContent" ng-model="addAgentRuleCtrl.addAgentRuleForm.content" nv-file-select="" uploader="addAgentRuleCtrl.uploader">
+              </div>
+
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Agent Rule</button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+      </div>
+      <!-- /Main content ends here -->
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>

@@ -1,0 +1,17 @@
+{
+  "name": "itheon-subscriber-entity",
+  "version": "1.0.4",
+  "publishConfig": {
+    "registry": "http://10.187.76.250:80"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "itheon-entity": "^1.1.1",
+    "itheon-logger": "^1.0.2",
+    "itheon-utility": "^1.0.0"
+  }
+}

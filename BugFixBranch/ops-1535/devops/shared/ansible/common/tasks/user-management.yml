@@ -1,0 +1,64 @@
+---
+- include_vars: users.yml
+
+- name: Create/Remove Groups
+  group:
+    name: "{{item.name}}"
+    state: "{{item.state}}"
+  with_items:
+    - {name: "developers", state: "present"}
+
+- name: Create and/or remove machine users
+  user:
+    name: "{{item.name}}"
+    groups: "{{item.groups}}"
+    state: "{{item.state}}"
+    shell: /bin/bash
+    append: yes
+  with_items: "{{machine_users}}"
+
+- name: Set passwords for users
+  user:
+    name: "{{item.name}}"
+    groups: "{{item.groups}}"
+    state: "{{item.state}}"
+    shell: /bin/bash
+    append: yes
+    password: "{{item.password}}"
+  with_items: "{{machine_users}}"
+  when: (item.password is defined)
+
+- name: Remove extra home directories
+  file:
+    path: "/home/{{item.name}}/"
+    state: "{{item.state}}"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+  with_items: "{{machine_users}}"
+  when: item.state == "absent"
+
+- name: Deploy ssh keys.
+  copy:
+    src: "user-home/{{item.name}}/"
+    dest: "/home/{{item.name}}/"
+    owner: "{{item.name}}"
+    group: "{{item.name}}"
+    mode: 0660
+    force: yes
+  with_items: "{{machine_users}}"
+  when: item.state == "present"
+
+- name: Allow 'developers' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%developers'
+    line: '%developers ALL=(ALL) NOPASSWD: ALL'
+
+- name: Preserve JAVA_HOME when suing to root
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^Defaults env_keep += "JAVA_HOME"'
+    line: 'Defaults   env_keep += "JAVA_HOME"'
+    insertafter: "Defaults env_reset"

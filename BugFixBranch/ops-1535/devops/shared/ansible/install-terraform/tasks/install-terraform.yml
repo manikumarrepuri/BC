@@ -1,0 +1,56 @@
+---
+- name: Check terraform exists
+  stat:
+    path: "/usr/bin/terraform"
+  register: status
+
+- name: Check terraform version
+  shell: "terraform -v"
+  register: versionCheck
+  when: (status.stat.exists == true)
+
+- name: Set terraform download baseurl.
+  set_fact:
+    terraform_baseurl: https://releases.hashicorp.com/terraform/
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Get latest terraform version.
+  shell: 'curl -sN {{terraform_baseurl}} | grep -m 1 -o "terraform_.*<" | sed ''s/terraform_\(.*\).$/\1/'''
+  register: versionResult
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Set terraform version fact.
+  set_fact:
+    terraform_latest_version: "{{versionResult.stdout}}"
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Create terraform directory.
+  file:
+    path: /opt/terraform
+    state: directory
+    mode: 0755
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Download latest version of terraform.
+  unarchive:
+    src: "{{terraform_baseurl}}{{terraform_latest_version}}/terraform_{{terraform_latest_version}}_linux_amd64.zip"
+    dest: /opt/terraform
+    remote_src: True
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Make terraform executable
+  file:
+    path: /opt/terraform/terraform
+    mode: a+x
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)
+
+- name: Symlink terraform binary.
+  file:
+    src: /opt/terraform/terraform
+    dest: /usr/bin/terraform
+    state: link
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('update') != -1)

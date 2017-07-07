@@ -1,0 +1,10 @@
+screen -dmS vagrant sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 update-vagrant.yml; exec bash'
+sleep 5
+screen -dmS rabbitmq sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-rabbitmq.yml; exec bash'
+screen -dmS redis sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-redis.yml; exec bash'
+screen -dmS rethinkdb sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-rethinkdb.yml; exec bash'
+screen -dmS befe sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-befe.yml; exec bash'
+screen -dmS receivers sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-receivers.yml; exec bash'
+screen -dmS haproxy sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-haproxy.yml; exec bash'
+screen -dmS handlers sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-handlers.yml; exec bash'
+screen -dmS workers sh -c 'ansible-playbook -i /opt/itheon/itheon-deployment/build-staging-host-file/staging-build-55 create-workers.yml; exec bash'

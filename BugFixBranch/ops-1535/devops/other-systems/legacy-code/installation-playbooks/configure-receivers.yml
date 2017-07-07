@@ -1,0 +1,17 @@
+---
+- name: See Sentinels group
+  hosts: redis-sentinel
+  tasks: [ ]
+  
+- name: Configure receiver nodes and dependencies
+  hosts: receivers
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-git
+    - install-nodejs
+    - install-pm2
+    - install-pm2-logrotate
+    - deploy-certs
+    - configure-receivers

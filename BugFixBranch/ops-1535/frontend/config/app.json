@@ -1,0 +1,62 @@
+{"certificate_paths": {
+    "ca" : "/opt/itheon/itheonChain.crt",
+    "cert" : "/opt/itheon/itheon.crt",
+    "key" : "/opt/itheon/itheon.key"
+  },
+  "express": {
+    "port" : 3002
+  },
+  "socket.io": {
+    "port": 5000
+  },
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : true,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "silly",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "backend-api": {
+    "hostname": "localhost",
+    "host": "localhost:9443",
+    "port": 9443,
+    "headers": {
+      "content-type": "application/json"
+    }
+  },
+  "redis":
+    {
+      "host": "localhost",
+      "port": 32774,
+      "family": 4,
+      "db": 0,
+      "password": ""
+    },
+  "session": {
+    "secret": "10f4ca0256bed83fcc7d853c227958944981c13f"
+  },
+  "authentication": {
+    "secret": "1244sdklf^&*$#@hasdjkl35345346533!!$%^&*$#@"
+  }
+}

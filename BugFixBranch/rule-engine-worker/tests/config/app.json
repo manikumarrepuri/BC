@@ -1,0 +1,14 @@
+{
+  "logger": {
+    "immediate": false,
+    "format": "dev",
+    "transports": {
+      "console": {
+        "enabled": true,
+        "colorize": true,
+        "timestamp": true,
+        "level": "silly",
+        "handleException": true
+      }
+    }
+  }

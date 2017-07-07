@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+var path = require('app-root-path');
+
+Itheon = require(path + '/app');
+new Itheon();

@@ -1,0 +1,11 @@
+/*
+ * Component: Control sidebar. By default, this is the right sidebar.
+ */
+
+ .user-sidebar .control-label {
+   width: 8em;
+ }
+
+.user-sidebar input {
+  width: 15em;
+}

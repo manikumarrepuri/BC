@@ -1,0 +1,61 @@
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button class="add btn btn-bar bg-teal btn-flat" ng-click="userRolesCtrl.addRole()">
+      <i class="fa fa-plus"></i> <strong>User Roles</strong>
+    </button>
+  </div>
+  <app-search service="userRolesCtrl.service"></app-search>
+</div>
+
+<div class="box user-box">
+  <div sticky offset="85" class="box-header">
+    <h3 class="box-title">
+      <span class="label label-default">{{userRolesCtrl.totals.total}}</span> User Roles
+    </h3>
+  </div>
+  <div class="delete-success hide alert alert-success"><span>Successfully deleted the user.</span></div>
+  <div class="delete-failed hide alert alert-danger"><span>Failed to delete the user: {{userRolesCtrl.errorMessage}}.</span></div>
+  <div class="box-body table-responsive no-padding" infinite-scroll="userRolesCtrl.loadMore()" infinite-scroll-distance="1">
+    <table class="table table-fixed table-striped table-bordered table-hover table-users">
+      <thead sticky offset="123" >
+        <tr>
+          <th class='hover col-xs-4' data-ng-click="userRolesCtrl.service.sort('username')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': userRolesCtrl.options.orderBy == 'username' && !userRolesCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': userRolesCtrl.options.orderBy == 'username' && userRolesCtrl.options.orderASC}">
+            </i>
+            Role Name
+          </th>
+          <th class='hover col-xs-6' data-ng-click="userRolesCtrl.service.sort('email')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': userRolesCtrl.options.orderBy == 'email' && !userRolesCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': userRolesCtrl.options.orderBy == 'email' && userRolesCtrl.options.orderASC}">
+            </i>
+            Role Description
+          </th>
+          <th class='hover col-xs-2' data-ng-click="userRolesCtrl.service.sort('title')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': userRolesCtrl.options.orderBy == 'title' && !userRolesCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': userRolesCtrl.options.orderBy == 'title' && userRolesCtrl.options.orderASC}">
+            </i>
+            Number of Users
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+            context-menu="userRolesCtrl.menuOptions"
+            ng-repeat="role in userRolesCtrl.roles track by role.id"
+            selection-model
+            selection-model-mode="'multiple'"
+            selection-model-selected-items="userRolesCtrl.selected"
+            selection-model-selected-class="'row-selected'">
+          <td class="col-xs-4">{{role.id}}</td>
+          <td class="col-xs-6">{{role.description}}</td>
+          <td class="col-xs-2">{{role.userCount}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<add-role></add-role>
+<confirm-modal></confirm-modal>
+<permissions-modal></permissions-modal>
+<multi-select-modal></multi-select-modal>

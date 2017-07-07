@@ -1,0 +1,27 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "info",
+        "handleException" : true
+      },
+      "log2gelf": {
+        "name": "Graylog",
+        "enabled" : true,
+        "level": "info",
+        "silent": false,
+        "handleExceptions": true,
+        "host": "10.187.104.67",
+        "port": 12201,
+        "protocol": "tcp",
+        "service": "node.ja",
+        "environment": "system-test"
+      } 
+    }
+  }
+}

@@ -1,0 +1,219 @@
+<style>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+  .st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+/*table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+    border: 1px solid lightgrey;
+}
+
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+thead {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tbody {
+    display: inline-block;
+}
+
+thead > tr, tbody > tr, tfoot > tr {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -moz-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+   -moz-flex-wrap: nowrap;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+}
+
+thead, tfoot {
+    -moz-flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+}
+
+th, tbody td {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+tfoot {
+    display: inline-block;
+}
+
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+.withFilter {
+  padding-top: 7%;
+}
+.withOutFilter {
+  padding-top: 1%;
+}
+.withFixedWidth{
+  width: 2000px;
+}
+.withOutFixedWidth{
+  width: 100%;
+}*/
+.table-container
+{
+	width: 100%;
+	overflow-y: auto;
+	_overflow: auto;
+	margin: 0 0 1em;
+}
+</style>
+<div class="table-container">
+      <table st-set-filter="customFilter" st-table="alertTableCtrl.alerts" st-sticky-header class="table-responsive table table-list-page table-hover table-alerts table-body" style="overflow-x: scroll;">
+        <thead>
+           <tr ng-show="alertTableCtrl.isFilterVisible">
+            <th>
+              <input class="form-control" step="0.01" placeholder="Severity" st-search="severity" type="number" ng-model="alertTableCtrl.query.severityFilter"/>
+            </th>
+            <th>
+              <input class="form-control" placeholder="Brief" st-search="brief" type="search" ng-model="alertTableCtrl.query.briefFIlter" />
+            </th>
+            <th>
+              <st-date-range predicate="createdAt" before="alertTableCtrl.query.before" after="alertTableCtrl.query.after"></st-date-range>
+            </th>
+            <th>
+              <input class="form-control" placeholder="Tags" st-search="tags" type="search" ng-model="alertTableCtrl.query.tagsFilter"/>
+            </th>
+            <th>
+              <input class="form-control" placeholder="Group" st-search="group" type="search" ng-model="alertTableCtrl.query.groupFIlter" />
+            </th>
+            <th>
+              <input class="form-control" placeholder="Host" st-search="name" type="search" ng-model="alertTableCtrl.query.nameFIlter" />
+            </th>
+            <th>
+              <input class="form-control" placeholder="State" st-search="state" type="search" ng-model="alertTableCtrl.query.stateFIlter" />
+            </th>
+          </tr>
+          <tr style="cursor: pointer;">
+            <th st-sort="severity">Severity</th>
+            <th st-sort="brief">Details</th>
+            <th st-sort="createdAt">Occurred</th>
+            <th st-sort="tags">Tags</th>
+            <th st-sort="group">Group</th>
+            <th st-sort="name">Host</th>
+            <th st-sort="state">State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr bindonce
+              context-menu="alertTableCtrl.menuOptions"
+              ng-repeat="alert in alertTableCtrl.alerts"
+              selection-model
+              selection-model-selected-items="alertTableCtrl.parentCtrl.selected"
+              selection-model-selected-class="'row-selected'"
+              ng-click="alertTableCtrl.requestAlert($event, alert._id)">
+            <td>
+              <span class="fa-stack fa-1x severity-icon" ng-class="{'text-green': alert.severity >= 7 || alert.severity == 5,
+                'text-orange': alert.severity >= 3 && alert.severity  <= 6 && alert.severity != 5,
+                'text-red': alert.severity <= 2}">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa-stack fa-stack-1x severity-text ng-binding">{{alert.severity}}</i>
+                </span>
+                <a title="Collapse" href="#" ng-if="alert.expanded" ng-click="alert.expanded = false; $event.stopPropagation(); $event.preventDefault();"><span class="fa fa-chevron-up fa-1x" aria-hidden="true"></span></a>
+                <a title="Expand" href="#" ng-if="!alert.expanded" ng-click="alert.expanded = true; $event.stopPropagation(); $event.preventDefault();"><span class="fa fa-chevron-down fa-1x" aria-hidden="true"></span></a>
+            </td>
+            <td>
+                <div class="alert-details">
+                  <div class="alert-header clearfix">
+                    <ng-letter-avatar ng-if="alert.assignee" class="pull-left" data="{{alert.assignee}}" charcount="2" dynamic="true" width="20" height="20" fontsize="10" avatarcustomborder="border:2px solid #cccccc;" shape="round"></ng-letter-avatar>
+                    <i data-ng-if="alert.acknowledged" class="fa fa-check-circle-o acknowledged-icon pull-left"></i>
+                    <h5 title="{{alert.brief}}" class="pull-left alert-title truncate" ng-bind-html="alert.brief | limitTo:100"></h5>
+                    
+                    <span class="alert-tag label label-primary pull-right" title="{{alert.ruleName}}">
+                        {{alert.ruleName}}
+                      </span>
+                  </div>
+                  <p ng-if="alert.expanded" ng-bind-html="alert.fullText"></p>
+                  <div ng-if="alert.expanded" class="alert-footer clearfix">
+                    <div ng-if="alert.occurrences > 0" class="pull-left">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-xs" ng-click="alertTableCtrl.requestHistory($event, alert._id); $event.stopPropagation();">{{alert.occurrences}} Alerts</button>
+                        <button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+                          <span class="caret"></span>
+                          <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#" class="dropdown-option" ng-click="alertTableCtrl.requestHistory($event, alert._id); $event.preventDefault();">View History</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="alert-actions">
+                      <a href="#" ng-if="!alert.acknowledged" ng-click="alertTableCtrl.acknowledge($event, alert._id); $event.stopPropagation(); $event.preventDefault();">Acknowledge</a>
+                      <a href="#" ng-click="alertTableCtrl.assignToMe($event, alert._id); $event.stopPropagation(); $event.preventDefault();">Assign to me</a>
+                    </div>
+                  </div>
+                </div>
+                <alert-history alert-history-active="alert"></alert-history>
+            </td>
+            <td>
+              <time ng-if="alert.expanded" title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ alert.createdAt | amCalendar:null:alertTableCtrl.calendarFormatWithTime }}</time>
+              <time ng-if="!alert.expanded" title="{{ alert.createdAt | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}">{{ alert.createdAt | amCalendar:null:alertTableCtrl.calendarFormat }}</time>
+            </td>
+            <td>
+                <div ng-if="alert.expanded" class="bg-gray" ng-repeat="(key, tag) in alert.tags" title="{{tag}}">
+                      #{{tag}}
+                </div>
+                <div ng-if="!alert.expanded" class="bg-gray" ng-repeat="(key, tag) in alert.tags |limitTo:1" title="{{tag}}">
+                      #{{tag}}
+                </div>
+            </td>
+            <td title="{{alert.group}}" >{{alert.group}}</td>
+            <td title="{{alert.name}}" >{{alert.name}}</td>
+            <td title="{{ alert.state == 'C' ? 'Closed' : alert.state == 'N' ? 'New' : 'Update'}}" >{{alert.state}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" class="text-center">
+              <div st-pagination="" st-items-by-page="alertTableCtrl.numberOfPages" st-template="../static/js/components/stCustomPagination/stCustomPagination.html"></div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>

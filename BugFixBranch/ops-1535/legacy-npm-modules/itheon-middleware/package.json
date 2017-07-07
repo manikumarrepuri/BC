@@ -1,0 +1,19 @@
+{
+  "name": "itheon-middleware",
+  "version": "1.0.5",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "itheon-entity": "^1.0.0",
+    "itheon-error": "^1.0.0",
+    "itheon-request": "^1.0.0",
+    "itheon-utility": "^1.0.0",
+    "require-directory": "^2.1.1"
+  }
+}

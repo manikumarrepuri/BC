@@ -1,0 +1,18 @@
+---
+# Setup installation repositories
+
+- name: Add source to /etc/apt/sources.list
+  lineinfile: dest=/etc/apt/sources.list
+              backup=yes
+              line='deb http://www.rabbitmq.com/debian/ testing main'
+              state=present
+
+- name: Download RabbitMQ public key
+  get_url: url=https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+           dest=/tmp/rabbitmq-signing-key-public.asc
+           validate_certs=no
+
+- name: Add RabbitMQ public key
+  command: apt-key add rabbitmq-signing-key-public.asc
+  args:
+    chdir: /tmp

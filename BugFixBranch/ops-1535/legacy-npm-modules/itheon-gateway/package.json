@@ -1,0 +1,33 @@
+{
+  "name": "itheon-gateway",
+  "version": "3.3.24",
+  "publishConfig": {
+    "registry": "https://artifactory.appdev.bluechipdomain.co.uk/api/npm/npm-registry"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require tests/bootstrap.js --recursive tests/cases/"
+  },
+  "dependencies": {
+    "itheon-data-provider": "^3.2.2",
+    "itheon-entity": "^1.4.1",
+    "itheon-error": "^1.0.0",
+    "itheon-logger": "^1.0.4",
+    "itheon-request": "^1.0.0",
+    "itheon-utility": "^1.0.5",
+    "schema-inspector": "^1.6.4"
+  },
+  "devDependencies": {
+    "bluebird": "^3.4.6",
+    "chai": "^3.5.0",
+    "itheon-test": "^2.4.0",
+    "nock": "^8.0.0",
+    "q": "^1.4.1",
+    "redis-js": "^0.1.2",
+    "sinon": "^1.17.6"
+  }
+}

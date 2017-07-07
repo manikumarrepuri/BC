@@ -1,0 +1,78 @@
+---
+- name: Check if Confluence Exists
+  stat:
+    path: "{{install_path}}/uninstall"
+  register: service_status
+
+- name: Download confluence binary.
+  get_url:
+    url: https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-6.0.5-x64.bin
+    dest: /tmp/atlassian-confluence-x64.bin
+    checksum: sha256:1ff4402a6dd03e01f80a31260ff2e0292f0a2679e5b955f005584366f6a14097
+    mode: 0777
+  when: (not service_status.stat.exists)
+
+- name: Deploy varfile (install)
+  template:
+    src: install.varfile.j2
+    dest: /tmp/response.varfile
+    mode: 0777
+  when: (not service_status.stat.exists)
+
+- name: Execute installer
+  shell: ./atlassian-confluence-x64.bin -q -varfile response.varfile
+  args:
+    chdir: /tmp/
+  when: (not service_status.stat.exists)
+
+- name: Cleanup install files
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - /tmp/response.varfile
+    - /tmp/atlassian-confluence-x64.bin
+
+- name: Deploy config files.
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: "server.xml.j2", dest: "{{install_path}}/conf/server.xml"}
+  register: reboot
+
+- name: Use system jre
+  lineinfile:
+    dest: "{{install_path}}/bin/catalina.sh"
+    state: absent
+    regexp: '^JRE_HOME=/usr/bin/java'
+    line: 'JRE_HOME=/usr/bin/java'
+    insertafter: '#!/bin/sh'
+  register: reboot
+
+- name: Use system jre
+  lineinfile:
+    dest: "{{install_path}}/bin/setenv.sh"
+    state: present
+    regexp: '^JRE_HOME='
+    line: 'JRE_HOME=/usr/lib/jvm/java-8-oracle/jre/; export JRE_HOME'
+  register: reboot
+
+- name: import appdev CA
+  shell: "{{item}}"
+  ignore_errors: yes
+  with_items:
+    - "keytool -delete -alias appdevroot -keystore {{install_path}}/jre/lib/security/cacerts -storepass changeit"
+    - "keytool -import -trustcacerts -alias appdevroot -file /etc/ssl/appdev.ca.cer -keystore {{install_path}}/jre/lib/security/cacerts -storepass changeit -noprompt"
+
+- name: restart machine
+  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: reboot.changed
+
+- name: waiting for server to respond
+  local_action: wait_for host="{{ inventory_hostname }}" search_regex=OpenSSH port=22 delay=10 timeout=300
+  become: false
+  when: reboot.changed

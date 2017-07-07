@@ -1,0 +1,18 @@
+section.timeline {
+  margin: 20px;
+}
+
+.timeline .fa-2x {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
+  line-height: 38px;
+  position: absolute;
+  color: #666;
+  background: #d2d6de;
+  border-radius: 50%;
+  text-align: center;
+  left: 14px;
+  top: 0;
+}

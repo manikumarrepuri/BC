@@ -1,0 +1,26 @@
+---
+- name: Create config dir
+  file:
+    dest: /opt/redis
+    state: directory
+  
+- name: Deploy redis config
+  template:
+    src: redis.conf.j2
+    dest: /opt/redis/redis.conf
+
+- name: Create and start redis container
+  docker_container:
+    name: redis
+    image: "{{docker_repository}}/redis"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - /opt/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    recreate: yes
+    ports:
+      - "6739:6739"
+    state: started
+    restart_policy: always
+
+- name: Prune docker system.
+  shell: docker system prune -f

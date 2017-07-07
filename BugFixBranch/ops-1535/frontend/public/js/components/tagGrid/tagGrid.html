@@ -1,0 +1,31 @@
+<div class="selection-container row" infinite-scroll="tagsListCtrl.loadMore()" infinite-scroll-distance="1">
+  <div class="tag-type-container col-md-4" ng-repeat="type in tagGridCtrl.types">
+    <div class="tag-container">
+      <div class="box box-warning box-solid" ng-style="{'border-color': tagGridCtrl.tagGroups[type][0].color || tagGridCtrl.tagGroups[type][0].defaultColor}">
+        <div class="box-header with-border" ng-style="{'background-color': tagGridCtrl.tagGroups[type][0].color || tagGridCtrl.tagGroups[type][0].defaultColor}">
+          <h3 class="box-title">{{type}} <span class="label label-default">{{tagGridCtrl.tagGroups[type].length}}</span></h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" ng-click="tagGridCtrl.tagGroups[type].isCollapsed = !tagGridCtrl.tagGroups[type].isCollapsed">
+              <i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" ng-click="tagGridCtrl.confirmDeleteTags($event, tagGridCtrl.tagGroups[type])">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" uib-collapse="tagGridCtrl.tagGroups[type].isCollapsed">
+          <div class="tags" ng-repeat="(index, tag) in tagGridCtrl.tagGroups[type]" ng-click="tagGridCtrl.requestTag($event, tag.id)">
+            <div class="tag label bg-gray">
+              <i class="fa fa-times pull-right text-danger" ng-click="tagGridCtrl.confirmDeleteTag($event, tag.id)"></i>
+              #{{tag.value}}
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  </div>
+</div>

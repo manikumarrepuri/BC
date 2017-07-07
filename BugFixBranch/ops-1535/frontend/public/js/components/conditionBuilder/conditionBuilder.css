@@ -1,0 +1,21 @@
+.conditionBuilder.query-builder {
+  margin: -5px !important;
+  background: rgba(220, 220, 220, 0.9);
+  border-radius: 0;
+}
+
+.conditionBuilder.query-builder .rules-group-container {
+  background: rgba(220, 220, 220, 0.9);
+  border: 1px solid #A9A8A7;
+  border-radius: 0;
+}
+
+.query-builder .rule-container, .query-builder .rule-placeholder {
+  border: 1px solid #FFFFFF;
+  background: rgba(206, 206, 206, 0.9);
+}
+
+app-condition-builder .btn-search {
+  margin: 5px;
+  margin-top: 0;
+}

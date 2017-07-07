@@ -1,0 +1,30 @@
+---
+haproxy_socket: /var/lib/haproxy/stats
+haproxy_chroot: /usr/share/haproxy
+haproxy_user: haproxy
+haproxy_group: haproxy
+
+# Frontend settings.
+haproxy_frontend_name: 'hafrontend'
+haproxy_frontend_bind_address: '*'
+haproxy_frontend_port: 80
+haproxy_frontend_mode: 'http'
+
+# Backend settings.
+haproxy_backend_name: 'habackend'
+haproxy_backend_mode: 'http'
+haproxy_backend_balance_method: 'roundrobin'
+haproxy_backend_httpchk: 'HEAD / HTTP/1.1\r\nHost:localhost'
+
+# List of backend servers.
+haproxy_backend_servers: []
+  # - name: app1
+  #   address: 192.168.0.1:80
+  # - name: app2
+  #   address: 192.168.0.2:80
+haproxy_stats_port: # define in playbook
+haproxy_virtual_ip: # define IP in playbook
+haproxy_rabbitmq_group: # define group in playbook
+itheonx_dns: #define IP in playbook
+haproxy_rmq_virtual_ip: # define in playbook
+haproxy_rmq_node_port: 5672

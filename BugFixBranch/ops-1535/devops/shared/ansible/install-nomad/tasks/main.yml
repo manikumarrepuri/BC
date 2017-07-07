@@ -1,0 +1,3 @@
+---
+- include: install-nomad.yml
+- include: configure-nomad.yml

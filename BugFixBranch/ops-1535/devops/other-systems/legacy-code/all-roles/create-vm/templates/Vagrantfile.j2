@@ -1,0 +1,27 @@
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "atlas_shrugged/vsphere_dummy"
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = "/home/vagrant/.ssh/id_rsa"
+  config.vm.network 'private_network', ip: '{{ network_address_1 }}'
+  config.vm.network 'private_network', ip: '{{ network_address_2 }}'
+  config.vm.network 'private_network', ip: '{{ network_address_3 }}'
+  config.vm.boot_timeout = 1
+
+  config.vm.provider :vsphere do |vsphere|
+    vsphere.host = '{{ vsphere_host }}'
+	  vsphere.compute_resource_name = '{{ vsphere_compute_resource_name }}'
+    vsphere.template_name = '{{ vsphere_template_name }}'
+    vsphere.name = '{{ vsphere_name }}'
+    vsphere.user = '{{ vsphere_user }}'
+    vsphere.password = '{{ vsphere_password }}'
+	  vsphere.data_store_name = '{{ vsphere_data_store_name }}'
+	  vsphere.insecure = '{{ vsphere_insecure }}'
+    vsphere.vm_base_path = '{{ vsphere_dest_directory }}'
+    vsphere.memory_mb = '{{ vsphere_memory }}'
+    vsphere.cpu_count = '{{ vsphere_cpu }}'
+    vsphere.customization_spec_name = '{{ vsphere_custom_spec }}'
+  end
+
+end

@@ -1,0 +1,14 @@
+---
+- name: Remove existing Vagrant dummy box (if present)
+  file: path={{ vsphere_dummy_dir }}
+        state: absent
+
+- name: Create new directory for dummy box
+  file: path={{ vsphere_dummy_dir }}
+        state=directory
+        mode=0755
+
+- name: Create vSphere dummy box
+  command: vagrant box add {{ vagrant_box_name }} {{ vagrant_box_url }} --force
+  args:
+    chdir: "{{ vsphere_dummy_dir }}"

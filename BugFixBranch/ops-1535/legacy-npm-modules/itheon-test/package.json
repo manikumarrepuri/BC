@@ -1,0 +1,20 @@
+{
+  "name": "itheon-test",
+  "version": "2.5.0",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "app-root-path": "^1.0.0",
+    "express": "^4.13.4",
+    "extend": "^3.0.0",
+    "itheon-utility": "^1.0.0",
+    "querystring": "^0.2.0",
+    "url": "^0.11.0"
+  }
+}

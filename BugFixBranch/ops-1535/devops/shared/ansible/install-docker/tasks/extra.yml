@@ -1,0 +1,33 @@
+---
+- name: Deploy docker daemon json
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  register: dockerupdate
+
+- name: Restart docker service
+  service:
+    name: docker
+    state: restarted
+  when: dockerupdate.changed
+
+- name: create registry ssl certificate directory.
+  file:
+    path: "{{item.src}}"
+    state: directory
+  with_items:
+    - {src: "/etc/docker/certs.d/docker.appdev.bluechipdomain.co.uk"}
+
+- name: ca certificate link
+  file:
+    src: /usr/local/share/ca-certificates/appdev.crt
+    dest: /etc/docker/certs.d/docker.appdev.bluechipdomain.co.uk/docker.appdev.bluechipdomain.co.uk.crt
+    state: link
+
+- name: make sure docker-py is installed
+  pip:
+    name: docker-py
+    state: "{{item}}"
+  with_items:
+    - absent
+    - latest

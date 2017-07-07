@@ -1,0 +1,16 @@
+<style>
+input.form-control.ui-select-search.ng-pristine.ng-valid:not(ng-touched) {
+    width: 100% !important;
+}
+input.form-control.ui-select-search.ng-valid.ng-dirty.ng-valid-parse:not(ng-touched){
+     width: 100% !important;
+}
+</style>
+<ui-select ng-model="selectBoxCtrl.value" ng-change="selectBoxCtrl.update(this)" theme="bootstrap" ng-disabled="disabled" style="width: 50%;">
+  <ui-select-match placeholder="Select...">
+    {{$select.selected[selectBoxCtrl.service.displayFieldName]}}
+  </ui-select-match>
+  <ui-select-choices repeat="item in selectBoxCtrl.items | propsFilter: {fields: [{name: selectBoxCtrl.service.displayFieldName, value: $select.search}]}">
+    <div ng-bind-html="item[selectBoxCtrl.service.displayFieldName] | highlight: $select.search"></div>
+  </ui-select-choices>
+</ui-select>

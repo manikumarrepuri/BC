@@ -1,0 +1,83 @@
+---
+#https://releases.hashicorp.com/consul/0.8.0/consul_0.8.0_linux_amd64.zip
+#/etc/systemd/system/consul.service
+- name: Check consul exists
+  changed_when: no
+  stat:
+    path: "/usr/bin/consul"
+  register: status
+
+- name: Check consul exists
+  changed_when: no
+  stat:
+    path: "/etc/systemd/system/consul.service"
+  register: status_service
+
+- name: Check consul version
+  shell: "consul -v"
+  register: versionCheck
+  when: (status.stat.exists == true)
+
+- name: Set consul download baseurl.
+  set_fact:
+    consul_baseurl: https://releases.hashicorp.com/consul/
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Get latest consul version.
+  shell: 'curl -sN {{consul_baseurl}} | grep -m 1 -o "consul_.*<" | sed ''s/consul_\(.*\).$/\1/'''
+  register: versionResult
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Set consul version fact.
+  set_fact:
+    consul_latest_version: "{{versionResult.stdout}}"
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Create consul directory.
+  file:
+    path: /opt/consul
+    state: directory
+    mode: 0755
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Stop consul service.
+  service:
+    name: consul
+    state: stopped
+  become: yes
+  when: 
+  - (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+  - status_service.stat.exists
+
+- name: Download latest version of consul.
+  unarchive:
+    src: "{{consul_baseurl}}{{consul_latest_version}}/consul_{{consul_latest_version}}_linux_amd64.zip"
+    dest: /opt/consul
+    remote_src: True
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Make consul executable
+  file:
+    path: /opt/consul/consul
+    mode: a+x
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Symlink consul binary.
+  file:
+    src: /opt/consul/consul
+    dest: /usr/bin/consul
+    state: link
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Start consul service.
+  service:
+    name: consul
+    state: started
+  become: yes
+  when: 
+  - (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+  - status_service.stat.exists

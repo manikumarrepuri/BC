@@ -1,0 +1,8 @@
+---
+- name: Install RabbitMQ on target machine
+  hosts: rabbitmq
+  become: yes
+  remote_user: ansible
+  roles:
+    - network-tuning
+    - install-rabbitmq

@@ -1,0 +1,79 @@
+---
+- name: Check nomad exists
+  stat:
+    path: "/usr/bin/nomad"
+  register: status
+
+- name: Check nomad exists
+  stat:
+    path: "/etc/systemd/system/nomad.service"
+  register: status_service
+
+- name: Check nomad version
+  shell: "nomad -v"
+  register: versionCheck
+  when: (status.stat.exists == true)
+
+- name: Set nomad download baseurl.
+  set_fact:
+    nomad_baseurl: https://releases.hashicorp.com/nomad/
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Get latest nomad version.
+  shell: 'curl -sN {{nomad_baseurl}} | grep -m 1 -o "nomad_.*<" | sed ''s/nomad_\(.*\).$/\1/'''
+  register: versionResult
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Set nomad version fact.
+  set_fact:
+    nomad_latest_version: "{{versionResult.stdout}}"
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Create nomad directory.
+  file:
+    path: /opt/nomad
+    state: directory
+    mode: 0755
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Stop nomad service.
+  service:
+    name: nomad
+    state: stopped
+  become: yes
+  when: 
+  - (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+  - status_service.stat.exists
+
+- name: Download latest version of nomad.
+  unarchive:
+    src: "{{nomad_baseurl}}{{nomad_latest_version}}/nomad_{{nomad_latest_version}}_linux_amd64.zip"
+    dest: /opt/nomad
+    remote_src: True
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Make nomad executable
+  file:
+    path: /opt/nomad/nomad
+    mode: a+x
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Symlink nomad binary.
+  file:
+    src: /opt/nomad/nomad
+    dest: /usr/bin/nomad
+    state: link
+  become: yes
+  when: (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+
+- name: Start nomad service.
+  service:
+    name: nomad
+    state: started
+  become: yes
+  when: 
+  - (status.stat.exists == false) or (versionCheck.stdout.find('out of date') != -1)
+  - status_service.stat.exists

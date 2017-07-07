@@ -1,0 +1,115 @@
+---
+- name: Check if bamboo already exists
+  stat:
+    path: "/etc/systemd/system/bamboo.service"
+  register: service_status
+
+- name: create bamboo group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{bamboo_user}}"
+
+- name: create bamboo user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    group: "{{item}}"
+  with_items:
+    - "{{bamboo_user}}"
+
+- name: Create bamboo directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+  with_items:
+    - "{{data_path}}"
+    - "{{install_path}}"
+
+- name: Download bamboo archive.
+  get_url:
+    url: "https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{bamboo_version}}.tar.gz"
+    dest: "/tmp/atlassian-bamboo.tar.gz"
+    checksum: sha256:132bb1678563fc385de4a8c4eecf57e5571dec6296efcefa740de92f6a5095b6
+    mode: 0777
+  when: (not service_status.stat.exists)
+  register: archive
+
+- name: Extract archive.
+  shell: "tar zxf /tmp/atlassian-bamboo.tar.gz --strip=1 -C {{install_path}}"
+  when: archive.changed
+
+- name: Deploy config files.
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: "bamboo-init.properties.j2", dest: "{{install_path}}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties"}
+    - {src: "server.xml.j2", dest: "{{install_path}}/conf/server.xml"}
+  register: restartbamboo
+
+- name: Deploy bamboo service
+  template: 
+    src: bamboo.service.j2
+    dest: "/etc/systemd/system/bamboo.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: bamboo
+
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable bamboo.service"
+  when: bamboo.changed
+
+- name: update JAVA_OPTS  
+  lineinfile:
+    dest: "{{install_path}}/bin/setenv.sh"
+    regexp: '^JAVA_OPTS='
+    line: 'JAVA_OPTS="-Djsse.enableSNIExtension=false -Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${JAVA_OPTS} ${JVM_REQUIRED_ARGS} ${JVM_SUPPORT_RECOMMENDED_ARGS} ${BAMBOO_HOME_MINUSD}"'
+  register: restartbamboo
+
+- name: Set folder ownership
+  command: "chown -R {{bamboo_user}}:{{bamboo_user}} {{install_path}}"
+
+- name: Find .sh files in bamboo install dirs
+  find:
+    paths: ["{{install_path}}/", "{{install_path}}/bin/"]
+    patterns: "*.sh"
+  register: find
+
+- name: Set execute permissions
+  file: 
+    dest: "{{item.path}}"
+    mode: "u+rwx,g+rwx,o+rx"
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+  with_items: "{{find.files}}"
+
+- name: Relax permissions on folders.
+  file:
+    dest: "{{item}}"
+    state: directory
+    mode: "0775" # rwxrwxr-x
+    owner: "{{bamboo_user}}"
+    group: "{{bamboo_user}}"
+    recurse: yes
+  with_items:
+    - "{{install_path}}"
+    - "{{data_path}}"
+
+- name: Restart bamboo
+  service:
+    name: bamboo
+    state: restarted
+  when: restartbamboo.changed
+
+- name: Ensure bamboo service is started.
+  service:
+    name: bamboo
+    state: started

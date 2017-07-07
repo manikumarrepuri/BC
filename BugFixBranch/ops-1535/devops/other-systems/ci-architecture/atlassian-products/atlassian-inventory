@@ -1,0 +1,11 @@
+[confluence]
+confluence.appdev.bluechipdomain.co.uk
+
+[jira]
+jira.appdev.bluechipdomain.co.uk
+
+[crowd]
+crowd.appdev.bluechipdomain.co.uk
+
+[bamboo]
+bamboo.appdev.bluechipdomain.co.uk

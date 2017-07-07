@@ -1,0 +1,11 @@
+handler_git_repo: # define in playbook
+itheonx_pubsub_git_repo: # define in /group_vars/all.yml
+itheonx_rethinkdb_group: # define in playbook
+itheonx_rethinkdb_port: 28015
+haproxy_rmq_virtual_ip: # define in playbook
+itheonx_frontend_ip: # define in playbook
+itheonx_frontend_port: 80
+itheonx_socket_port: 5000
+itheonx_sinopia_server: # define in playbook
+pubsub_stats_port: 4000
+pubsub_democracy_port: 12345

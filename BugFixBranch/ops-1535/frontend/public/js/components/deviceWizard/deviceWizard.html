@@ -1,0 +1,36 @@
+<div class="modal-header ng-scope">
+    <h3 class="modal-title">Add a Device</h3>
+</div>
+<div class="modal-body ng-scope">
+    <ul class="head">OpServe is designed to take metrics from many sources. Let's see how we can help with your new device. Please choose what method of metric collection is to be used for your device:</ul>
+   <a href="#">
+     <div class="metric-type">
+         <i class="fa fa-server bullet" aria-hidden="true"></i>
+         <div class="device-types">
+             <strong>Agent Based</strong> - Your device is having an agent installed to provide deep analysis and exception-based metrics as well as standard data. Best suited for those devices that either require complex monitoring or or are restricted by your network.
+         </div>
+     </div>
+   </a>
+  <br>
+   <a href="#">
+    <div class="metric-type">
+        <i class="fa fa-desktop bullet" aria-hidden="true"></i>
+        <div class="device-types">
+            <strong>Agentless Based</strong> - Your device is to be queried by OpServe in order to collect the necessary statistics required for central monitoring. Perfect for light-touch devices that do not have network restrictions.
+        </div>
+    </div>
+   </a>
+  <br>
+   <a href="#">
+    <div class="metric-type">
+        <i class="fa fa-file-code-o bullet" aria-hidden="true"></i>
+        <div class="device-types">
+            <strong>Collector Based</strong> - Your device is to be queried by a special collector that will then pass metrics to OpServe. This best suits large estates so as to reduce network traffic and also minimise network restrictions.
+        </div>
+    </div>
+   </a>
+</div>
+<div class="modal-footer ng-scope">
+    <!-- <button type="submit" class="btn btn-primary">OK</button> -->
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

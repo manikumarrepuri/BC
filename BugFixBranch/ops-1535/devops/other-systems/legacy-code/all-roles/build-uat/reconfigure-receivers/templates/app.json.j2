@@ -1,0 +1,58 @@
+{
+  "logger" : {
+    "immediate" : false,
+    "format" : "dev",
+    "transports" : {
+      "console" : {
+        "enabled" : true,
+        "colorize" : true,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "file" : {
+        "enabled" : false,
+        "filename" : "logs/run.log",
+        "maxsize" : 1048576,
+        "maxFiles" : 3,
+        "timestamp" : true,
+        "level" : "error",
+        "handleException" : true
+      },
+      "logentries" : {
+        "enabled" : false,
+        "token" : "abc",
+        "level" : "error",
+        "handleException" : true
+      }
+    }
+  },
+  "redis": {
+    "sentinels": [
+  {% for host in groups[itheonx_sentinel_group] %}
+   {% if 'ansible_nodename' in hostvars[host] and hostvars[host]['ansible_nodename'] is defined %}
+
+    {
+       "host": "{{ hostvars[host].ansible_default_ipv4.address }}",
+       "port": {{ itheonx_sentinel_port }}
+     }{% if loop.index != loop.length %},{% endif %}
+   {% endif %}
+  {% endfor %}
+    ],
+    "name": "master01"
+  },
+  "amqp": {
+    "connectionString": "amqp://test:test@{{ haproxy_rmq_virtual_ip }}"
+  },
+  "server" : {
+    "port": {{ haproxy_receivers_port }}
+  },
+  "frontendApi": {
+    "host": "{{ haproxy_virtual_ip }}",
+    "protocol": "https://",
+    "port": "{{ ssl }}",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+}

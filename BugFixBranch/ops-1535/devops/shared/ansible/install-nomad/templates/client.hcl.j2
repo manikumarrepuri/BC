@@ -1,0 +1,21 @@
+# /etc/nomad.d/client.hcl
+
+data_dir = "/var/nomad"
+
+datacenter = "{{datacenter}}"
+
+client {
+  enabled = true
+  servers = ["nomad.service.{{datacenter}}.consul"]
+}
+
+advertise {
+  http = "{{advertise_addr}}"
+  rpc = "{{advertise_addr}}"
+  serf = "{{advertise_addr}}" 
+}
+
+server {
+  enabled          = false
+  encrypt = "J/s2wZ+D2ONs9Fd/ADgdIg=="
+}

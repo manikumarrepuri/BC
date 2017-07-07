@@ -1,0 +1,95 @@
+<aside class="add-reminder-sidebar module-sidebar module-sidebar-light has-header">
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- Home tab content -->
+    <div class="tab-pane active">
+      <section class="content-header">
+        <h1>
+          Add New Reminder
+          <i class="pull-right close fa fa-times-circle-o" ng-click="addReminderCtrl.toggleReminder()"></i>
+        </h1>
+      </section>
+
+      <!-- /Main content is here -->
+      <div>
+        <div class="box-primary">
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="status update-success hide progress-bar-success"><span>Successfully added the reminder {{addReminderCtrl.addReminderForm.remindername}}.</span></div>
+            <div class="status update-failed hide progress-bar-danger"><span>Failed to add the reminder: {{addReminderCtrl.errorMessage}}.</span></div>
+            <div class="callout callout-danger" ng-show="addReminderForm.$submitted && addReminderForm.$invalid">
+              <span ng-if="addReminderForm.schedule.$invalid">Invalid date string provided for Schedule: check the <a href="http://bunkat.github.io/later/parsers.html#text" target="_blank">documentation</a></span>
+              <span ng-if="addReminderForm.reminder.$invalid">Invalid date string provided for Reminder: check the <a href="http://bunkat.github.io/later/parsers.html#text" target="_blank">documentation</a></span>
+              <div ng-if="addReminderForm.description.$invalid">Please provide a description.</div>
+              <div ng-if="addReminderForm.type.$invalid">Please provide a valid type.</div>
+              <div ng-if="addReminderForm.defaultState.$invalid">Please provide a valid default state.</div>
+              <div ng-if="addReminderForm.defaultAssignee.$invalid">Please provide a valid default assignee.</div>
+              <div ng-if="addReminderForm.actionBy.$invalid">Please provide a valid  completion time.</div>
+            </div>
+
+            <form name="addReminderForm" ng-submit="addReminderCtrl.addReminder(addReminderForm)">
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.description.$invalid}">
+                <label class="control-label" for="description">Description: </label>
+                <textarea name="description" ng-model="addReminderCtrl.addReminderForm.description" placeholder="Explain what needs to be done..." ng-keyup="addReminderCtrl.changeReminderText()" autofocus required>
+                </textarea>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.type.$invalid}">
+                <label class="control-label" for="type">Type: </label>
+                <select name="type" ng-model="addReminderCtrl.addReminderForm.type" required>
+                  <option value="backups">Backup</option>
+                  <option value="reports">Report</option>
+                  <option value="bau">Business as Usual</option>
+                </select>
+              </div>
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.defaultState.$invalid}">
+                <label class="control-label" for="defaultState">Default State: </label>
+                <select name="defaultState" ng-model="addReminderCtrl.addReminderForm.defaultState" required>
+                  <option value="new">New</option>
+                  <option value="in progress">In Progress</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+              <!-- <div ng-form-model="passwordRetry"> -->
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.defaultAssignee.$invalid}">
+                <label class="control-label" for="defaultAssignee">Default Assignee: </label>
+                <input name="defaultAssignee" ng-model="addReminderCtrl.addReminderForm.defaultAssignee" required type="text" placeholder="admin">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.tags.$invalid}">
+                <label class="control-label" for="tags">Tags: </label>
+                <multi-select-box name="tags" ng-model="addReminderCtrl.addReminderForm.tags" service-name="TagService" collection-variable-name="tags"></multi-select-box>
+              </div>
+              <!--    </div> -->
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.schedule.$invalid}">
+                <label class="control-label" for="schedule">Schedule: </label>
+                <input name="schedule" ng-model="addReminderCtrl.addReminderForm.schedule" check-text-date required placeholder="every weekday at 8:00 am">
+              </div>
+              <div class="form-group">
+                <label class="control-label" for="reminder">Remind me: </label>
+                <input name="reminder" ng-model="addReminderCtrl.addReminderForm.reminder" placeholder="15 minutes before">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.actionBy.$invalid}">
+                <label class="control-label" for="actionBy">Complete by: </label>
+                <input name="actionBy" ng-model="addReminderCtrl.addReminderForm.actionBy" required placeholder="9am">
+              </div>
+              <div class="form-group" ng-class="{'has-error':addReminderForm.$dirty && addReminderForm.procedureLink.$invalid}">
+                <label class="control-label" for="procedureLink">Procedure: </label>
+                <input name="procedureLink" ng-model="addReminderCtrl.addReminderForm.procedureLink" value="http://" required>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Add Reminder</button>
+            </form>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+      </div>
+      <!-- /Main content ends here -->
+    </div>
+    <!-- /.tab-pane -->
+  </div>
+</aside>
+<!-- /.control-sidebar -->
+
+<!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+<div class="module-sidebar-bg"></div>
+<confirm-modal></confirm-modal>

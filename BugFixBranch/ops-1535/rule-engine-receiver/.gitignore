@@ -1,0 +1,7 @@
+node_modules
+logs
+/nbproject/private/
+/.project
+config/app.env.json
+.remote-sync.json
+/npm-debug.log

@@ -1,0 +1,124 @@
+---
+- name: Check if Confluence Exists
+  stat:
+    path: "/etc/systemd/system/crowd.service"
+  register: service_status
+
+- name: create crowd group
+  group:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "{{crowd_user}}"
+
+- name: create crowd user
+  user:
+    name: "{{item}}"
+    shell: /bin/bash
+    group: "{{item}}"
+  with_items:
+    - "{{crowd_user}}"
+
+- name: Create crowd directories
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: "{{crowd_user}}"
+    group: "{{crowd_user}}"
+  with_items:
+    - "{{data_path}}"
+    - "{{install_path}}"
+
+- name: Download crowd archive.
+  get_url:
+    url: "https://downloads.atlassian.com/software/crowd/downloads/atlassian-crowd-{{crowd_version}}.tar.gz"
+    dest: /tmp/atlassian-crowd.tar.gz
+    checksum: sha256:2829546939aa6772dab65958d518a64631f4ec1ad8d4d9eda39c11e3ab12e35f
+    mode: 0777
+  when: (not service_status.stat.exists)
+  register: archive
+
+- name: Extract archive.
+  shell: "tar zxf /tmp/atlassian-crowd.tar.gz --strip=1 -C {{install_path}}"
+  when: archive.changed
+
+- name: Deploy config files.
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: "crowd-init.properties.j2", dest: "{{install_path}}/crowd-webapp/WEB-INF/classes/crowd-init.properties"}
+    - {src: "crowd.properties.j2", dest: "{{data_path}}/crowd.properties"}
+    - {src: "server.xml.j2", dest: "{{install_path}}/apache-tomcat/conf/server.xml"}
+  register: restartcrowd
+
+- name: Deploy crowd service
+  template: 
+    src: crowd.service.j2
+    dest: "/etc/systemd/system/crowd.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: crowd
+
+- name: reload and enable service
+  command: "{{item}}"
+  with_items:
+    - "systemctl daemon-reload"  
+    - "systemctl enable crowd.service"
+  when: crowd.changed
+
+- name: update JAVA_OPTS  
+  lineinfile:
+    dest: "{{install_path}}/apache-tomcat/bin/setenv.sh"
+    regexp: '^JAVA_OPTS='
+    line: 'JAVA_OPTS="-Djsse.enableSNIExtension=false -Xms128m -Xmx512m -Dfile.encoding=UTF-8 $JAVA_OPTS"'
+  register: restartcrowd
+
+- name: Set folder ownership
+  command: "chown -R {{crowd_user}}:{{crowd_user}} {{install_path}}"
+
+- name: Find .sh files in crowd install dirs
+  find:
+    paths: ["{{install_path}}/", "{{install_path}}/apache-tomcat/bin/"]
+    patterns: "*.sh"
+  register: find
+
+- name: Set execute permissions
+  file: 
+    dest: "{{item.path}}"
+    mode: "u+rwx,g+rwx,o+rx"
+    owner: "{{crowd_user}}"
+    group: "{{crowd_user}}"
+  with_items: "{{find.files}}"
+
+- name: Relax permissions on folders.
+  file:
+    dest: "{{item}}"
+    state: directory
+    mode: "0775" # rwxrwxr-x
+    owner: "{{crowd_user}}"
+    group: "{{crowd_user}}"
+    recurse: yes
+  with_items:
+    - "{{install_path}}"
+    - "{{data_path}}"
+
+- name: Touch log file
+  file:
+    dest: "{{install_path}}/atlassian-crowd-openid-server.log"    
+    state: touch
+    owner: "root"
+    group: "root"
+    mode: 0775
+
+- name: Restart crowd
+  service:
+    name: crowd
+    state: restarted
+  when: restartcrowd.changed
+
+- name: Ensure crowd service is started.
+  service:
+    name: crowd
+    state: started

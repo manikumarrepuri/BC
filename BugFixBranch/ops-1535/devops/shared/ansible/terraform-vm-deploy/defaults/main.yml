@@ -1,0 +1,12 @@
+---
+artifactory_url: "http://artifactory.appdev.bluechipdomain.co.uk"
+artifactory_user: "opserve-devops"
+artifactory_password: "qt5lZEJDH31TpZHdtLFnaHBVB"
+artifactory_repo: "terraform-state"
+
+vsphere_user: "ITHDEV.LOCAL\\\\opserve" # backslash must be escaped in the .tf file
+vsphere_password: "Op$3rv3!"
+vsphere_host: "10.197.55.55"
+vsphere_datacenter: "AR Itheon Development"
+
+vm_folder: "opserve/{{environment_identifier}}"

@@ -1,0 +1,26 @@
+---
+- name: stop service
+  shell: service rabbitmq-server stop
+  ignore_errors: yes
+
+# - include: network.yml
+
+# - include: service.yml
+
+- include: cluster.yml
+  when: 'rabbitmq_create_cluster and (ansible_hostname != rabbitmq_cluster_master) and (ansible_fqdn != rabbitmq_cluster_master)'
+
+# - name: Add user
+#   command: rabbitmqctl add_user test test
+#   when: (ansible_hostname == rabbitmq_cluster_master)
+
+# - name: Set user tags
+#   command: rabbitmqctl set_user_tags test administrator
+#
+# - name: Set permissions
+#   command: rabbitmqctl set_permissions -p / test ".*" ".*" ".*"
+
+- name: rabbitmq service started and enabled
+  service: name=rabbitmq-server
+           state=restarted
+  tags: [service,rabbitmq]

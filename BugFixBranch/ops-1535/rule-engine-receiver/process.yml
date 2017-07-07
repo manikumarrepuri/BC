@@ -1,0 +1,7 @@
+apps:
+  - script   : 'app.js'
+    name     : 'receiver'
+    exec_mode: 'cluster'
+    instances: 1
+    error_file: ./logs/receiver-error.log
+    out_file: ./logs/receiver-out.log

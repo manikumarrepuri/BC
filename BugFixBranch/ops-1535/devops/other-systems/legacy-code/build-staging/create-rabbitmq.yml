@@ -1,0 +1,115 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rabbitmq-master-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - vagrant_project: /opserve/staging-rabbitmq-master-ub-16-04
+    - network_address_1: 10.197.55.114
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.114
+    - network_hostname: staging-rabbitmq-master-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rabbitmq-slave1-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - vagrant_project: /opserve/staging-rabbitmq-slave1-ub-16-04
+    - network_address_1: 10.197.55.115
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.115
+    - network_hostname: staging-rabbitmq-slave1-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rabbitmq-slave2-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - vagrant_project: /opserve/staging-rabbitmq-slave2-ub-16-04
+    - network_address_1: 10.197.55.116
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.116
+    - network_hostname: staging-rabbitmq-slave2-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rabbitmq-slave3-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - vagrant_project: /opserve/staging-rabbitmq-slave3-ub-16-04
+    - network_address_1: 10.197.55.117
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.117
+    - network_hostname: staging-rabbitmq-slave3-ub-16-04
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: staging-rabbitmq-slave4-ub-16-04
+    - vsphere_template_name: /opserve/template-ub-16-04
+    - vsphere_memory: 4096
+    - vagrant_project: /opserve/staging-rabbitmq-slave4-ub-16-04
+    - network_address_1: 10.197.55.118
+
+- name: configure network
+  hosts: template
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address_1: 10.197.55.118
+    - network_hostname: staging-rabbitmq-slave4-ub-16-04

@@ -1,0 +1,66 @@
+---
+# Targeting specific OSes or distributions:
+#
+#   - `ansible_system`               → Linux, BSD, ...
+#   - `ansible_os_family`            → Debian, RedHat, ...
+#   - `ansible_distribution`         → Debian, Ubuntu, RedHat, ...
+#   - `ansible_distribution_release` → precise, wheezy, ...
+#   - `ansible_pkg_mgr`              → apt, yum, ...
+
+- name: Create RethinkDB directories
+  become: yes
+  file:
+    dest: "{{item}}"
+    state: directory
+    recurse: yes
+    owner: "{{rethinkdb_user}}"
+    group: "{{itheonx_rethinkdb_group}}"
+  with_items:
+    - "{{rethinkdb_conf_dir}}"
+    - "{{rethinkdb_instances_dir}}"
+    - "{{rethinkdb_run_dir}}"
+    - "{{rethinkdb_lib_dir}}"
+    - "{{rethinkdb_data_dir}}"
+    - "{{rethinkdb_log_dir}}"
+  tags:
+    - conf
+    - rethinkdb
+
+
+
+- name: Configure RethinkDB Proxy (Upstart)
+  become: yes
+  template:
+    src: rethinkdb-proxy.conf
+    dest: "/etc/init/rethinkdb-proxy.conf"
+    owner: "root"
+    group: "root"
+  notify: restart rethinkdb-proxy
+  tags:
+    - conf
+    - rethinkdb
+
+
+# Flush handlers now, so we avoid starting the process and then
+# restarting it immediately after notifications are flushed.
+- meta: flush_handlers
+
+- name: Ensure RethinkDB is disabled for proxy
+  become: yes
+  service:
+    name: "rethinkdb"
+    state: stopped
+    enabled: no
+  tags:
+    - init
+    - rethinkdb
+
+- name: Ensure RethinkDB proxy is running and enabled
+  become: yes
+  service:
+    name: "rethinkdb-proxy"
+    state: running
+    enabled: yes
+  tags:
+    - init
+    - rethinkdb

@@ -1,0 +1,18 @@
+tag-list .selection-container {
+  padding: 10px;
+  background: #ecf0f5;
+  box-shadow: 0 1px 1px rgb(246, 246, 247);
+}
+
+tag-list .tag-container {
+  background: #ffffff;
+}
+
+
+tag-list .tag-type-container .tag.label {
+  font-size: 100%;
+  margin: 5px;
+  padding: 8px;
+  float: left;
+  cursor: pointer;
+}

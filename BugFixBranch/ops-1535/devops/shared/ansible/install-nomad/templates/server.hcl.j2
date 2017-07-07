@@ -1,0 +1,17 @@
+# /etc/nomad.d/server.hcl
+
+data_dir = "/var/nomad"
+
+datacenter = "{{datacenter}}"
+
+advertise {
+  http = "{{advertise_addr}}"
+  rpc = "{{advertise_addr}}"
+  serf = "{{advertise_addr}}" 
+}
+
+server {
+  enabled          = true
+  bootstrap_expect = {{node_count}}
+  encrypt = "J/s2wZ+D2ONs9Fd/ADgdIg=="
+}

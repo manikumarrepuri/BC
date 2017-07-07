@@ -1,0 +1,23 @@
+---
+- name: Install VirtualBox
+  apt: name=virtualbox
+       update_cache=yes
+
+- name: Install virtualbox-dkms
+  apt: name=virtualbox-dkms
+
+# - name: Install Vagrant
+#   apt: name=vagrant
+
+- name: Download Vagrant from hashicorp
+  command: wget https://releases.hashicorp.com/vagrant/1.8.0/vagrant_1.8.0_x86_64.deb
+  args:
+    chdir: /home/vagrant
+
+- name: Install Vagrant using dpkg
+  command: dpkg -i vagrant_1.8.0_x86_64.deb
+  args:
+    chdir: /home/vagrant
+
+- name: Install vSphere plugin
+  command: vagrant plugin install vagrant-vsphere

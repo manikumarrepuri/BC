@@ -1,0 +1,17 @@
+{
+  "name": "itheon-module-reminder-entity",
+  "version": "1.0.8",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "dependencies": {
+    "itheon-entity": "^1.0.0",
+    "itheon-utility": "^1.0.0",
+    "itheon-logger": "^1.0.0"
+  }
+}

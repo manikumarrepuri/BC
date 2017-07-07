@@ -1,0 +1,99 @@
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button class="add btn bg-teal btn-bar btn-flat" ng-click="ruleUpdaterCtrl.addAgentRule()">
+      <i class="fa fa-plus"></i> <strong>Rule</strong>
+    </button>
+  </div>
+  <app-search service="ruleUpdaterCtrl.service"></app-search>
+</div>
+
+<div class="box-header">
+  <h3 class="box-title">
+    <span class="label label-default">{{ruleUpdaterCtrl.totals.total}}</span> Agent Rules
+  </h3>
+  <table class="table table-fixed table-bordered table-head">
+    <thead>
+      <tr>
+        <th class='hover col-xs-3' data-ng-click="ruleUpdaterCtrl.service.sort('version')">
+          <i class="fa" ng-class="{'fa-sort-numeric-asc': ruleUpdaterCtrl.options.orderBy == 'version' && ruleUpdaterCtrl.options.orderASC,
+                              'fa-sort-numeric-desc': ruleUpdaterCtrl.options.orderBy == 'version' && !ruleUpdaterCtrl.options.orderASC}">
+          </i>
+          Version
+        </th>
+        <th class='hover col-xs-3' data-ng-click="ruleUpdaterCtrl.service.sort('name')">
+          <i class="fa" ng-class="{'fa-sort-alpha-asc': ruleUpdaterCtrl.options.orderBy == 'name' && ruleUpdaterCtrl.options.orderASC,
+                              'fa-sort-alpha-desc': ruleUpdaterCtrl.options.orderBy == 'name' && !ruleUpdaterCtrl.options.orderASC}">
+          </i>
+          Rule File Name
+        </th>
+        <th class='hover col-xs-4' data-ng-click="ruleUpdaterCtrl.service.sort('tags')">
+          <i class="fa" ng-class="{'fa-sort-alpha-asc': ruleUpdaterCtrl.options.orderBy == 'tags' && ruleUpdaterCtrl.options.orderASC,
+                              'fa-sort-alpha-desc': ruleUpdaterCtrl.options.orderBy == 'tags' && !ruleUpdaterCtrl.options.orderASC}">
+          </i>
+          Tags
+        </th>
+        <th class='hover col-xs-2'>
+          </i>
+          Propagation
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
+<div class="scroll-bar">
+  <div resize class="box device-box" ng-if="ruleUpdaterCtrl.totals.total != 0">
+    <div class="box-body table-responsive no-padding" infinite-scroll="ruleUpdaterCtrl.loadMore()" infinite-scroll-distance="1" infinite-scroll-disabled='ruleUpdaterCtrl.busy'>
+      <table class="table table-striped table-fixed table-list-page table-bordered table-hover table-ruleUpdater">
+        <tbody>
+          <tr bindonce
+              context-menu="ruleUpdaterCtrl.menuOptions"
+              ng-repeat="rule in ruleUpdaterCtrl.rules track by rule.id"
+              selection-model
+              selection-model-mode="'multiple'"
+              selection-model-selected-items="ruleUpdaterCtrl.selected"
+              selection-model-selected-class="'row-selected'"
+              ng-click="ruleUpdaterCtrl.loadAgentRule($event, rule.agentRuleId)">
+            <td class="state-column col-xs-3">
+              {{rule.versionDisplay | amCalendar:null:ruleUpdaterCtrl.calendarFormat }}
+            </td>
+            <td class="col-xs-3">
+              {{rule.name}}
+              <div class="show-helper pull-right">Show Rule</div>
+            </td>
+            <td class="col-xs-4 truncate">
+              <div class="tag label bg-gray" ng-repeat="(key, tag) in rule.tags |limitTo:3">
+                #{{tag}}
+              </div>
+              <div class="tag-more" ng-if="rule.tags.length > 3">...</div>
+            </td>
+            <td class="col-xs-2">
+              <div class="tag label bg-yellow" ng-if="rule.started.count > 0" title="In progress" uib-popover-html="rule.started.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{rule.started.count}}
+              </div>
+              <div class="tag label bg-green" ng-if="rule.success.count > 0" title="Successfully installed"  uib-popover-html="rule.success.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{rule.success.count}}
+              </div>
+              <div class="tag label bg-red" ng-if="rule.failed.count > 0" title="Failed to install"  uib-popover-html="rule.failed.devices" popover-trigger="mouseenter" popover-placement="bottom">
+                {{rule.failed.count}}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+       <div ng-show='ruleUpdaterCtrl.busy'>
+         <i class="fa fa-spinner"></i> Loading data...
+       </div>
+    </div>
+  </div>
+</div>
+<div ng-if="ruleUpdaterCtrl.totals.total == 0" class="no-items search-padding">
+  <h3>Agent Rules</h3>
+  <p>
+    Looks like you don't have any agent rules yet press the <a href="#">+ Rule button</a> in the top right to get started. Once you have
+    added your first rule, you will be able to sync rules with the agent.
+  </p>
+</div>
+<agent-rule></agent-rule>
+<add-agent-rule></add-agent-rule>
+<confirm-modal></confirm-modal>

@@ -1,0 +1,96 @@
+---
+- name: configure network
+  hosts: 10.197.55.123
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.23
+    - network_hostname: staging-redis-sentinel1-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.124
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.24
+    - network_hostname: staging-redis-sentinel2-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.125
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.25
+    - network_hostname: staging-redis-sentinel3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+
+- name: configure network
+  hosts: 10.197.55.119
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.19
+    - network_hostname: staging-redis1-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.120
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.20
+    - network_hostname: staging-redis2-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+
+- name: configure network
+  hosts: 10.197.55.121
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.21
+    - network_hostname: staging-redis3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0
+
+- name: configure network
+  hosts: 10.197.55.122
+  become: yes
+  remote_user: ansible
+  roles:
+    - configure-network
+  vars:
+    - network_address: 10.197.57.22
+    - network_hostname: staging-redis3-ub-16-04
+    - network_interface: ens224
+    - network_broadcast: 10.197.57.255
+    - network_gateway: 10.197.57.254
+    - network_network: 10.197.57.0

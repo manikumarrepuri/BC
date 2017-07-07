@@ -1,0 +1,35 @@
+---
+- name: Enable additional repositories
+  apt_repository:
+    repo: "{{item}}"
+  with_items:
+    - ppa:duggan/jo 
+  register: aptrepo
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  when: aptrepo.changed
+  
+- name: Install additional software
+  apt:
+    name: "{{item}}"
+    state: latest
+    cache_valid_time: 3600
+  with_items:
+    - unzip 
+    - ca-certificates 
+    - curl
+    - apt-transport-https
+    # Python dependencies, essential to ansible.
+    - python-dev
+    - python-pip
+    - build-essential
+    - jo
+
+- name: Install python dependencies via pip.
+  pip:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - pip

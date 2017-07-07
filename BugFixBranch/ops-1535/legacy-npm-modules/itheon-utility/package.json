@@ -1,0 +1,20 @@
+{
+  "name": "itheon-utility",
+  "version": "1.1.0",
+  "publishConfig": {
+    "registry": "http://10.197.55.249"
+  },
+  "files": [
+    "Readme.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --recursive tests/cases/"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "handlebars-helpers": "^0.7.5",
+    "underscore": "^1.8.3"
+  }
+}

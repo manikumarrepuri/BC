@@ -1,0 +1,75 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'install ansible pre-reqs'
+      raw: sudo apt-get -y install python-simplejson
+
+- hosts : all
+  become: yes
+  roles:
+   - role: ../../shared/ansible/common
+   - role: ../../shared/ansible/ssl-certificates
+
+- hosts: serviceregistry
+  become: yes
+  serial:
+    - 1
+    - "50%"
+    - "100%"
+  vars:
+    node_count: "{{ groups['serviceregistry'] | length }}"
+    server_node_ips: "{{ groups['serviceregistry'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(' ') }}"
+    advertise_addr: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+    consul_user: "consul"
+    consul_deployment: "server"
+    nomad_user: "nomad"
+    nomad_deployment: "server"
+    datacenter: "ar"
+  roles:
+  - role: ../../shared/ansible/install-consul
+  - role: ../../shared/ansible/install-nomad
+  - role: ../../shared/ansible/install-vault
+
+- hosts: containerhosts
+  become: yes
+  roles:
+  - role: ../../shared/ansible/install-docker
+
+- hosts: containerhosts
+  become: yes
+  serial:
+    - 1
+    - "50%"
+    - "100%"
+  vars:
+    server_node_ips: "{{ groups['serviceregistry'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(' ') }}"
+    consul_user: "consul"
+    consul_deployment: "client"
+    nomad_deployment: "client"
+    nomad_user: "nomad"
+    datacenter: "ar"
+  roles:
+  - role: ../../shared/ansible/install-consul
+  - role: ../../shared/ansible/install-nomad
+  - role: ../../shared/ansible/install-vault
+
+- hosts: bastions
+  become: yes
+  serial:
+    - 1
+    - 50%
+    - 100%
+  vars:
+    vars:
+    server_node_ips: "{{ groups['serviceregistry'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(' ') }}"
+    consul_user: "consul"
+    consul_deployment: "client"
+    nomad_deployment: "client"
+    nomad_user: "nomad"
+    datacenter: "ar"
+  roles:
+  - role: ../../shared/ansible/install-consul
+  - role: ../../shared/ansible/install-nomad
+  - role: ../../shared/ansible/install-vault

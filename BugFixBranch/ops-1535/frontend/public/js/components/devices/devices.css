@@ -1,0 +1,55 @@
+.device-box {
+  width: 98%;
+  clear: both;
+}
+
+.device-box .fa {
+  vertical-align: bottom;
+}
+
+.state-column i {
+  float: left;
+  font-size: 30px;
+  margin-right: 5px;
+  line-height: 30px;
+}
+
+.state-column i.state-text {
+  color: #fff !important;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.device-box .box-title .label {
+  cursor: pointer;
+}
+
+#pagination {
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  width: 15em;
+  margin-left: -7.5em;
+  display: none;
+}
+
+.state-column {
+  padding-left: 15px !important;
+}
+
+.state-column .state-icon {
+  padding-left: 11px;
+}
+
+.state-column .state-icon .state-text {
+  font-size: 90%;
+}
+
+devices .no-items {
+ font-size: 120%;
+}
+
+devices .no-items li {
+ list-style-type: circle;
+ margin-left: 20px;
+}

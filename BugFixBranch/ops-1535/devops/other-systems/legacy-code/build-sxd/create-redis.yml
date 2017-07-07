@@ -1,0 +1,84 @@
+---
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis-sentinel1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.167
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis-sentinel2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.168
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis-sentinel3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.169
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis1-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.163
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis2-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.164
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis3-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.165
+
+- name: create vm
+  hosts: vagrant
+  become: yes
+  remote_user: ansible
+  roles:
+    - create-vm
+  vars:
+    - vsphere_name: sxd-redis4-ub-16-04
+    - vsphere_template_name: "{{ vsphere_template_small }}"
+    - vsphere_memory: 8192
+    - network_address_1: 10.197.55.166

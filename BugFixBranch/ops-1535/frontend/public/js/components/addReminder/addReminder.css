@@ -1,0 +1,11 @@
+/*
+ * Component: Control sidebar. By default, this is the right sidebar.
+ */
+
+ .reminder-sidebar .control-label {
+   width: 8em;
+ }
+
+.reminder-sidebar input {
+  width: 15em;
+}

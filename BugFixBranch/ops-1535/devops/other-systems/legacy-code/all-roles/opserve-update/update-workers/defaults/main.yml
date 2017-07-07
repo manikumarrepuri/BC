@@ -1,0 +1,9 @@
+worker_git_repo: # Define this in the playbook
+itheonx_rethinkdb_group: # Define this in the playbook
+itheonx_rethinkdb_port: 28015
+itheonx_redis_port: 6379
+haproxy_rmq_virtual_ip: # Define this in the playbook
+itheonx_sinopia_server: # Define this in the playbook
+itheonx_sentinel_group: # Define this in the playbook
+itheonx_redis_port: 26379
+itheonx_rethinkdb_master: # {{ hostvars[groups['####DEFINE RETHINKDB GROUP IN PLAYBOOK####'][0]].ansible_default_ipv4.address }}

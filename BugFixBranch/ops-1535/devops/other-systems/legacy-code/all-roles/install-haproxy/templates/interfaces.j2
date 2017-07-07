@@ -1,0 +1,21 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto {{ network_interface }}
+iface {{ network_interface }} inet static
+        address {{ ansible_default_ipv4.address }}
+        netmask {{ ansible_default_ipv4.netmask }}
+        gateway {{ ansible_default_ipv4.gateway }}
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers {{ itheonx_dns }}
+
+# HAProxy Virtual IP 1
+auto {{ network_interface }}:1
+iface {{ network_interface }}:1 inet static
+        address {{ haproxy_virtual_ip }}
+        netmask {{ ansible_default_ipv4.netmask }}

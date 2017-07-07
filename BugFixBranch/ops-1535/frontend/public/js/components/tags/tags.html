@@ -1,0 +1,82 @@
+<div class="actions-bar is-page-top">
+  <div class="buttonGroup clearfix">
+    <button ng-click="tagsCtrl.addTag()" class="add btn btn-bar bg-teal btn-flat">
+      <i class="fa fa-plus"></i> <strong>Tag</strong>
+    </button>
+  </div>
+  <app-search service="tagsCtrl.service"></app-search>
+</div>
+<!-- <div class="search-padding clearfix">
+
+</div> -->
+<div class="box-header">
+  <div class="page-options pull-right ">
+    <span>Display: </span>
+    <div class="btn-group">
+      <button type="button" class="btn btn-xs">
+        <i ng-if="tagsCtrl.display == 'grid'" class="fa fa-th"></i>
+        <i ng-if="tagsCtrl.display == 'table'" class="fa fa-table"></i>
+      </button>
+      <button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu pull-left dropdown-left" role="menu">
+        <li ng-click="tagsCtrl.display = 'grid'">
+          &nbsp; <i class="fa fa-th"></i> &nbsp; Grid View
+        </li>
+        <li class="divider"></li>
+        <li ng-click="tagsCtrl.display = 'table'">
+          &nbsp; <i class="fa fa-table"></i> &nbsp; Table View
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div ng-if="tagsCtrl.display == 'table'">
+    <h3 class="box-title">
+      <span class="label label-default">{{tagsCtrl.totals.total}}</span> Tags
+    </h3>
+    <table class="table table-striped table-fixed table-list-page table-bordered table-hover table-tags">
+      <thead>
+        <tr>
+          <th class='hover col-xs-3' data-ng-click="tagTableCtrl.service.sort('type')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': tagTableCtrl.options.orderBy == 'type' && tagTableCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': tagTableCtrl.options.orderBy == 'type' && !tagTableCtrl.options.orderASC}">
+            </i> Type
+          </th>
+          <th class='hover col-xs-3' data-ng-click="tagTableCtrl.service.sort('value')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': tagTableCtrl.options.orderBy == 'value' && tagTableCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': tagTableCtrl.options.orderBy == 'value' && !tagTableCtrl.options.orderASC}">
+            </i> Value
+          </th>
+          <th class='hover col-xs-3' data-ng-click="tagTableCtrl.service.sort('description')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': tagTableCtrl.options.orderBy == 'description' && tagTableCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': tagTableCtrl.options.orderBy == 'description' && !tagTableCtrl.options.orderASC}">
+            </i> Description
+          </th>
+          <th class='hover col-xs-3' data-ng-click="tagTableCtrl.service.sort('color')">
+            <i class="fa" ng-class="{'fa-sort-alpha-asc': tagTableCtrl.options.orderBy == 'color' && tagTableCtrl.options.orderASC,
+                                'fa-sort-alpha-desc': tagTableCtrl.options.orderBy == 'color' && !tagTableCtrl.options.orderASC}">
+            </i> Colour
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+<div class="scroll-bar">
+  <div resize class="box" ng-if="tagsCtrl.totals.total != 0">
+    <tag-grid ng-if="tagsCtrl.display == 'grid'"></tag-grid>
+    <tag-table ng-if="tagsCtrl.display == 'table'"></tag-table>
+  </div>
+</div>
+<div ng-show="tagsCtrl.totals.total == 0" class="no-items">
+  <h3>No Tags</h3>
+  <p>
+    You don't currently have any tags let's add some just click the + Tag button in the top right.
+  </p>
+</div>
+
+<view-tag></view-tag>
+<add-tag></add-tag>
+<confirm-modal></confirm-modal>

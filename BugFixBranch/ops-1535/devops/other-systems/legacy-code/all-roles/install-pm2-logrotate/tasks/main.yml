@@ -1,0 +1,5 @@
+- name: Install pm2-logrotate
+  command: pm2 install pm2-logrotate
+
+- name: Set pm2 to retain 7 logs
+  command: pm2 set pm2-logrotate:retain 7
